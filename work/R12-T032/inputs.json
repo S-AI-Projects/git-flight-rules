@@ -1,0 +1,42 @@
+{
+  "task": "R12-T032",
+  "guide_section": "Stash with message",
+  "repository_author": {
+    "name": "Course Student",
+    "email": "student@example.invalid"
+  },
+  "default_branch": "main",
+  "commits": [
+    {
+      "commit": "A",
+      "action": "create notes.txt",
+      "content": "alpha\n"
+    },
+    {
+      "commit": "B",
+      "action": "append beta to notes.txt",
+      "content": "beta\n"
+    },
+    {
+      "branch_created": "topic",
+      "at_commit": "B"
+    },
+    {
+      "commit": "C",
+      "action": "add todo.txt",
+      "content": "one\n"
+    }
+  ],
+  "staged_change": {
+    "file": "todo.txt",
+    "action": "append 'two\\n' and git add todo.txt"
+  },
+  "working_tree_change": {
+    "file": "notes.txt",
+    "action": "append 'gamma\\n' (unstaged)"
+  },
+  "command_anchors": [
+    "git stash push -m <message>",
+    "git stash save <message>"
+  ]
+}

@@ -1625,6 +1625,79 @@ or
 $ git stash push -m <message>
 ```
 
+#### How `git stash` changes refs, commit ancestry, index, and working tree
+
+When you save or push a stash with a message, Git creates a merge commit under `refs/stash` that records both the index and working tree states, and then restores your working tree and index to match `HEAD`:
+
+1. **Refs**: Creates or updates `refs/stash` (also accessible as `stash@{0}`). The current `HEAD` and branch refs (`main`, `topic`) remain unchanged.
+2. **Commit Ancestry**: The stash commit has two parents:
+   - **Parent 1 (`refs/stash^1`)**: The current `HEAD` commit where stash was invoked.
+   - **Parent 2 (`refs/stash^2`)**: A commit recording the staged index state at the time of stashing.
+3. **The Index**: All staged changes are reset to match `HEAD` (clean index).
+4. **The Working Tree**: All tracked working-tree modifications are reverted to match `HEAD` (clean working tree).
+
+##### Before and After State Diagram
+
+Given a repository with commits A, B, and C on branch `main`, branch `topic` pointing to commit B, staged changes in `todo.txt`, and unstaged modifications in `notes.txt`:
+
+```text
+BEFORE STASH:
+  HEAD ──────> refs/heads/main ───> Commit C (todo.txt: "one\n")
+                                      │
+  Index (Staged):                     └──> todo.txt: "one\ntwo\n" [staged M]
+  Working Tree (Unstaged):            └──> notes.txt: "alpha\nbeta\ngamma\n" [unstaged M]
+  refs/heads/topic ───────────────> Commit B (notes.txt: "alpha\nbeta\n")
+  refs/stash:                         (none)
+
+COMMAND:
+  (main) $ git stash push -m "WIP on main"
+  # (or: $ git stash save "WIP on main")
+
+AFTER STASH:
+  HEAD ──────> refs/heads/main ───> Commit C (todo.txt: "one\n") [unchanged]
+  refs/heads/topic ───────────────> Commit B (notes.txt: "alpha\nbeta\n") [unchanged]
+  Index:                            (clean, matches Commit C)
+  Working Tree:                     (clean, matches Commit C)
+
+  Commit Ancestry for refs/stash (stash@{0}):
+               Commit C (HEAD) <────────┐ (parent 1: HEAD commit)
+                     ▲                  │
+                     │             refs/stash (working tree state + "WIP on main")
+                     │                  │
+               Index Commit <───────────┘ (parent 2: staged todo.txt)
+```
+
+##### Executable State Transition Assertions
+
+You can verify each claimed state transition with the following commands:
+
+```sh
+# 1. Assert HEAD and branch refs are unchanged (pointing to commit C)
+$ test "$(git rev-parse HEAD)" = "$(git rev-parse refs/heads/main)"
+$ test "$(git rev-parse refs/heads/topic)" = "$(git rev-parse main~1)"
+
+# 2. Assert stash parent 1 is HEAD and parent 2 is the index commit
+$ test "$(git rev-parse refs/stash^1)" = "$(git rev-parse HEAD)"
+$ test "$(git rev-parse refs/stash^2)" != "$(git rev-parse HEAD)"
+
+# 3. Assert index state is preserved in parent 2 of stash
+$ test "$(git show refs/stash^2:todo.txt)" = "$(printf 'one\ntwo\n')"
+
+# 4. Assert working tree state is preserved in refs/stash
+$ test "$(git show refs/stash:notes.txt)" = "$(printf 'alpha\nbeta\ngamma\n')"
+
+# 5. Assert working tree and index are clean and reverted to HEAD
+$ test -z "$(git status --porcelain)"
+$ test -z "$(git diff --cached)"
+$ test -z "$(git diff)"
+$ test "$(cat notes.txt)" = "$(printf 'alpha\nbeta\n')"
+$ test "$(cat todo.txt)" = "$(printf 'one\n')"
+
+# 6. Assert stash commit message contains the custom message
+$ git log -1 --format=%s refs/stash
+# Output: On main: WIP on main
+```
+
 <a name="stash-apply-specific"></a>
 ### Apply a specific stash from list
 

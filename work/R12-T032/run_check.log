@@ -1,0 +1,6 @@
+All assertions PASSED successfully across two independent temporary directory runs!
+HEAD commit C: f903e61e64a6625c7154c9562478ee918900a17f
+refs/stash: 547838416b031d564f576cab841c0698246ddac2
+  Parent 1 (HEAD): f903e61e64a6625c7154c9562478ee918900a17f
+  Parent 2 (Index commit): 45901e75bd1ad4da25f3ee4cd68b96f3cd0cc1c9
+Index & Working Tree status after stash: clean ('')

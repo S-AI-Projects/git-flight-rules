@@ -1,0 +1,74 @@
+{
+  "status": "PASS",
+  "assertions_verified": [
+    {
+      "fact": "HEAD and branch ref main unchanged by stash (points to Commit C)",
+      "expected": "59d0c62dd6e9364d7990636e6e9556556e9d00f8",
+      "actual": "59d0c62dd6e9364d7990636e6e9556556e9d00f8",
+      "passed": true
+    },
+    {
+      "fact": "Branch ref topic unchanged by stash (points to Commit B)",
+      "expected": "353f551fab68b6bf2975c911c74983b0040b1c1e",
+      "actual": "353f551fab68b6bf2975c911c74983b0040b1c1e",
+      "passed": true
+    },
+    {
+      "fact": "refs/stash parent 1 matches HEAD (Commit C)",
+      "expected": "59d0c62dd6e9364d7990636e6e9556556e9d00f8",
+      "actual": "59d0c62dd6e9364d7990636e6e9556556e9d00f8",
+      "passed": true
+    },
+    {
+      "fact": "refs/stash parent 2 (index commit) contains staged todo.txt ('one\\ntwo\\n')",
+      "expected": "one\ntwo\n",
+      "actual": "one\ntwo\n",
+      "passed": true
+    },
+    {
+      "fact": "refs/stash working tree commit contains unstaged notes.txt ('alpha\\nbeta\\ngamma\\n')",
+      "expected": "alpha\nbeta\ngamma\n",
+      "actual": "alpha\nbeta\ngamma\n",
+      "passed": true
+    },
+    {
+      "fact": "Working tree and index are reverted to clean state matching Commit C",
+      "expected": "",
+      "actual": "",
+      "passed": true
+    },
+    {
+      "fact": "Stash commit message preserves custom message",
+      "expected_substring": "WIP on main with message",
+      "actual": "On main: WIP on main with message",
+      "passed": true
+    },
+    {
+      "fact": "Two independent runs across separate temporary directories match identical tree and state transitions",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    }
+  ],
+  "state_transitions": {
+    "refs": {
+      "HEAD": "Unchanged (points to Commit C)",
+      "refs/heads/main": "Unchanged (points to Commit C)",
+      "refs/heads/topic": "Unchanged (points to Commit B)",
+      "refs/stash": "Created (points to stash commit 202d3ed1d124905b7b6d4175ea653bf0f88ec71d)"
+    },
+    "commit_ancestry": {
+      "stash_commit": "202d3ed1d124905b7b6d4175ea653bf0f88ec71d",
+      "parent_1_HEAD": "59d0c62dd6e9364d7990636e6e9556556e9d00f8",
+      "parent_2_index": "e999152999d0935cefef7a6736a905b7adf048a2"
+    },
+    "index": {
+      "before": "M  todo.txt (staged modification 'two\\n')",
+      "after": "Clean (reverted to Commit C)"
+    },
+    "working_tree": {
+      "before": " M notes.txt (unstaged modification 'gamma\\n')",
+      "after": "Clean (reverted to Commit C)"
+    }
+  }
+}
