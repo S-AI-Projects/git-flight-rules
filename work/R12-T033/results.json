@@ -1,0 +1,84 @@
+{
+  "status": "PASS",
+  "assertions_verified": [
+    {
+      "fact": "ORIG_HEAD captures pre-rebase commit B",
+      "expected": "686843ef84969bfb4a0d52e3badfb5cf8d19bb89",
+      "actual": "686843ef84969bfb4a0d52e3badfb5cf8d19bb89",
+      "passed": true
+    },
+    {
+      "fact": "topic@{1} captures pre-rebase commit B",
+      "expected": "686843ef84969bfb4a0d52e3badfb5cf8d19bb89",
+      "actual": "686843ef84969bfb4a0d52e3badfb5cf8d19bb89",
+      "passed": true
+    },
+    {
+      "fact": "Rebase advanced topic to commit C (demonstrating reversible mistake)",
+      "expected": "eb7574424d03c81dfe2952417781e9b077acd359",
+      "actual": "eb7574424d03c81dfe2952417781e9b077acd359",
+      "passed": true
+    },
+    {
+      "fact": "Recovered topic tree matches saved tree hash at commit B exactly",
+      "expected": "f85b72cccab2aab0cfca333f78ab1ff302be5f7b",
+      "actual": "f85b72cccab2aab0cfca333f78ab1ff302be5f7b",
+      "passed": true
+    },
+    {
+      "fact": "Recovered topic commit matches saved commit B",
+      "expected": "686843ef84969bfb4a0d52e3badfb5cf8d19bb89",
+      "actual": "686843ef84969bfb4a0d52e3badfb5cf8d19bb89",
+      "passed": true
+    },
+    {
+      "fact": "Recovered notes.txt content matches pre-rebase content ('alpha\\nbeta\\n')",
+      "expected": "alpha\nbeta\n",
+      "actual": "alpha\nbeta\n",
+      "passed": true
+    },
+    {
+      "fact": "todo.txt absent on recovered topic branch",
+      "expected": false,
+      "actual": false,
+      "passed": true
+    },
+    {
+      "fact": "Working tree and index are clean after recovery",
+      "expected": "",
+      "actual": "",
+      "passed": true
+    },
+    {
+      "fact": "Branch main is untouched and remains at commit C",
+      "expected": "eb7574424d03c81dfe2952417781e9b077acd359",
+      "actual": "eb7574424d03c81dfe2952417781e9b077acd359",
+      "passed": true
+    },
+    {
+      "fact": "Two independent runs across separate temporary directories match identical tree and state recovery",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    }
+  ],
+  "recovery_point": {
+    "saved_commit": "686843ef84969bfb4a0d52e3badfb5cf8d19bb89",
+    "saved_tree": "f85b72cccab2aab0cfca333f78ab1ff302be5f7b",
+    "orig_head": "686843ef84969bfb4a0d52e3badfb5cf8d19bb89",
+    "reflog_entry": "686843ef84969bfb4a0d52e3badfb5cf8d19bb89"
+  },
+  "recovered_state": {
+    "commit": "686843ef84969bfb4a0d52e3badfb5cf8d19bb89",
+    "tree": "f85b72cccab2aab0cfca333f78ab1ff302be5f7b",
+    "notes_txt": "alpha\nbeta\n",
+    "todo_txt_exists": false,
+    "status_porcelain": ""
+  },
+  "unrecoverable_boundaries": [
+    "Uncommitted working tree changes present at the time of reset --hard",
+    "Unstaged file edits never captured by Git commits or stash",
+    "Reflog entries expired or garbage-collected past gc.reflogExpire",
+    "ORIG_HEAD overwritten by subsequent rebase/merge/reset commands"
+  ]
+}

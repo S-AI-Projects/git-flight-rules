@@ -1,0 +1,8 @@
+All assertions PASSED successfully across two independent temporary directory runs!
+Pre-rebase topic commit: 77b1a66e9294ed287b27ff442f280c79a7cedc8b
+Pre-rebase topic tree:   f85b72cccab2aab0cfca333f78ab1ff302be5f7b
+Rebased topic commit:    38fb12700d446b072e3da02e11a1a80f9318b4fb
+ORIG_HEAD reference:     77b1a66e9294ed287b27ff442f280c79a7cedc8b
+Recovered topic commit:  77b1a66e9294ed287b27ff442f280c79a7cedc8b
+Recovered topic tree:    f85b72cccab2aab0cfca333f78ab1ff302be5f7b
+Tree hash verification: EXACT MATCH

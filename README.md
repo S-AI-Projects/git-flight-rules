@@ -1356,6 +1356,54 @@ Unfortunately, you have to force push, if you want those changes to be reflected
 
 For more, see [this SO thread](https://stackoverflow.com/questions/11058312/how-can-i-use-git-rebase-without-requiring-a-forced-push).
 
+#### Recovering from an accidental or unwanted rebase
+
+If you rebased your branch following this workflow and realize that the rebase was a mistake (or replayed unwanted commits), you can restore your branch back to its exact pre-rebase state without force pushing or losing history.
+
+##### 1. Recovery Point
+When Git performs a rebase, it automatically preserves the pre-rebase commit of the branch in two places:
+- `ORIG_HEAD`: Git's special ref pointing to the commit where `HEAD` was immediately before the rebase started.
+- `my-branch@{1}`: The reflog entry recording the tip of `my-branch` prior to the rebase.
+
+##### 2. Recovery Commands
+Switch to your branch and reset it back to `ORIG_HEAD` (or `my-branch@{1}`):
+
+```sh
+# Ensure you are on the rebased branch
+(main)$ git checkout my-branch
+
+# Restore your branch to its exact pre-rebase commit and working-tree state
+(my-branch)$ git reset --hard ORIG_HEAD
+```
+
+Or using the branch reflog:
+
+```sh
+(my-branch)$ git reset --hard my-branch@{1}
+```
+
+##### 3. Verification
+Verify that your branch commit, tree hash, and file contents match their original pre-rebase state:
+
+```sh
+# Verify the branch has been restored to its pre-rebase commit
+(my-branch)$ git log -1 --oneline
+
+# Verify the working tree and index are clean
+(my-branch)$ test -z "$(git status --porcelain)"
+
+# Verify file contents and status
+(my-branch)$ git status
+On branch my-branch
+nothing to commit, working tree clean
+```
+
+##### 4. What Cannot Be Recovered by this Method
+While `git reset --hard ORIG_HEAD` recovers all committed history and file states, note the following limitations:
+- **Uncommitted working-tree modifications**: Any unstaged or untracked changes that were dirty in the working tree when `git reset --hard` was run are permanently overwritten, because Git never created commit objects for them.
+- **Overwritten `ORIG_HEAD`**: Git maintains only a single `ORIG_HEAD` pointer per repository. If you run another rebase, merge, or reset before recovering, `ORIG_HEAD` will be overwritten (though you can still inspect `git reflog` for older entries).
+- **Expired reflog entries**: Reflog entries are pruned after their expiration window (governed by `gc.reflogExpire`, default 90 days).
+
 <a name="interactive-rebase"></a>
 ### I need to combine commits
 

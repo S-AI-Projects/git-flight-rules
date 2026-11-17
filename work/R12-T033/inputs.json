@@ -1,0 +1,43 @@
+{
+  "task": "R12-T033",
+  "guide_section": "I rebased, but I don't want to force push",
+  "repository_author": {
+    "name": "Course Student",
+    "email": "student@example.invalid"
+  },
+  "default_branch": "main",
+  "commits": [
+    {
+      "commit": "A",
+      "action": "create notes.txt",
+      "content": "alpha\n"
+    },
+    {
+      "commit": "B",
+      "action": "append beta to notes.txt",
+      "content": "beta\n"
+    },
+    {
+      "branch_created": "topic",
+      "at_commit": "B"
+    },
+    {
+      "commit": "C",
+      "action": "add todo.txt",
+      "content": "one\n"
+    }
+  ],
+  "command_anchors": [
+    "(main)$ git checkout my-branch",
+    "(my-branch)$ git rebase -i main",
+    "(my-branch)$ git checkout main"
+  ],
+  "demonstrated_mistake": "Unwanted rebase of topic onto main",
+  "recovery_mechanism": "git reset --hard ORIG_HEAD (or git reset --hard topic@{1})",
+  "unrecoverable_by_method": [
+    "Uncommitted working tree modifications present when reset --hard was executed",
+    "Unstaged file edits not tracked in commits or stash",
+    "Reflog entries expired past gc.reflogExpire",
+    "ORIG_HEAD if subsequent reset/merge/rebase has overwritten it"
+  ]
+}
