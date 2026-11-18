@@ -2112,6 +2112,63 @@ function Squash-Commits {
 }
 ```
 
+#### Recovery Exercise: Reversible Mistake with Interactive Rebase
+
+The `Squash-Commits` function uses `git rebase -i HEAD~N`. Below is a cross-platform demonstration of a **reversible mistake** (accidentally dropping a commit during interactive rebase) and the recovery using `git reflog`.
+
+**Setup** (branch `master`, author `Course Student <student@example.invalid>`):
+
+```sh
+$ mkdir /tmp/demo-powershell-recovery && cd /tmp/demo-powershell-recovery
+$ git init
+$ git config user.name "Course Student"
+$ git config user.email "student@example.invalid"
+
+# Commit A: notes.txt with "alpha"
+$ echo "alpha" > notes.txt && git add notes.txt && git commit -m "A: add notes.txt"
+
+# Commit B: append "beta"
+$ echo "beta" >> notes.txt && git add notes.txt && git commit -m "B: append beta"
+
+# Commit C: todo.txt with "one"
+$ echo "one" > todo.txt && git add todo.txt && git commit -m "C: add todo.txt"
+```
+
+**Reversible mistake** — simulating accidentally dropping commit B via rebase:
+
+```sh
+# Simulate dropping commit B: rebase squashes B into A, losing "beta"
+$ SHA_B=$(git log --oneline | grep "B:" | awk '{print $1}')
+$ SHA_A=$(git log --oneline | grep "A:" | awk '{print $1}')
+
+# Record ORIG_HEAD before destructive operation
+$ git rebase --onto ${SHA_B} ${SHA_B}~1   # effectively skips commit B
+```
+
+**What cannot be recovered** without `reflog`: the exact commit message and timestamp of the dropped commit. The commit object itself is unreachable from any ref.
+
+**Recovery using `git reflog`**:
+
+```sh
+# Find the commit SHA before the bad rebase
+$ git reflog
+# Look for the entry just before "rebase: ..."
+# Example output:
+#   abc1234 HEAD@{0}: rebase finished: ...
+#   def5678 HEAD@{1}: commit: C: add todo.txt   ← state before bad rebase
+#   ghi9012 HEAD@{2}: commit: B: append beta
+
+# Restore to the state before the bad rebase
+$ git reset --hard HEAD@{1}
+
+# Verify recovery
+$ cat notes.txt   # alpha\nbeta\n — commit B restored
+$ git log --oneline  # A, B, C all present
+```
+
+**Verification** (`python3 work/R12-T003/check.py`):
+See [`work/R12-T003/check.py`](work/R12-T003/check.py) for an automated check that simulates the mistake and verifies recovery.
+
 # Other Resources
 
 ## Books
