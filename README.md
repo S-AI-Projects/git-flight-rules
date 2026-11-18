@@ -299,6 +299,28 @@ If you want to see a file at a specific commit, you can also do this (where `<co
 $ git show <commitid>:filename
 ```
 
+#### Handling Paths with Spaces and Ambiguities
+
+When inspecting commits that involve filenames or directories containing spaces—such as `"release notes.txt"` or `"sample data/details.txt"`—path quoting and the disambiguation separator `--` are required to prevent shell splitting or revision-vs-path ambiguities:
+
+```sh
+# View changes for a file with spaces in the latest commit
+$ git show HEAD -- "release notes.txt"
+
+# View changes under a directory with spaces
+$ git log -n1 -p -- "sample data/"
+
+# View file content at a specific commit using revision:path syntax (quoted)
+$ git show "HEAD:release notes.txt"
+# Alternatively, with an index lookup:
+$ git show ":release notes.txt"
+```
+
+> **Why `--` matters**: If a branch or tag has the same name as a file (or if a path contains spaces), Git might interpret the argument as a revision identifier instead of a path. Adding `--` disambiguates revisions from path arguments.
+
+**Verification** (`python3 work/R12-T005/check.py`):
+See [`work/R12-T005/check.py`](work/R12-T005/check.py) for an automated check testing quoted path handling in `git show` and `git log`.
+
 <a name="wrong-thing-in-commit-message"></a>
 ### I wrote the wrong thing in a commit message
 
