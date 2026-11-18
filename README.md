@@ -1688,6 +1688,22 @@ $ git log --committer=<name or email>
 
 Keep in mind that author and committer are not the same. The `--author` is the person who originally wrote the code; on the other hand, the `--committer`, is the person who committed the code on behalf of the original author.
 
+#### Executable Guide Test: Filtering Commits by Author vs. Committer
+
+You can verify author and committer filtering with an automated integration test:
+
+```sh
+# Run the automated test suite
+$ python3 work/R12-T008/check.py
+```
+
+The test sets up two different identities (an original author and a separate committer), creates commits under both, and asserts:
+1. `git log --author="Course Student"` filters to commits authored by Course Student.
+2. `git log --committer="Reviewer"` filters to commits committed by Reviewer.
+3. Filtering with an unmatched author returns 0 commits and exits cleanly.
+
+See [`work/R12-T008/check.py`](work/R12-T008/check.py) for the complete executable test implementation.
+
 ### I want to list commits containing specific files
 
 To find all commits containing a specific file you can use:
