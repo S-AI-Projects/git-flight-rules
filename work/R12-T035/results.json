@@ -1,0 +1,68 @@
+{
+  "status": "PASS",
+  "assertions_verified": [
+    {
+      "fact": "Unquoted directory path with spaces ('sample data') splits into multiple arguments and fails with pathspec errors",
+      "expected": "error: pathspec 'sample' did not match any file(s) known to git",
+      "actual": "error: pathspec 'sample' did not match any file(s) known to git\nerror: pathspec 'data' did not match any file(s) known to git",
+      "passed": true
+    },
+    {
+      "fact": "Quoted directory path with '--' (git submodule update --init --recursive -- 'sample data') succeeds",
+      "expected_returncode": 0,
+      "actual_returncode": 0,
+      "passed": true
+    },
+    {
+      "fact": "Submodule file 'sample data/release notes.txt' exists and contains exact content",
+      "expected": "v1.0 release notes\n",
+      "actual": "v1.0 release notes\n",
+      "passed": true
+    },
+    {
+      "fact": "Unquoted file path with spaces ('release notes.txt') splits into multiple arguments and fails",
+      "expected": "error: pathspec 'release' did not match any file(s) known to git",
+      "actual": "error: pathspec 'release' did not match any file(s) known to git\nerror: pathspec 'notes.txt' did not match any file(s) known to git",
+      "passed": true
+    },
+    {
+      "fact": "Quoted file path with '--' (git checkout HEAD -- 'release notes.txt') succeeds",
+      "expected_returncode": 0,
+      "actual_returncode": 0,
+      "passed": true
+    },
+    {
+      "fact": "Recursive clone (git clone --recursive ... '<destination with spaces>') preserves spaces and checks out submodules",
+      "expected": "v1.0 release notes\n",
+      "actual": "v1.0 release notes\n",
+      "passed": true
+    },
+    {
+      "fact": "Filename vs revision ambiguity is detected when ref matches filename, requiring '--' delimiter",
+      "expected": "fatal: ambiguous argument 'todo.txt': both revision and filename",
+      "actual": "fatal: ambiguous argument 'todo.txt': both revision and filename\nUse '--' to separate paths from revisions, like this:\n'git <command> [<revision>...] -- [<file>...]'",
+      "passed": true
+    },
+    {
+      "fact": "Disambiguated command with '--' acts strictly on intended pathspec",
+      "expected_in_output": "Commit C: add todo.txt",
+      "actual": "4b2eabc Commit C: add todo.txt",
+      "passed": true
+    },
+    {
+      "fact": "Two independent runs across separate temporary directories produce identical submodule tree hashes",
+      "expected_tree": "c7d15222c1c591c3a85e651cacade8944fb1c511",
+      "actual_tree": "c7d15222c1c591c3a85e651cacade8944fb1c511",
+      "passed": true
+    }
+  ],
+  "submodule_state": {
+    "submodule_commit": "8ae0cb9e544819cdda2e3614ca3665b907273e37",
+    "submodule_gitlink": "8ae0cb9e544819cdda2e3614ca3665b907273e37",
+    "submodule_tree": "c7d15222c1c591c3a85e651cacade8944fb1c511",
+    "superproject_commit": "9bd08ed2aa186174e516246d4ccc65b9c2525a5a",
+    "superproject_tree": "61041e27caabed209e456c6e1ce46981b176f3b2",
+    "submodule_path": "sample data",
+    "file_path": "sample data/release notes.txt"
+  }
+}

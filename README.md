@@ -1742,6 +1742,27 @@ If already cloned:
 $ git submodule update --init --recursive
 ```
 
+If the repository destination or submodule paths contain spaces (for example, a submodule directory `sample data` containing `release notes.txt`), always enclose paths in quotes:
+
+```sh
+$ git clone --recursive git://github.com/foo/bar.git "sample data"
+```
+
+Or when updating a specific submodule path that contains spaces:
+
+```sh
+$ git submodule update --init --recursive -- "sample data"
+```
+
+Without quotes, the shell splits the path into separate arguments (`sample` and `data`), causing Git to fail with pathspec mismatch errors:
+
+```
+error: pathspec 'sample' did not match any file(s) known to git
+error: pathspec 'data' did not match any file(s) known to git
+```
+
+The `--` delimiter explicitly separates command options from path arguments. When checking out paths or inspecting files (e.g., `git checkout HEAD -- "sample data/release notes.txt"`), `--` resolves ambiguity if a branch or tag shares the same name as a file path (`fatal: ambiguous argument '<name>': both revision and filename`).
+
 <a name="delete-submodule"></a>
 ### Remove a submodule
 

@@ -1,0 +1,9 @@
+All assertions PASSED successfully across two independent temporary directory runs!
+Superproject commit: 9bd08ed2aa186174e516246d4ccc65b9c2525a5a
+Submodule commit:    8ae0cb9e544819cdda2e3614ca3665b907273e37
+Superproject tree:   61041e27caabed209e456c6e1ce46981b176f3b2
+Unquoted directory pathspec correctly caught: error: pathspec 'sample' / 'data' did not match
+Quoted directory pathspec with '--' checked out: 'sample data/release notes.txt' -> 'v1.0 release notes\n'
+Unquoted file pathspec correctly caught: error: pathspec 'release' did not match
+Quoted file pathspec with '--' succeeded.
+Filename vs revision ambiguity verified and resolved using '--'.

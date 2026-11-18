@@ -1,0 +1,49 @@
+{
+  "task": "R12-T035",
+  "guide_section": "Clone all submodules",
+  "repository_author": {
+    "name": "Course Student",
+    "email": "student@example.invalid"
+  },
+  "default_branch": "main",
+  "topic_branch": "topic",
+  "commits": [
+    {
+      "commit": "A",
+      "action": "create notes.txt",
+      "content": "alpha\n"
+    },
+    {
+      "commit": "B",
+      "action": "append beta to notes.txt",
+      "content": "beta\n"
+    },
+    {
+      "branch_created": "topic",
+      "at_commit": "B"
+    },
+    {
+      "commit": "C",
+      "action": "add todo.txt",
+      "content": "one\n"
+    },
+    {
+      "submodule_path": "sample data",
+      "submodule_file": "release notes.txt",
+      "submodule_content": "v1.0 release notes\n"
+    }
+  ],
+  "command_anchors": [
+    "git clone --recursive git://github.com/foo/bar.git",
+    "git submodule update --init --recursive"
+  ],
+  "quoting_and_disambiguation": {
+    "directory_with_spaces": "sample data",
+    "file_with_spaces": "release notes.txt",
+    "unquoted_directory_behavior": "Shell splits 'sample data' into two arguments; git fails with pathspec mismatch",
+    "quoted_directory_behavior": "Enclosing 'sample data' in quotes preserves the directory path as a single argument",
+    "unquoted_file_behavior": "Shell splits 'release notes.txt' into two arguments; git fails with pathspec mismatch",
+    "quoted_file_behavior": "Enclosing 'release notes.txt' in quotes preserves the file path as a single argument",
+    "double_dash_separator": "Separates command options and revisions from pathspecs, resolving filename vs revision ambiguity"
+  }
+}
