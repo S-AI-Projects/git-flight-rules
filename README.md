@@ -646,6 +646,60 @@ which tells Git to recreate the commit. Also, Git will ask you to write a new co
 
 will do the rest of the work for you.
 
+#### Branch and Remote Semantics: Amending a Non-Last Commit on `topic` vs `master`
+
+This example shows exactly which refs change when the guide is applied with `topic` as the current branch and `master` as the default branch.
+
+**Setup** (branch `master`, author `Course Student <student@example.invalid>`):
+
+```sh
+$ mkdir /tmp/demo-amend-commit && cd /tmp/demo-amend-commit
+$ git init
+$ git config user.name "Course Student"
+$ git config user.email "student@example.invalid"
+
+# Commit A: notes.txt with "alpha"  (on master)
+$ echo "alpha" > notes.txt && git add notes.txt && git commit -m "A: add notes.txt"
+
+# Create topic at A, switch to it
+$ git checkout -b topic
+
+# Commit B on topic: append "beta"
+$ echo "beta" >> notes.txt && git add notes.txt && git commit -m "B: append beta"
+
+# Commit C on topic: add todo.txt
+$ echo "one" > todo.txt && git add todo.txt && git commit -m "C: add todo.txt"
+```
+
+**Amend commit B on branch `topic`** (non-interactive simulation):
+
+```sh
+# We want to amend commit B to also append "gamma"
+$ SHA_B=$(git log --oneline | grep "B:" | awk '{print $1}')
+
+$ git rebase -i HEAD~2   # opens editor — mark B as 'edit', keep C as 'pick'
+# (In practice, edit the todo list to: edit <sha-B>; pick <sha-C>)
+
+# When rebase stops at B:
+$ echo "gamma" >> notes.txt && git add notes.txt
+$ git commit --amend --no-edit
+
+$ git rebase --continue
+```
+
+**Ref behavior**:
+
+| Ref       | Before amend  | After amend   | Explanation                              |
+|-----------|---------------|---------------|------------------------------------------|
+| `topic`   | → old C       | → new C'      | Rebased; both B and C get new SHAs      |
+| `master`  | → A           | → A           | **Unchanged** — master is never touched |
+| `HEAD`    | → topic       | → topic       | Still on topic branch                   |
+
+**Key rule**: Only the refs on the **current branch (`topic`)** are rewritten. `master` and any other branches not in the rebase chain stay fixed.
+
+**Verification** (`python3 work/R12-T004/check.py`):
+See [`work/R12-T004/check.py`](work/R12-T004/check.py) for an automated check asserting the intended ref changed and unrelated refs stayed fixed.
+
 ## Staging
 
 <a name="stage-tracked-files-and-leave-untracked-files"></a>
