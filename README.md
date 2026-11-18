@@ -444,6 +444,59 @@ $ git push --force-with-lease [remote] [branch]
 
 Or do an [interactive rebase](#interactive-rebase) and remove the line(s) corresponding to commit(s) you want to see removed.
 
+#### Reproducible Example: Delete/remove arbitrary commit
+
+The following complete example demonstrates `git rebase --onto` with no undocumented state.
+
+**Setup** (branch `master`, author `Course Student <student@example.invalid>`):
+
+```sh
+# Create a temporary repo
+$ mkdir /tmp/demo-delete-commit && cd /tmp/demo-delete-commit
+$ git init
+$ git config user.name "Course Student"
+$ git config user.email "student@example.invalid"
+
+# Commit A: create notes.txt
+$ echo "alpha" > notes.txt && git add notes.txt
+$ git commit -m "A: add notes.txt with alpha"
+
+# Commit B: append to notes.txt (this is the BAD commit we want to delete)
+$ echo "beta" >> notes.txt && git add notes.txt
+$ git commit -m "B: append beta (BAD commit)"
+
+# Commit C: add todo.txt
+$ echo "one" > todo.txt && git add todo.txt
+$ git commit -m "C: add todo.txt with one"
+
+# Create branch topic at B (second commit)
+$ git checkout -b topic HEAD~1
+$ git checkout master
+```
+
+**Delete commit B** (capture SHA dynamically):
+
+```sh
+$ BAD=$(git log --oneline | grep "B: append beta" | awk '{print $1}')
+$ git rebase --onto ${BAD}^ ${BAD}
+# If a remote were needed:
+# $ git push --force-with-lease origin master
+```
+
+**Expected result after rebase**:
+
+```sh
+$ git log --oneline
+# Shows only: A and C (B is gone)
+$ cat notes.txt
+# alpha     ← "beta" line removed because commit B was deleted
+$ cat todo.txt
+# one       ← commit C is preserved
+```
+
+**Verification** (`python3 work/R12-T001/check.py`):
+See [`work/R12-T001/check.py`](work/R12-T001/check.py) for an automated check that runs in an isolated temp directory and asserts three Git state facts.
+
 <a name="force-push"></a>
 ### I tried to push my amended commit to a remote, but I got an error message
 
