@@ -511,6 +511,34 @@ If you edit the file and remove the sensitive data, then run
 (feature-branch)$ git push --force-with-lease origin [branch]
 ```
 
+#### Comparison: Amending vs. Creating a New Forward-Fix Commit
+
+When sensitive data has been committed and pushed, developers typically choose between rewriting the commit (`--amend`) or pushing a forward fix (`git commit`):
+
+| Property | Approach 1: Amend (`--amend`) | Approach 2: Forward Fix (`git commit`) |
+| :--- | :--- | :--- |
+| **Command** | `git commit --amend --no-edit` | `git commit -m "remove secret"` |
+| **History rewritten?** | Yes (latest commit SHA changes) | No (new commit appended) |
+| **Commit count** | Stays the same ($N$) | Increases ($N + 1$) |
+| **Push required** | `git push --force-with-lease` | Standard fast-forward `git push` |
+| **Secret in git log?** | Removed from latest commit | **Still visible** in prior commit history |
+| **Best when** | Private/feature branch; quick cleanup | Public branch; collaborators already pulled |
+
+**Reproducible Example**:
+
+```sh
+# Approach 1 (Amend - rewrites commit):
+$ git add secrets.env && git commit --amend --no-edit
+$ git push --force-with-lease origin feature-branch
+
+# Approach 2 (Forward Fix - preserves commit history):
+$ git rm secrets.env && git commit -m "security: remove sensitive file"
+$ git push origin feature-branch
+```
+
+**Verification** (`python3 work/R12-T006/check.py`):
+See [`work/R12-T006/check.py`](work/R12-T006/check.py) for an automated test asserting the exact differences in commit counts and SHAs between both methods.
+
 If you want to remove an entire file (but keep it locally), then run
 ```sh
 (feature-branch)$ git rm --cached sensitive_file
