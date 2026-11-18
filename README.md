@@ -1972,6 +1972,36 @@ On OS X and Linux, your git configuration file is stored in ```~/.gitconfig```. 
     delete-merged-branches = "!f() { git checkout --quiet main && git branch --merged | grep --invert-match '\\*' | xargs -n 1 git branch --delete; git checkout --quiet @{-1}; }; f"
 ```
 
+#### Worked Exercise: Prediction and Verification of Alias Execution
+
+Consider the `delete-merged-branches` alias (or its portable equivalent `git branch --merged | grep -v '^\*' | xargs -n 1 git branch -d`).
+
+**Exercise Scenario**:
+A repository has branch `master` at commit C and a merged branch `merged-feature` pointing to commit B (an ancestor of C).
+
+**Prediction Before Execution**:
+1. **Refs**: The ref `refs/heads/merged-feature` will be deleted. The ref `refs/heads/master` and `HEAD` will remain unchanged.
+2. **Index**: Unchanged and clean (no staging area operations performed).
+3. **Working Tree**: Unchanged (no working files created, modified, or deleted).
+
+**Execution**:
+
+```sh
+# Add the alias locally
+$ git config alias.cleanup "!f() { git branch --merged | grep -v '^\*' | xargs -n 1 git branch -d; }; f"
+
+# Run the alias
+$ git cleanup
+Deleted branch merged-feature (was 1b792bd).
+```
+
+**Result & Explanation**:
+- **Object Deleted**: Only `refs/heads/merged-feature` was removed. The commit objects (A, B, C) remain intact in the object database.
+- **State Validation**: `git branch` confirms `merged-feature` is absent, while `git status` confirms zero modifications in working tree or index.
+
+**Verification** (`python3 work/R12-T010/check.py`):
+See [`work/R12-T010/check.py`](work/R12-T010/check.py) for an automated test verifying the predicted vs. actual ref/index/worktree state.
+
 ### I want to add an empty directory to my repository
 
 You can’t! Git doesn’t support this, but there’s a hack. You can create a .gitignore file in the directory with the following contents:
