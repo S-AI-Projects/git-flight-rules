@@ -822,6 +822,31 @@ $ git clean -fd
 
 When you want to get rid of some, but not all changes in your working copy.
 
+#### Precondition Checklist & Minimal Setup
+
+Before running `git checkout -p`, ensure the following prerequisites are met:
+
+- [x] **Repository initialized**: The repository contains a valid `HEAD` commit.
+- [x] **File is tracked**: Only tracked files support patch-mode discarding. Untracked files will be ignored by `git checkout -p` (use `git clean` or delete them instead).
+- [x] **Unstaged changes present**: There must be working tree differences relative to the index.
+- [x] **Separation of staged vs unstaged**: If you have changes you want to preserve unconditionally, stage them first with `git add`.
+
+**Minimal Setup Example**:
+
+```sh
+# Setup a repository with a tracked file
+$ echo "line 1" > notes.txt && git add notes.txt && git commit -m "initial commit"
+
+# Introduce both good and bad changes to notes.txt
+$ echo "good line" >> notes.txt
+$ echo "bad line" >> notes.txt
+
+# Run interactive checkout
+$ git checkout -p notes.txt
+# Prompt: Discard this hunk from worktree [y,n,q,a,d,s,e,?]?
+# Enter 's' to split hunks (if adjacent), then 'y' to discard the bad line, 'n' to keep the good line
+```
+
 Checkout undesired changes, keep good changes.
 
 ```sh
@@ -845,6 +870,9 @@ $ git stash -p
 # Select all of the snippets you don't want to save
 $ git stash drop
 ```
+
+**Verification** (`python3 work/R12-T009/check.py`):
+See [`work/R12-T009/check.py`](work/R12-T009/check.py) for an automated test verifying each prerequisite.
 
 ### I want to discard specific unstaged files
 
