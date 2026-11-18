@@ -1,0 +1,54 @@
+{
+  "task": "R12-T036",
+  "guide_section": "I want to add code to someone else's repository",
+  "author": {
+    "name": "Course Student",
+    "email": "student@example.invalid"
+  },
+  "default_branch": "main",
+  "topic_branch": "topic",
+  "commits": [
+    {
+      "commit": "A",
+      "action": "create notes.txt",
+      "content": "alpha\n"
+    },
+    {
+      "commit": "B",
+      "action": "append beta to notes.txt",
+      "content": "beta\n"
+    },
+    {
+      "branch_created": "topic",
+      "at_commit": "B"
+    },
+    {
+      "commit": "C",
+      "action": "add todo.txt",
+      "content": "one\n"
+    },
+    {
+      "commit": "D",
+      "action": "add feature.txt on topic branch",
+      "content": "contribution feature\n"
+    }
+  ],
+  "compared_workflows": {
+    "workflow_1_guide_hosted": {
+      "name": "Hosted Fork & Pull Request",
+      "command": "git push --set-upstream origin topic",
+      "precondition": "Secondary hosted fork repository with write access",
+      "ref_state": "Creates refs/remotes/origin/topic and sets upstream tracking @{u}",
+      "worktree_state": "Clean working tree; no local patch files created",
+      "commit_state": "Commit ID preserved identically on remote fork"
+    },
+    "workflow_2_second_command": {
+      "name": "Patch Export & git am",
+      "command": "git format-patch -1 topic && git am <patch>",
+      "precondition": "Local repository only; no remote fork or network required",
+      "ref_state": "No remote tracking ref created; local refs unchanged",
+      "worktree_state": "Untracked patch file (0001-*.patch) in working tree",
+      "commit_state": "Maintainer creates new commit ID with identical tree hash and author, but maintainer committer"
+    }
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "status": "PASS",
+  "assertions_verified": [
+    {
+      "fact": "Workflow 1 (Fork & PR) configures remote tracking ref origin/topic pointing to topic commit",
+      "expected_tracking_ref": "origin/topic",
+      "actual_tracking_ref": "origin/topic",
+      "passed": true
+    },
+    {
+      "fact": "Workflow 1 (Fork & PR) preserves clean working tree with 0 patch files generated",
+      "expected_patch_count": 0,
+      "actual_patch_count": 0,
+      "passed": true
+    },
+    {
+      "fact": "Workflow 2 (format-patch) does not create any remote tracking ref",
+      "expected_has_tracking": false,
+      "actual_has_tracking": false,
+      "passed": true
+    },
+    {
+      "fact": "Workflow 2 (format-patch) produces untracked patch file in contributor working tree",
+      "expected_in_status": "?? 0001-Commit-D-add-feature-on-topic.patch",
+      "actual_status": "?? 0001-Commit-D-add-feature-on-topic.patch",
+      "passed": true
+    },
+    {
+      "fact": "Workflow 2 maintainer application (git am) produces tree identical to contributor topic tree",
+      "expected_tree": "0371f81a0314899930cca8e7d4b8a5ab385e406c",
+      "actual_applied_tree": "0371f81a0314899930cca8e7d4b8a5ab385e406c",
+      "passed": true
+    },
+    {
+      "fact": "Workflow 2 maintainer application preserves author but records maintainer as committer",
+      "expected_author": "Course Student <student@example.invalid>",
+      "actual_author": "Course Student <student@example.invalid>",
+      "expected_committer": "Course Maintainer <maintainer@example.invalid>",
+      "actual_committer": "Course Maintainer <maintainer@example.invalid>",
+      "passed": true
+    },
+    {
+      "fact": "Two independent runs across separate temporary directories produce identical trees and states",
+      "expected_tree": "0371f81a0314899930cca8e7d4b8a5ab385e406c",
+      "actual_tree": "0371f81a0314899930cca8e7d4b8a5ab385e406c",
+      "passed": true
+    }
+  ],
+  "workflow_comparison_summary": {
+    "fixture_topic_commit": "75ddd80b51ebafe913afdecc7044b54825c4b176",
+    "fixture_topic_tree": "0371f81a0314899930cca8e7d4b8a5ab385e406c",
+    "workflow_1_fork_pr": {
+      "remote_tracking_ref": "origin/topic",
+      "remote_fork_commit": "75ddd80b51ebafe913afdecc7044b54825c4b176",
+      "working_tree_clean": true
+    },
+    "workflow_2_format_patch": {
+      "patch_file": "0001-Commit-D-add-feature-on-topic.patch",
+      "applied_commit_hash": "553e6c2d2cdbe545dec456bc31df7644454fbaae",
+      "applied_tree_hash": "0371f81a0314899930cca8e7d4b8a5ab385e406c",
+      "applied_author": "Course Student <student@example.invalid>",
+      "applied_committer": "Course Maintainer <maintainer@example.invalid>"
+    }
+  }
+}

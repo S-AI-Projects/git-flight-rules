@@ -196,6 +196,25 @@ Git doesn't allow you to add code to someone else's repository without access ri
 
 First, a bit about forking. A fork is a copy of a repository. It is not a git operation, but is a common action on GitHub, Bitbucket, GitLab — or anywhere people host Git repositories. You can fork a repository through the hosted UI.
 
+**Workflow Comparison: Fork & Pull Request vs. Patches (`git format-patch`)**
+
+| Workflow | Preconditions | Resulting Commit State | Resulting Index State | Resulting Worktree State | Resulting Ref State |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Fork & Pull Request** (`git push -u origin <branch>`) | Requires a hosted remote fork repository with contributor write access | Commit object ID is preserved identically on the remote fork | Clean (no staged changes) | Clean working tree; no local transfer files generated | Updates `refs/remotes/origin/<branch>` and sets upstream tracking (`@{u}`) |
+| **Patch Export** (`git format-patch`) | Local repository only; no remote fork or network required | Maintainer creates a new commit via `git am` (identical tree/author, new committer/timestamp) | Clean (no staged changes) | Working tree contains generated patch file(s) (`0001-*.patch`) | Leaves all local and remote refs unchanged |
+
+*Reproducible Example:*
+
+```sh
+# Workflow 1: Push branch to hosted fork for a pull request
+(topic)$ git push --set-upstream origin topic
+
+# Workflow 2: Generate standalone patch file for maintainer review
+(topic)$ git format-patch -1 topic
+# Maintainer applies the patch in upstream repository:
+(main)$ git am 0001-my-feature.patch
+```
+
 #### Suggesting code via pull requests
 
 After you've forked a repository, you normally need to clone the repository to your machine. You can do some small edits on GitHub, for instance, without cloning, but this isn't a github-flight-rules list, so let's go with how to do this locally.
