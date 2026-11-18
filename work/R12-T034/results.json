@@ -1,0 +1,92 @@
+{
+  "status": "PASS",
+  "assertions_verified": [
+    {
+      "fact": "Intended ref changed: HEAD changed from refs/heads/topic to refs/heads/main",
+      "expected": "refs/heads/main",
+      "actual": "refs/heads/main",
+      "passed": true
+    },
+    {
+      "fact": "Unrelated ref refs/heads/topic stayed fixed at Commit B",
+      "expected": "c4ab0a9bbdf3bb1771e0ccf8dbad1445894853e1",
+      "actual": "c4ab0a9bbdf3bb1771e0ccf8dbad1445894853e1",
+      "passed": true
+    },
+    {
+      "fact": "Unrelated ref refs/heads/main stayed fixed at Commit C",
+      "expected": "c40139c4aab0ff15363c829a403d47db822627a8",
+      "actual": "c40139c4aab0ff15363c829a403d47db822627a8",
+      "passed": true
+    },
+    {
+      "fact": "Remote ref refs/remotes/origin/main stayed fixed at Commit C",
+      "expected": "c40139c4aab0ff15363c829a403d47db822627a8",
+      "actual": "c40139c4aab0ff15363c829a403d47db822627a8",
+      "passed": true
+    },
+    {
+      "fact": "Remote ref refs/remotes/origin/topic stayed fixed at Commit B",
+      "expected": "c4ab0a9bbdf3bb1771e0ccf8dbad1445894853e1",
+      "actual": "c4ab0a9bbdf3bb1771e0ccf8dbad1445894853e1",
+      "passed": true
+    },
+    {
+      "fact": "refs/stash created during stash and dropped after pop",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "fact": "Working tree on main contains moved unstaged edits (M notes.txt)",
+      "expected": " M notes.txt",
+      "actual": "M notes.txt",
+      "passed": true
+    },
+    {
+      "fact": "notes.txt on main contains 'alpha\\nbeta\\ngamma\\n'",
+      "expected": "alpha\nbeta\ngamma\n",
+      "actual": "alpha\nbeta\ngamma\n",
+      "passed": true
+    },
+    {
+      "fact": "todo.txt on main preserved as 'one\\n'",
+      "expected": "one\n",
+      "actual": "one\n",
+      "passed": true
+    },
+    {
+      "fact": "Two independent runs across separate temporary directories match identical states",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    }
+  ],
+  "ref_transitions": {
+    "HEAD": {
+      "before": "refs/heads/topic",
+      "after": "refs/heads/main",
+      "changed": true
+    },
+    "refs/heads/topic": {
+      "before": "c4ab0a9bbdf3bb1771e0ccf8dbad1445894853e1",
+      "after": "c4ab0a9bbdf3bb1771e0ccf8dbad1445894853e1",
+      "changed": false
+    },
+    "refs/heads/main": {
+      "before": "c40139c4aab0ff15363c829a403d47db822627a8",
+      "after": "c40139c4aab0ff15363c829a403d47db822627a8",
+      "changed": false
+    },
+    "refs/remotes/origin/main": {
+      "before": "c40139c4aab0ff15363c829a403d47db822627a8",
+      "after": "c40139c4aab0ff15363c829a403d47db822627a8",
+      "changed": false
+    },
+    "refs/remotes/origin/topic": {
+      "before": "c4ab0a9bbdf3bb1771e0ccf8dbad1445894853e1",
+      "after": "c4ab0a9bbdf3bb1771e0ccf8dbad1445894853e1",
+      "changed": false
+    }
+  }
+}

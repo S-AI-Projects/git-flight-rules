@@ -960,6 +960,47 @@ $ git checkout my-branch
 $ git stash pop
 ```
 
+#### Example: Branch and ref semantics when moving edits from `topic` to `main`
+
+Suppose your current branch is `topic` and you have unstaged changes (for example, in `notes.txt`) that belong on an existing branch, such as default branch `main`:
+
+```sh
+# On branch topic with unstaged changes:
+(topic)$ git stash
+
+# Switch to the existing target branch:
+(topic)$ git checkout main
+
+# Pop the unstaged changes onto the target branch:
+(main)$ git stash pop
+```
+
+##### How refs and branches are affected
+- **Intended ref changed**:
+  - `HEAD`: Changed from pointing to `refs/heads/topic` to pointing to `refs/heads/main`.
+- **Unrelated refs that stay fixed**:
+  - `refs/heads/topic`: Stays fixed at its commit (no commit or branch pointer is altered).
+  - `refs/heads/main`: Stays fixed at its existing commit (edits remain unstaged in the working tree).
+  - Remote tracking refs (e.g. `refs/remotes/origin/main`, `refs/remotes/origin/topic`): Remain completely untouched because no network or remote synchronization is involved.
+  - `refs/stash`: Temporarily created by `git stash` and dropped by `git stash pop`.
+- **Which branch is affected**:
+  - The working tree of `main` receives the unstaged modifications (`notes.txt`).
+  - The working tree of `topic` is left clean.
+
+##### State Verification
+```sh
+# 1. Verify HEAD points to main
+(main)$ test "$(git symbolic-ref HEAD)" = "refs/heads/main"
+
+# 2. Verify branch tips remained unchanged
+(main)$ test "$(git rev-parse refs/heads/topic)" = "$TOPIC_COMMIT"
+(main)$ test "$(git rev-parse refs/heads/main)" = "$MAIN_COMMIT"
+
+# 3. Verify unstaged edits are present on main
+(main)$ git status --short
+ M notes.txt
+```
+
 <a name="commit-wrong-branch"></a>
 ### I committed to main instead of a new branch
 

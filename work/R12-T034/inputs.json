@@ -1,0 +1,48 @@
+{
+  "task": "R12-T034",
+  "guide_section": "I want to move my unstaged edits to a different, existing branch",
+  "repository_author": {
+    "name": "Course Student",
+    "email": "student@example.invalid"
+  },
+  "default_branch": "main",
+  "source_branch": "topic",
+  "target_branch": "main",
+  "commits": [
+    {
+      "commit": "A",
+      "action": "create notes.txt",
+      "content": "alpha\n"
+    },
+    {
+      "commit": "B",
+      "action": "append beta to notes.txt",
+      "content": "beta\n"
+    },
+    {
+      "branch_created": "topic",
+      "at_commit": "B"
+    },
+    {
+      "commit": "C",
+      "action": "add todo.txt",
+      "content": "one\n"
+    }
+  ],
+  "unstaged_edit_on_topic": {
+    "file": "notes.txt",
+    "edit": "append 'gamma\\n'"
+  },
+  "command_anchors": [
+    "git stash",
+    "git checkout my-branch",
+    "git stash pop"
+  ],
+  "intended_ref_changed": "HEAD (from refs/heads/topic to refs/heads/main)",
+  "unrelated_refs_fixed": [
+    "refs/heads/topic",
+    "refs/heads/main",
+    "refs/remotes/origin/main",
+    "refs/remotes/origin/topic"
+  ]
+}
