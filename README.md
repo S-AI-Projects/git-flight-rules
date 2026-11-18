@@ -1272,6 +1272,76 @@ $ git push
 
 The behavior of the other modes of `git push` is described in the [doc of `push.default`](https://git-scm.com/docs/git-config#Documentation/git-config.txt-pushdefault).
 
+#### Before/After State Diagram: Creating a New Remote Branch
+
+This example shows how `git push -u <remote> HEAD` changes refs, commit ancestry, the index and the working tree.
+
+**Setup** (branch `master`, author `Course Student <student@example.invalid>`):
+
+```sh
+$ mkdir /tmp/demo-remote-branch && cd /tmp/demo-remote-branch
+$ git init --bare remote.git          # bare repo acts as remote (file:// URL)
+$ git clone file://$(pwd)/remote.git local
+$ cd local
+$ git config user.name "Course Student"
+$ git config user.email "student@example.invalid"
+
+# Commit A: notes.txt with "alpha"
+$ echo "alpha" > notes.txt && git add notes.txt && git commit -m "A: add notes.txt"
+
+# Commit B: append "beta"
+$ echo "beta" >> notes.txt && git add notes.txt && git commit -m "B: append beta"
+
+# Commit C: add todo.txt with "one"
+$ echo "one" > todo.txt && git add todo.txt && git commit -m "C: add todo.txt"
+
+# Create branch topic at commit B
+$ git checkout -b topic HEAD~1 && git checkout master
+```
+
+**Before `git push -u origin topic`** (on branch `topic`):
+
+```
+Local refs:                     Remote refs:
+  master  → C                     origin/master → C
+  topic   → B                     (no origin/topic yet)
+  HEAD    → topic → B
+Index: clean (matches HEAD B)
+Working tree: clean
+```
+
+**Execute**:
+
+```sh
+$ git checkout topic
+$ git push -u origin topic
+```
+
+**After `git push -u origin topic`**:
+
+```
+Local refs:                     Remote refs:
+  master        → C               origin/master → C
+  topic         → B               origin/topic  → B  ← NEW
+  HEAD          → topic → B
+  @{upstream}   → origin/topic    (tracking set by -u)
+Index: unchanged (still clean, matches B)
+Working tree: unchanged (notes.txt = "alpha\nbeta\n", no todo.txt)
+```
+
+**Key state changes**:
+
+| Object       | Before push          | After push              |
+|-------------|----------------------|-------------------------|
+| `origin/topic` | does not exist    | points to commit B      |
+| `@{upstream}`  | not set           | set to `origin/topic`   |
+| Index         | clean at B          | unchanged, clean at B   |
+| Working tree  | clean               | unchanged               |
+| Commit graph  | A ← B ← C (master) | unchanged locally       |
+
+**Verification** (`python3 work/R12-T002/check.py`):
+See [`work/R12-T002/check.py`](work/R12-T002/check.py) for an automated check with explicit assertions about each state transition.
+
 ### I want to set a remote branch as the upstream for a local branch
 
 You can set a remote branch as the upstream for the current local branch using:
