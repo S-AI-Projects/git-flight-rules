@@ -1,0 +1,7 @@
+All assertions PASSED successfully across two independent temporary directory runs!
+HEAD Commit (unchanged): 4189b5c68ff1fac5f9e7221a0d056d2d75e2f5bb
+MERGE_HEAD Ref:         3fbf162fed104916288ebc99faa3b8ef7b202881
+Staged Index Status:    A  feature.txt
+Deliberate omission of decisive command confirmed to fail assertions as expected.
+Child process failure propagation verified.
+Temporary directory cleanup verified.

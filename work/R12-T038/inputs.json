@@ -1,0 +1,43 @@
+{
+  "task": "R12-T038",
+  "guide_section": "Safe merging strategy",
+  "command_anchor": "git merge --no-ff --no-commit my-branch",
+  "repository_author": {
+    "name": "Course Student",
+    "email": "student@example.invalid"
+  },
+  "default_branch": "main",
+  "topic_branch": "topic",
+  "commits": [
+    {
+      "commit": "A",
+      "action": "create notes.txt",
+      "content": "alpha\n"
+    },
+    {
+      "commit": "B",
+      "action": "append beta to notes.txt",
+      "content": "beta\n"
+    },
+    {
+      "branch_created": "topic",
+      "at_commit": "B"
+    },
+    {
+      "commit": "C",
+      "action": "add todo.txt",
+      "content": "one\n"
+    },
+    {
+      "commit": "D",
+      "action": "add feature.txt on topic branch",
+      "content": "topic feature\n"
+    }
+  ],
+  "test_properties": {
+    "focused_guide_test_file": "tests/guides/test_safe_merging_strategy.py",
+    "child_failure_propagation": "subprocess with check=True",
+    "temporary_directories_cleanup": "tempfile.TemporaryDirectory context managers",
+    "deliberate_omission_testing": "Asserts failure when git merge --no-ff --no-commit is omitted"
+  }
+}

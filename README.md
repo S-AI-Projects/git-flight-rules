@@ -1456,6 +1456,25 @@ If everything is successful, you should see something like this:
 (main)$ git merge --no-ff --no-commit my-branch
 ```
 
+When this command runs, Git stages the merged changes into the index and creates `.git/MERGE_HEAD` recording the target branch commit, while keeping `HEAD` uncommitted on the current branch. You can inspect the staged changes before committing:
+
+```sh
+# Inspect staged merge changes
+(main)$ git status
+(main)$ git diff --cached
+
+# After inspecting or adjusting files, commit the merge:
+(main)$ git commit -m "Merge branch 'my-branch'"
+```
+
+**Automated guide check:**
+
+You can run the isolated integration check for this workflow with:
+
+```sh
+$ python3 tests/guides/test_safe_merging_strategy.py
+```
+
 #### I need to merge a branch into a single commit
 
 ```sh

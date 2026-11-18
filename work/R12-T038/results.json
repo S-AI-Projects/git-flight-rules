@@ -1,0 +1,57 @@
+{
+  "status": "PASS",
+  "assertions_verified": [
+    {
+      "fact": "Safe merge command (git merge --no-ff --no-commit topic) executes cleanly without autocommit",
+      "head_before": "4189b5c68ff1fac5f9e7221a0d056d2d75e2f5bb",
+      "head_after": "4189b5c68ff1fac5f9e7221a0d056d2d75e2f5bb",
+      "head_unchanged": true,
+      "passed": true
+    },
+    {
+      "fact": ".git/MERGE_HEAD records the merged topic commit object ID",
+      "expected_merge_head": "3fbf162fed104916288ebc99faa3b8ef7b202881",
+      "actual_merge_head": "3fbf162fed104916288ebc99faa3b8ef7b202881",
+      "passed": true
+    },
+    {
+      "fact": "Merged changes are staged in Git's index awaiting user inspection",
+      "expected_status": "A  feature.txt",
+      "actual_status": "A  feature.txt",
+      "passed": true
+    },
+    {
+      "fact": "Working tree contains merged file contents intact",
+      "expected_content": "topic feature\n",
+      "actual_content": "topic feature\n",
+      "passed": true
+    },
+    {
+      "fact": "Test explicitly fails when the decisive merge command is deliberately omitted",
+      "omission_detected": true,
+      "passed": true
+    },
+    {
+      "fact": "Child process failures are properly propagated via check=True",
+      "propagation_verified": true,
+      "passed": true
+    },
+    {
+      "fact": "Temporary directories are cleaned up automatically via context managers",
+      "cleaned": true,
+      "passed": true
+    },
+    {
+      "fact": "Two independent runs across separate temporary directories produce identical results",
+      "expected_tree": "5d2abeac46ea41141a928323e5f85d3f0baaa621",
+      "actual_tree": "5d2abeac46ea41141a928323e5f85d3f0baaa621",
+      "passed": true
+    }
+  ],
+  "state_summary": {
+    "main_commit_c": "4189b5c68ff1fac5f9e7221a0d056d2d75e2f5bb",
+    "topic_commit_d": "3fbf162fed104916288ebc99faa3b8ef7b202881",
+    "merge_head": "3fbf162fed104916288ebc99faa3b8ef7b202881",
+    "index_status": "A  feature.txt"
+  }
+}
