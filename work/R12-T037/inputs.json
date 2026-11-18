@@ -1,0 +1,43 @@
+{
+  "task": "R12-T037",
+  "guide_section": "I want to remove a file from Git but keep the file",
+  "command_anchor": "git rm --cached log.txt",
+  "repository_author": {
+    "name": "Course Student",
+    "email": "student@example.invalid"
+  },
+  "default_branch": "main",
+  "topic_branch": "topic",
+  "commits": [
+    {
+      "commit": "A",
+      "action": "create notes.txt",
+      "content": "alpha\n"
+    },
+    {
+      "commit": "B",
+      "action": "append beta to notes.txt",
+      "content": "beta\n"
+    },
+    {
+      "branch_created": "topic",
+      "at_commit": "B"
+    },
+    {
+      "commit": "C",
+      "action": "add todo.txt",
+      "content": "one\n"
+    },
+    {
+      "commit": "D",
+      "action": "add log.txt",
+      "content": "log line 1\n"
+    }
+  ],
+  "violated_precondition": {
+    "description": "Staged index content differs from both HEAD and the working tree",
+    "error_category": "Data Safety / Staged Content Divergence",
+    "expected_exit_code": 1,
+    "smallest_correction": "Stage current working tree state (git add log.txt) or pass -f flag (git rm --cached -f log.txt)"
+  }
+}

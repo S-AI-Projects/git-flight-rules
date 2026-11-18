@@ -1,0 +1,9 @@
+All assertions PASSED successfully across two independent temporary directory runs!
+Fixture HEAD Commit: 11d2d23f691c0257d98f00aa71aec35621e247cb
+Fixture HEAD Tree:   fd4520fe7d488ae18fa3ca3fe4164e0f044d561c
+Bad case failed as expected with exit status 1.
+  Error message: error: the following file has staged content different from both the
+Repaired case succeeded with exit status 0.
+Verified: log.txt removed from index, preserved in working directory.
+Working tree status: D  log.txt
+?? log.txt

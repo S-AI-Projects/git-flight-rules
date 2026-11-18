@@ -1,0 +1,55 @@
+{
+  "status": "PASS",
+  "assertions_verified": [
+    {
+      "fact": "Violated precondition causes git rm --cached log.txt to fail with nonzero exit status (code 1)",
+      "expected_rc": 1,
+      "actual_rc": 1,
+      "passed": true
+    },
+    {
+      "fact": "Git protects uncommitted staged work and keeps file in the index during the bad case",
+      "expected_still_in_index": true,
+      "actual_still_in_index": true,
+      "passed": true
+    },
+    {
+      "fact": "Smallest correction (aligning index via git add) allows git rm --cached log.txt to succeed with exit code 0",
+      "expected_rc": 0,
+      "actual_rc": 0,
+      "passed": true
+    },
+    {
+      "fact": "Repaired operation removes log.txt from Git index (untracked by Git)",
+      "expected_removed_from_index": true,
+      "actual_removed_from_index": true,
+      "passed": true
+    },
+    {
+      "fact": "log.txt is preserved on disk in working directory with full content intact",
+      "expected_preserved": true,
+      "actual_preserved": true,
+      "actual_content": "log line 1\nstaged log line 2\nunstaged log line 3\n",
+      "passed": true
+    },
+    {
+      "fact": "git status shows staged deletion (D) in index and untracked (??) in worktree",
+      "expected_in_status": "D log.txt and ?? log.txt",
+      "actual_status": "D  log.txt\n?? log.txt",
+      "passed": true
+    },
+    {
+      "fact": "Two independent runs across separate temporary directories produce identical results",
+      "expected_tree": "fd4520fe7d488ae18fa3ca3fe4164e0f044d561c",
+      "actual_tree": "fd4520fe7d488ae18fa3ca3fe4164e0f044d561c",
+      "passed": true
+    }
+  ],
+  "failure_diagnosis": {
+    "violated_precondition": "Three-way divergence: staged index differs from both HEAD and worktree",
+    "error_category": "Data Safety / Staged Content Divergence",
+    "exit_status": 1,
+    "captured_error_snippet": "error: the following file has staged content different from both the",
+    "correction_applied": "git add log.txt (aligns index to working tree before git rm --cached)"
+  }
+}

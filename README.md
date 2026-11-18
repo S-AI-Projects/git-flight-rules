@@ -1860,6 +1860,39 @@ $ git push origin refs/tags/<tag-name>
 (main)$ git rm --cached log.txt
 ```
 
+This removes the file from Git's staging area (index) so that it is no longer tracked, while keeping the physical file intact on disk in your working directory.
+
+#### Precondition and failure diagnosis
+
+For `git rm --cached <file>` to succeed without forcing, the file must be tracked, and its staged content in the index must not diverge simultaneously from both `HEAD` and the working tree.
+
+If the file has staged modifications (so the index differs from `HEAD`) and also has further unstaged changes in your working tree (so the working file differs from the index), Git aborts to prevent accidental data loss:
+
+```
+error: the following file has staged content different from both the
+file and the HEAD:
+    log.txt
+(use -f to force removal)
+```
+
+**Error category**: *Data Safety / Staged Content Divergence*. Git blocks the command because the intermediate staged version exists neither in `HEAD` nor in the working file, meaning removal from the index would cause that staged revision to be lost.
+
+**Smallest correction**:
+- To preserve your current working tree content and untrack the file, first re-stage the working tree state so the index matches disk, then run `git rm --cached`:
+  ```sh
+  (main)$ git add log.txt
+  (main)$ git rm --cached log.txt
+  ```
+- Alternatively, if you do not need the intermediate staged revision, pass `-f` to force removal from the index:
+  ```sh
+  (main)$ git rm --cached -f log.txt
+  ```
+
+After untracking, add the path to `.gitignore` so Git does not prompt you to re-stage it:
+```sh
+(main)$ echo "log.txt" >> .gitignore
+```
+
 ### I want to revert a file to a specific revision
 
 Assuming the hash of the commit you want is c5f567:
