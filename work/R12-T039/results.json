@@ -1,0 +1,66 @@
+{
+  "status": "PASS",
+  "assertions_verified": [
+    {
+      "fact": "Current branch visibility is verified before stashing",
+      "expected_branch": "topic",
+      "actual_branch": "topic",
+      "passed": true
+    },
+    {
+      "fact": "Staged and unstaged changes visibility verified via status and diff",
+      "staged_file": "notes.txt",
+      "unstaged_file": "todo.txt",
+      "passed": true
+    },
+    {
+      "fact": "Single-file stash (git stash push notes.txt) stashes only the specified file",
+      "expected_stashed": "notes.txt",
+      "actual_stashed": "notes.txt",
+      "passed": true
+    },
+    {
+      "fact": "Stashed file working tree is restored to clean commit state",
+      "expected_content": "alpha\nbeta\n",
+      "actual_content": "alpha\nbeta\n",
+      "passed": true
+    },
+    {
+      "fact": "Unmentioned modified file (todo.txt) remains intact in working tree",
+      "unmentioned_status": "M todo.txt",
+      "passed": true
+    },
+    {
+      "fact": "Multi-file stash (git stash push notes.txt todo.txt) stashes exactly the named files",
+      "expected_stashed_multi": [
+        "notes.txt",
+        "todo.txt"
+      ],
+      "actual_stashed_multi": [
+        "notes.txt",
+        "todo.txt"
+      ],
+      "passed": true
+    },
+    {
+      "fact": "All Git configuration is purely local and never modifies global ~/.gitconfig",
+      "local_only": true,
+      "passed": true
+    },
+    {
+      "fact": "Two independent runs across separate temporary directories produce identical results",
+      "expected_tree": "c2b1188e0a806c675789db0bc320dbdf76dd1196",
+      "actual_tree": "c2b1188e0a806c675789db0bc320dbdf76dd1196",
+      "passed": true
+    }
+  ],
+  "state_summary": {
+    "branch": "topic",
+    "stashed_single": "notes.txt",
+    "stashed_multi": [
+      "notes.txt",
+      "todo.txt"
+    ],
+    "remaining_untracked_or_modified": "M extra.txt"
+  }
+}

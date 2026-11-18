@@ -1,0 +1,42 @@
+{
+  "task": "R12-T039",
+  "guide_section": "Stash specific files",
+  "command_anchors": [
+    "git stash push working-directory-path/filename.ext",
+    "git stash push working-directory-path/filename1.ext working-directory-path/filename2.ext"
+  ],
+  "repository_author": {
+    "name": "Course Student",
+    "email": "student@example.invalid"
+  },
+  "default_branch": "main",
+  "topic_branch": "topic",
+  "commits": [
+    {
+      "commit": "A",
+      "action": "create notes.txt",
+      "content": "alpha\n"
+    },
+    {
+      "commit": "B",
+      "action": "append beta to notes.txt",
+      "content": "beta\n"
+    },
+    {
+      "branch_created": "topic",
+      "at_commit": "B"
+    },
+    {
+      "commit": "C",
+      "action": "add todo.txt",
+      "content": "one\n"
+    }
+  ],
+  "prerequisites_verified": [
+    "Git version >= 2.13.0 supporting pathspecs in git stash push",
+    "Valid repository with existing HEAD commit",
+    "Targeted files are tracked with uncommitted changes (staged or unstaged)",
+    "Purely local configuration (never touches user global ~/.gitconfig)",
+    "Visibility of current branch, staged changes, and unstaged changes"
+  ]
+}

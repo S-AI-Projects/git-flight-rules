@@ -1,0 +1,8 @@
+All assertions PASSED successfully across two independent temporary directory runs!
+Branch Verified:         topic
+Staged File Before:      notes.txt
+Unstaged File Before:    todo.txt
+Single Stash File:       notes.txt
+Multi Stash Files:       notes.txt, todo.txt
+Restored Notes Content:  'alpha\nbeta\n'
+Purely local configuration verified (zero global config modifications).

@@ -1600,16 +1600,68 @@ $ git stash -u
 
 ### Stash specific files
 
+#### Prerequisites checklist
+
+Before stashing specific files, ensure:
+* **Git version >= 2.13.0**: Stashing specific files via pathspec arguments (`git stash push <pathspec>...`) requires Git 2.13.0 or later.
+* **Valid repository and commit**: The repository must contain at least one valid commit (a valid `HEAD` reference).
+* **Tracked files**: Target files must be tracked in Git history (use `-u`/`--include-untracked` if including untracked files).
+* **Local configuration**: If working in a fresh repository, ensure `user.name` and `user.email` are configured locally (`git config --local`).
+* **Uncommitted changes**: The target files must have uncommitted changes (either staged in the index or modified in the working tree).
+
+#### Visibility and setup example
+
+Before stashing, make the current branch, staged changes, and unstaged changes visible:
+
+```sh
+# 1. Make current branch visible
+(topic)$ git branch --show-current
+topic
+
+# 2. Make staged and unstaged changes visible
+(topic)$ git status -s
+M  notes.txt
+ M todo.txt
+
+# Or check exact file diffs
+(topic)$ git diff --cached --name-only   # staged changes
+notes.txt
+(topic)$ git diff --name-only            # unstaged changes
+todo.txt
+```
+
 To stash only one file from your working directory
 
 ```sh
 $ git stash push working-directory-path/filename.ext
 ```
 
+Example on branch `topic`:
+```sh
+(topic)$ git stash push notes.txt
+Saved working directory and index state WIP on topic: ...
+```
+
+**State verification:**
+```sh
+# Verify only the targeted file is stashed:
+(topic)$ git stash show --name-only
+notes.txt
+
+# Verify untargeted files remain modified in the working tree:
+(topic)$ git status -s
+ M todo.txt
+```
+
 To stash multiple files from your working directory
 
 ```sh
 $ git stash push working-directory-path/filename1.ext working-directory-path/filename2.ext
+```
+
+Example:
+```sh
+(topic)$ git stash push notes.txt todo.txt
 ```
 
 <a name="stash-msg"></a>
