@@ -1658,6 +1658,35 @@ $ git stash create
 $ git stash store -m <message> CREATED_SHA1
 ```
 
+#### Troubleshooting: Common Precondition Failure
+
+`git stash create` only outputs a SHA if there are uncommitted changes (staged or unstaged) in the repository. If the working tree and index are clean, `git stash create` outputs nothing and exits 0.
+
+**Triggering state (Failure case)**:
+
+If you attempt to call `git stash store` with an empty or invalid identifier:
+
+```sh
+# Working tree is clean:
+$ SHA=$(git stash create)   # $SHA is empty!
+$ git stash store -m "backup" "$SHA"
+# fatal: Cannot parse '' as an object! (Exit code != 0)
+```
+
+**Smallest correction**:
+
+Ensure changes exist before creating the stash commit, or check that `$SHA` is non-empty before calling `store`:
+
+```sh
+# Verify changes exist first, or make your edits:
+$ echo "new work" >> notes.txt
+$ SHA=$(git stash create)
+$ [ -n "$SHA" ] && git stash store -m "backup" "$SHA"
+```
+
+**Verification** (`python3 work/R12-T007/check.py`):
+See [`work/R12-T007/check.py`](work/R12-T007/check.py) for an automated test capturing this non-zero exit and verifying the repair.
+
 ## Finding
 
 ### I want to find a string in any commit
