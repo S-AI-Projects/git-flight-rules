@@ -1,0 +1,46 @@
+{
+  "status": "PASS",
+  "assertions_verified": [
+    {
+      "fact": "Local tag ref deleted: refs/tags/v1.0.0 completely removed from local refs",
+      "tag_name": "v1.0.0",
+      "passed": true
+    },
+    {
+      "fact": "Remote tag ref deleted: git push origin :refs/tags/v1.0.0 removes tag on remote",
+      "remote_ref": "refs/tags/v1.0.0",
+      "passed": true
+    },
+    {
+      "fact": "Worktree and index invariant: files and porcelain status untouched",
+      "status_after": "",
+      "notes_content": "alpha\nbeta\n",
+      "todo_content": "one\n",
+      "passed": true
+    },
+    {
+      "fact": "Commit and tree objects persist: Commit B and tree object remain intact",
+      "commit_b_tree": "f85b72cccab2aab0cfca333f78ab1ff302be5f7b",
+      "passed": true
+    },
+    {
+      "fact": "Branch refs unaffected: refs/heads/main and refs/heads/topic remain intact",
+      "passed": true
+    },
+    {
+      "fact": "Purely local configuration: git config --local used; no global ~/.gitconfig modification",
+      "passed": true
+    },
+    {
+      "fact": "Deterministic consistency verified across separate temporary repositories",
+      "passed": true
+    }
+  ],
+  "state_summary": {
+    "deleted_tag": "v1.0.0",
+    "local_deletion_output": "Deleted tag 'v1.0.0' (was 460ef92)",
+    "worktree_status": "",
+    "main_head": "96267554c8053d47e5c59fd782774e14d26f362e",
+    "topic_head": "06c9a7703624d6893f59e249b6b5779e2b652c18"
+  }
+}

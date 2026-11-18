@@ -1778,10 +1778,48 @@ git checkout deletingcommitid^ -- filename
 
 ### Delete tag
 
+To delete a tag locally and remotely:
+
 ```sh
 $ git tag -d <tag_name>
 $ git push <remote> :refs/tags/<tag_name>
 ```
+
+#### Worked teaching exercise
+
+**Scenario:**
+You have a repository with branch `main` and branch `topic`. An annotated tag `v1.0.0` was created pointing to commit `B` on `topic` and pushed to remote `origin`:
+```sh
+(topic)$ git tag -a v1.0.0 -m "Release v1.0.0" topic
+(topic)$ git push origin v1.0.0
+```
+
+**Exercise — Predict the resulting state:**
+Before executing the deletion commands below, predict the exact impact on each part of Git's architecture:
+1. **Local ref state:** Will `refs/tags/v1.0.0` exist in the local `.git/refs/tags/` hierarchy? What happens to branch refs (`refs/heads/main`, `refs/heads/topic`)?
+2. **Remote ref state:** Will `refs/tags/v1.0.0` remain visible on `origin`?
+3. **Index and worktree state:** Will tracked files (`notes.txt`, `todo.txt`) or unstaged/staged working copy changes be modified or lost?
+4. **Commit object and history:** Will commit `B` or its tree object be deleted from the Git object database?
+
+**Execution:**
+
+```sh
+# Step 1: Delete local tag reference
+$ git tag -d v1.0.0
+Deleted tag 'v1.0.0' (was 9f047f2)
+
+# Step 2: Delete remote tag reference
+$ git push origin :refs/tags/v1.0.0
+To origin
+ - [deleted]         v1.0.0
+```
+
+**Actual result and state explanation:**
+
+* **Changed reference (local):** `refs/tags/v1.0.0` is deleted. Querying `git rev-parse --verify refs/tags/v1.0.0` now fails with fatal status (exit code 128), and `git tag --list` no longer displays `v1.0.0`.
+* **Changed reference (remote):** The remote reference `refs/tags/v1.0.0` is removed from `origin`. Querying `git ls-remote --tags origin` confirms no reference exists.
+* **Invariant index and worktree:** Git tags are strictly references (pointers); deleting a tag never touches the staging area (index) or working tree files. `git status --porcelain` is identical before and after deletion, and file contents remain unaltered.
+* **Invariant commits and branches:** Commit `B` and its snapshot tree remain fully intact in repository history (`git cat-file -e <commit_b_hash>` succeeds). Branch references (`refs/heads/main` and `refs/heads/topic`) are completely untouched.
 
 <a name="recover-tag"></a>
 ### Recover a deleted tag

@@ -1,0 +1,46 @@
+{
+  "task": "R12-T040",
+  "guide_section": "Delete tag",
+  "command_anchors": [
+    "git tag -d <tag_name>",
+    "git push <remote> :refs/tags/<tag_name>"
+  ],
+  "repository_author": {
+    "name": "Course Student",
+    "email": "student@example.invalid"
+  },
+  "default_branch": "main",
+  "topic_branch": "topic",
+  "commits": [
+    {
+      "commit": "A",
+      "action": "create notes.txt",
+      "content": "alpha\n"
+    },
+    {
+      "commit": "B",
+      "action": "append beta to notes.txt",
+      "content": "beta\n"
+    },
+    {
+      "branch_created": "topic",
+      "at_commit": "B"
+    },
+    {
+      "commit": "C",
+      "action": "add todo.txt",
+      "content": "one\n"
+    }
+  ],
+  "remote": "file://<bare_repository>",
+  "worked_exercise": {
+    "prompt": "Predict resulting ref, index, worktree, and commit state before executing git tag -d and git push origin :refs/tags/<tag>.",
+    "predictions": {
+      "local_ref_state": "refs/tags/<tag> is deleted; rev-parse exits non-zero.",
+      "remote_ref_state": "refs/tags/<tag> is deleted from origin; ls-remote returns empty.",
+      "worktree_state": "Completely untouched; working tree files retain exact contents.",
+      "index_state": "Completely untouched; index status remains invariant.",
+      "commit_state": "Commit B and its tree object remain reachable and intact in repository graph."
+    }
+  }
+}

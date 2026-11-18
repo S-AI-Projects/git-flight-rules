@@ -1,0 +1,8 @@
+All assertions PASSED successfully across two independent temporary directory runs!
+Tag Name:                v1.0.0
+Local Deletion Output:   Deleted tag 'v1.0.0' (was 460ef92)
+Worktree Status After:   ''
+Notes Content After:     'alpha\nbeta\n'
+Todo Content After:      'one\n'
+Commit B Tree Hash:      f85b72cccab2aab0cfca333f78ab1ff302be5f7b
+Purely local configuration verified (zero global config modifications).
