@@ -1493,6 +1493,54 @@ Say I have a main branch, a feature-1 branch branched from main, and a feature-2
 
 This helps in sticky scenarios where you might have a feature built on another feature that hasn't been merged yet, and a bugfix on the feature-1 branch needs to be reflected in your feature-2 branch.
 
+#### Example
+
+Setup, in a new temporary repository (the commit IDs in the outputs below will differ on your machine):
+
+```sh
+git init -b main
+git config user.name "Course Student"
+git config user.email "student@example.invalid"
+printf 'alpha\n' > notes.txt && git add notes.txt && git commit -m "A"
+printf 'beta\n' >> notes.txt && git commit -am "B"
+printf 'one\n' > todo.txt && git add todo.txt && git commit -m "C"
+git branch topic main~1
+git switch -c feature topic
+printf 'extra\n' > extra.txt && git add extra.txt && git commit -m "D"
+```
+
+History before the rebase (`git log --oneline --graph --all`). D is attached to B:
+
+```
+* 7da4e0d (HEAD -> feature) D
+| * 793bed8 (main) C
+|/
+* 1d3dac2 (topic) B
+* 8abbc83 A
+```
+
+Command:
+
+```sh
+(feature)$ git rebase --onto main topic feature
+```
+
+History after the rebase (`git log --oneline --graph --all`). D is now attached to C:
+
+```
+* ae0de59 (HEAD -> feature) D
+* 793bed8 (main) C
+* 1d3dac2 (topic) B
+* 8abbc83 A
+```
+
+Status after the rebase (`git status`):
+
+```
+On branch feature
+nothing to commit, working tree clean
+```
+
 ### Check if all commits on a branch are merged
 
 To check if all commits on a branch are merged into another branch, you should diff between the heads (or any commits) of those branches:
