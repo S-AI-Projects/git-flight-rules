@@ -1,0 +1,16 @@
+git version 2.55.0
+python: 3.15.2
+
+expected: git log -- <file> lists only commits affecting <file>; searching on a branch lacking the commit yields empty, recoverable via --all; tree hash and file contents match original commit C
+
+actual:
+commits: A=31e164d, B=68c037f, C=e116aa8
+log -- notes.txt:
+68c037f3c3074558720445d63411cdcc696753b6 B
+31e164df2b5ec0d81d217d16119ef883ff302bae A
+log -- todo.txt on main:
+e116aa8334a520d6f1df08c648e6fe2a59a1b6cf C
+log -- todo.txt on topic (mistake / empty):
+''
+log --all -- todo.txt (recovered):
+e116aa8334a520d6f1df08c648e6fe2a59a1b6cf C
