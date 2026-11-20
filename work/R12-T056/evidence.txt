@@ -1,0 +1,17 @@
+git version 2.55.0
+python: 3.15.2
+
+expected: Both git rebase -i @{u} and git reset --soft @{u} combine unpushed commits into a single commit atop @{u} with matching trees; rebase preserves commit history messages while reset --soft stages changes directly into index.
+
+actual:
+Fixture Initial: A=23b66f9 (pushed @{u}), B=c4b9730, C=bd9f160
+Unpushed commits before: C, B
+Method 1 (git rebase -i @{u}):
+  Combined commit: f8b4acf, parent: 23b66f9 (@{u})
+  Tree: 70d571a (matches C)
+  Preserved messages of both B and C in commit log
+Method 2 (git reset --soft @{u}):
+  Staged index before commit: 'M notes.txt', 'A todo.txt'
+  Combined commit: 5af74fc, parent: 23b66f9 (@{u})
+  Tree: 70d571a (matches C)
+Unrelated ref 'topic' stayed fixed at c4b9730 in both workflows

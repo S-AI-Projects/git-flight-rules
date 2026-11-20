@@ -1473,6 +1473,19 @@ Sometimes you have several work in progress commits that you want to combine bef
 
 This will do an interactive rebase that lists only the commits that you haven't already pushed, so it will be safe to reorder/fix/squash anything in the list.
 
+An alternative way to combine all unpushed commits into a single commit is using `git reset --soft`:
+
+```sh
+(main)$ git reset --soft @{u}
+(main)$ git commit -m "Your combined commit message"
+```
+
+##### Comparison: `git rebase -i @{u}` vs `git reset --soft @{u}`
+
+Both commands combine only the unpushed commits on top of the upstream tracking branch `@{u}` and yield an equivalent tree hash, but with observable operational differences:
+- **Index state during operation**: `git reset --soft @{u}` immediately points `HEAD` to upstream `@{u}` and stages all changes from the unpushed commits into your index (`git status` shows staged changes `M`, `A`, etc.), allowing you to inspect, edit, or commit them all at once. In contrast, `git rebase -i @{u}` stops per commit or squashes them during replay without leaving intermediate uncommitted staged changes in your index once complete.
+- **Commit message history**: With `git rebase -i @{u}` (using `squash`), Git automatically concatenates and preserves the commit messages of all individual combined commits in your editor so you can curate them. With `git reset --soft @{u}`, you author a new single commit message from scratch.
+
 #### I need to abort the merge
 
 Sometimes the merge can produce problems in certain files, in those cases we can use the option `abort` to abort the current conflict resolution process, and try to reconstruct the pre-merge state.
