@@ -554,6 +554,11 @@ To delete a specific file.
 (main)$ java -jar ~/Downloads/bfg.jar --delete-files filetoremove
 ```
 
+Note that the commands above show the `(main)$` prompt. If your current branch is a feature branch like `(topic)$` rather than the default branch `main`:
+- `git rm <file>` and `git commit` will only remove the file from the current branch (`topic`), advancing `topic` to a new commit.
+- Unrelated branches (such as `main`) and remote references (such as `origin/main` or `origin/topic`) remain unaffected until explicitly updated or pushed.
+- Before cleaning repository history across branches or preparing for a repo-wide purge, ensure you are on the intended branch or coordinate branch updates accordingly.
+
 Note that in bfg you must use the plain file name even if it is in a subdirectory.
 
 You can also delete a file by pattern, e.g.:

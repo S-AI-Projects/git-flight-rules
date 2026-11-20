@@ -1,0 +1,11 @@
+git version 2.55.0
+python: 3.15.2
+
+expected: When current branch is topic and default is main, git rm and commit update only the current branch (topic); unrelated refs (main, remote refs) stay unchanged; no public remote used.
+
+actual:
+Initial IDs: A=bd1f13e, B=ea0010b, C=eaf8828
+Branch 'topic' updated: ea0010b -> 309c8d0
+Branch 'main' unchanged: eaf8828
+Remote 'origin/main' unchanged: eaf8828
+Remote 'origin/topic' unchanged until pushed: ea0010b
