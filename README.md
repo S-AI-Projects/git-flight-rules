@@ -912,7 +912,7 @@ This is another chance to use `git reflog` to see where your HEAD pointed before
 ```sh
 (main)$ git reflog
 ab7555f HEAD@{0}: pull origin wrong-branch: Fast-forward
-c5bc55a HEAD@{1}: checkout: checkout message goes here
+c5bc55a HEAD@{1}: commit: your previous commit message
 ```
 
 Simply reset your branch back to the desired commit:
@@ -920,6 +920,8 @@ Simply reset your branch back to the desired commit:
 ```sh
 $ git reset --hard c5bc55a
 ```
+
+Alternatively, you can refer to the reflog entry directly with `git reset --hard HEAD@{1}`.
 
 Done.
 
