@@ -1,0 +1,12 @@
+git version 2.55.0
+python: 3.15.2
+
+expected: git log -S <string> accurately identifies the exact commit introducing or removing the target string; read-only inspection leaves working tree, index, and refs unmodified.
+
+actual:
+Initial IDs: A=f02603d, B=7ca14d2, C=a942af6
+git log -S 'alpha' identified commit f02603d (Commit A)
+git log -S 'beta' identified commit 7ca14d2 (Commit B)
+git log -S 'one' identified commit a942af6 (Commit C)
+On branch 'topic', -S 'one' is empty; with --all it identifies a942af6
+Working tree, index, and refs remained clean and unmodified

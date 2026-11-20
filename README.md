@@ -1676,6 +1676,35 @@ Commons parameters:
 
 * `--reverse` prints in reverse order, it means that will show the first commit that made the change.
 
+#### Example: Prediction and verification
+
+Setup, in a temporary repository:
+
+```sh
+git init -b main
+printf 'alpha\n' > notes.txt && git add notes.txt && git commit -m "A"
+printf 'beta\n' >> notes.txt && git commit -am "B"
+git branch topic
+printf 'one\n' > todo.txt && git add todo.txt && git commit -m "C"
+```
+
+**Prediction:**
+- `git log -S "alpha"`: matches commit A (where `"alpha\n"` was created in `notes.txt`).
+- `git log -S "beta"`: matches commit B (where `"beta\n"` was appended to `notes.txt`).
+- `git log -S "one"`: matches commit C (where `"one\n"` was created in `todo.txt`).
+- If currently checked out on branch `topic`, `git log -S "one"` will yield no results because commit C is not reachable from `topic`. Passing `--all` (`git log --all -S "one"`) recovers commit C across all branches.
+- **Repository state**: As a read-only search command, `git log -S` leaves the working tree, index, and all branch references untouched.
+
+**Verification:**
+
+```sh
+$ git log --oneline -S "beta"
+<commit-id-B> B
+
+$ git log --oneline -S "one"
+<commit-id-C> C
+```
+
 <a name="find-by-committer"></a>
 ### I want to find by author/committer
 
