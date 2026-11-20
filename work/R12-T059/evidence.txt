@@ -1,0 +1,13 @@
+git version 2.55.0
+python: 3.15.2
+
+expected: Setting origin/HEAD to track default remote branch queries the remote; prerequisites (configured remote, local config, clean state) are validated explicitly; origin/HEAD updates to origin/main without altering commit refs or local files.
+
+actual:
+Initial IDs: A=f78a0fc, B=c773df2, C=f240d6c
+Prerequisites verified: clean work tree, local repo config, remote 'origin' configured
+Before: origin/HEAD -> origin/topic;   origin/main;   origin/topic
+Executed: git remote set-head origin --auto (exit code 0)
+After: origin/HEAD -> origin/main;   origin/main;   origin/topic
+origin/HEAD updated: refs/remotes/origin/topic -> refs/remotes/origin/main
+Topic unchanged at c773df2

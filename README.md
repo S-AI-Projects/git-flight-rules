@@ -1291,7 +1291,12 @@ $ git branch -u [remotename]/[branch] [local-branch]
 <a name="head-to-track-remote-branch"></a>
 ### I want to set my HEAD to track the default remote branch
 
-By checking your remote branches, you can see which remote branch your HEAD is tracking. In some cases, this is not the desired branch.
+**Prerequisites:**
+- The repository must have the remote configured (e.g. `origin` pointing to the remote repository).
+- Network or file access to the remote repository is required so Git can query the remote's default `HEAD`.
+- This operation only adjusts the remote tracking symbolic reference (`refs/remotes/<remote>/HEAD`) and does not affect your current working tree, staged changes, local branch HEAD, or uncommitted edits.
+
+By checking your remote branches, you can see which remote branch your `origin/HEAD` is tracking. In some cases, this is not the desired branch:
 
 ```sh
 $ git branch -r
@@ -1299,7 +1304,7 @@ $ git branch -r
   origin/main
 ```
 
-To change `origin/HEAD` to track `origin/main`, you can run this command:
+To change `origin/HEAD` to automatically query the remote and track its default branch (e.g. `origin/main`), run:
 
 ```sh
 $ git remote set-head origin --auto
