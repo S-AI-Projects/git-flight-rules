@@ -1817,21 +1817,22 @@ $ git archive --format zip --output /full/path/to/zipfile.zip main
 ```
 ### Push a branch and a tag that have the same name
 
-If there is a tag on a remote repository that has the same name as a branch you will get the following error when trying to push that branch with a standard `$ git push <remote> <branch>` command.
+If a tag and a branch share the same name (either on the remote repository or in your local repository), running an unqualified push like `$ git push <remote> <branch>` fails because Git cannot determine whether you intend to push a branch (`refs/heads/`) or a tag (`refs/tags/`):
 
 ```sh
 $ git push origin <branch>
-error: dst refspec same matches more than one.
+error: src refspec <branch> matches more than one
+# or: error: dst refspec <branch> matches more than one
 error: failed to push some refs to '<git server>'
 ```
 
-Fix this by specifying you want to push the head reference.
+Fix this by explicitly specifying the full reference path to push:
 
 ```sh
 $ git push origin refs/heads/<branch-name>
 ```
 
-If you want to push a tag to a remote repository that has the same name as a branch, you can use a similar command.
+Similarly, if you want to push the tag rather than the branch, specify the tag reference explicitly:
 
 ```sh
 $ git push origin refs/tags/<tag-name>
