@@ -1,0 +1,12 @@
+git: git version 2.55.0
+python: 3.15.2 (main, Oct 25 2026, 16:57:51) [Clang 21.0.0 (clang-2100.3.34.2)]
+expected: D sits on top of C; main=C; topic=B
+actual log:
+* 0d2a41f D
+* e818f00 C
+* b7303e0 B
+* 0e78d97 A
+
+actual status:
+On branch feature
+nothing to commit, working tree clean
