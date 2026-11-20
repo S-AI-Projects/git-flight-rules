@@ -1708,6 +1708,72 @@ While using wildcards, it's useful to inform `--name-status` to see the list of 
 $ git log --name-status -- **/*.js
 ```
 
+#### Example
+
+Setup, in a new temporary repository (the commit IDs in the outputs below will differ on your machine):
+
+```sh
+git init -b main
+git config user.name "Course Student"
+git config user.email "student@example.invalid"
+printf 'alpha\n' > notes.txt && git add notes.txt && git commit -m "A"
+printf 'beta\n' >> notes.txt && git commit -am "B"
+git branch topic
+printf 'one\n' > todo.txt && git add todo.txt && git commit -m "C"
+```
+
+Listing commits touching `notes.txt`:
+
+```sh
+$ git log --oneline -- notes.txt
+```
+
+Output:
+
+```
+6d6a310 B
+5560916 A
+```
+
+Listing commits touching `todo.txt` while on `main`:
+
+```sh
+$ git log --oneline -- todo.txt
+```
+
+Output:
+
+```
+8adc778 C
+```
+
+##### Common mistake and recovery: Missing commits across branches
+
+If you are currently on another branch (e.g. `topic`) that does not branch off `C`, `git log -- todo.txt` will show no commits because `git log` defaults to inspecting `HEAD`:
+
+```sh
+$ git switch topic
+$ git log --oneline -- todo.txt
+# (no output)
+```
+
+**Recovery:**
+To search commit history across all branches and refs, pass `--all`:
+
+```sh
+$ git log --oneline --all -- todo.txt
+```
+
+Output:
+
+```
+8adc778 C
+```
+
+Note: While `--all` recovers commits reachable from any branch or tag ref, it cannot recover unreferenced or uncommitted changes, or commits that have been pruned or exist only in unreachable reflog entries without specifying the reflog directly.
+
+Every change above is checked in `work/R12-T053/check.py`.
+
 <a name="view-commit-history-for-specific-function"></a>
 ### I want to view the commit history for a specific function
 
