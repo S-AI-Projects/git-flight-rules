@@ -317,32 +317,85 @@ $ git commit --amend --only -m 'xxxxxxx'
 If you have already pushed the message, you can amend the commit and force push, but this is not recommended.
 
 <a name="commit-wrong-author"></a>
-### I committed with the wrong name and email configured
+#### Example: what `git commit --amend --reset-author --no-edit` changes
 
-If it's a single commit, amend it
-
-```sh
-$ git commit --amend --no-edit --author "New Authorname <authoremail@mydomain.com>"
-```
-
-An alternative is to correctly configure your author settings in `git config --global author.(name|email)` and then use
+Setup, in a new temporary repository (commit IDs will differ on your machine):
 
 ```sh
-$ git commit --amend --reset-author --no-edit
+git init -b main
+git config user.name "Course Student"
+git config user.email "student@example.invalid"
+printf 'alpha\n' > notes.txt && git add notes.txt && git commit -m "A"
+printf 'beta\n' >> notes.txt && git commit -am "B"
+git branch topic
+git config user.name "Wrong Name"
+git config user.email "wrong@example.invalid"
+printf 'one\n' > todo.txt && git add todo.txt && git commit -m "C"
 ```
 
-If you need to change for multiple commits, you can use
+Fix the author, then amend the last commit:
 
 ```sh
-$ git -c rebase.instructionFormat='%s%nexec GIT_COMMITTER_DATE="%cD" GIT_AUTHOR_DATE="%aD" git commit --amend --no-edit --reset-author' rebase -r <commit>
+git config user.name "Course Student"
+git config user.email "student@example.invalid"
+git commit --amend --reset-author --no-edit
 ```
 
-`<commit>` is a commit before all your bad commits. If you need to change all of history in the current branch including the root of the branch, put `--root` there instead.
+Before and after:
 
-If you need to change all of history, see the man page for `git filter-branch`.
+```
+BEFORE                                    AFTER
+commits:       A <- B <- C                A <- B <- C'
+HEAD:          -> main                    -> main
+main:          -> C (Wrong Name)          -> C' (Course Student)
+topic:         -> B                       -> B
+index:         notes.txt, todo.txt        same
+working tree:  notes.txt, todo.txt        same
+```
 
-Note this will change the history and a force push is required.
+C is replaced by a new commit C' with a new ID. The old C still exists in the object store, but no branch points to it. C' has the same parent (B) and the same tree as C, so the index and the working tree do not change.
 
+`git log --format='%h %an <%ae> %s'` before:
+
+```
+0d66265 Wrong Name <wrong@example.invalid> C
+18d27c4 Course Student <student@example.invalid> B
+728f01e Course Student <student@example.invalid> A
+```
+
+`git log --oneline --graph --all` and `git status` before:
+
+```
+* 0d66265 (HEAD -> main) C
+* 18d27c4 (topic) B
+* 728f01e A
+
+On branch main
+nothing to commit, working tree clean
+```
+
+`git log --format='%h %an <%ae> %s'` after:
+
+```
+629f94f Course Student <student@example.invalid> C
+18d27c4 Course Student <student@example.invalid> B
+728f01e Course Student <student@example.invalid> A
+```
+
+`git log --oneline --graph --all` and `git status` after:
+
+```
+* 629f94f (HEAD -> main) C
+* 18d27c4 (topic) B
+* 728f01e A
+
+On branch main
+nothing to commit, working tree clean
+```
+
+Every change above is checked in `work/R12-T052/check.py`.
+
+`git commit --amend --no-edit --author "Course Student <student@example.invalid>"` gives the same result.
 ### I want to remove a file from the previous commit
 
 In order to remove changes for a file from the previous commit, do the following:

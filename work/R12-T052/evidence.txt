@@ -1,0 +1,19 @@
+git version 2.55.0
+python: 3.15.2
+
+expected: new commit ID for C; main moves; topic stays at B; HEAD stays on main; tree, index and files unchanged
+
+actual:
+[reset-author]
+before: main -> 9c53cf4 (author: Wrong Name)
+after:  main -> cf3a60b (author: Course Student)
+* cf3a60b (HEAD -> main) C
+* 507e686 (topic) B
+* a721907 A
+
+[author-flag]
+before: main -> 9c53cf4 (author: Wrong Name)
+after:  main -> cf3a60b (author: Course Student)
+* cf3a60b (HEAD -> main) C
+* 507e686 (topic) B
+* a721907 A
