@@ -1,0 +1,12 @@
+git version 2.55.0
+python: 3.15.2
+
+expected: Pushing a branch when a tag shares the same name fails with 'matches more than one'; specifying refs/heads/<branch> resolves the ambiguity and updates the branch while leaving the tag and other refs intact.
+
+actual:
+Initial IDs: A=95a2edb, B=48f8dd9, C=7c811ff, D=db66a5c
+Collision: both refs/heads/topic and refs/tags/topic exist
+Unqualified push 'git push origin topic' exited with non-zero (1)
+Stderr captured: matches more than one; failed to push some refs
+Repaired push 'git push origin refs/heads/topic' succeeded (exit 0)
+Remote refs/heads/topic updated to db66a5c, while refs/tags/topic stays at 95a2edb
