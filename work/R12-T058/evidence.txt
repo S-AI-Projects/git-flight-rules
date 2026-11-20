@@ -1,0 +1,11 @@
+git version 2.55.0
+python: 3.15.2
+
+expected: An accidental pull from the wrong branch is recovered using git reflog and git reset --hard <commit>; test verifies child failures propagate, cleans temp dirs, and fails when the decisive reset command is omitted.
+
+actual:
+Pre-pull commit C: f6d8664
+Accidental pull merged/fast-forwarded wrong-branch
+Reflog verified pre-pull commit: f6d8664
+Decisive command 'git reset --hard f6d8664' restored tree 70d571a
+Branch 'topic' remained fixed at 042843a
