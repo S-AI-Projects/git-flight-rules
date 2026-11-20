@@ -396,6 +396,10 @@ Save and close the editor. This will bring you to commit b. Now, reset the file1
 $ git reset HEAD~1 file1
 ```
 
+> **Note on paths with spaces and disambiguation (`--`):**
+> If your filename or directory path contains spaces (for example, `"release notes.txt"` or `"sample data/data.txt"`), wrap the path in quotes so the shell does not split it into separate arguments.
+> Furthermore, always use `--` before the path (e.g. `git reset HEAD~1 -- "release notes.txt"`). The `--` separator is required whenever a path could be ambiguous with a branch, tag, or revision name, preventing `fatal: ambiguous argument '<name>': both revision and filename`.
+
 This will unstage the changes in file1. Now, stash those changes and continue the rebase:
 
 ```sh
@@ -411,6 +415,8 @@ $ git add file1
 $ git commit --amend --no-edit
 $ git rebase --continue
 ```
+
+If your file has spaces, remember to quote it here as well: `git add "release notes.txt"`.
 
 Now your rebase is complete, with the changes from b on a. If you wanted to move the changes from b to c, you would have to do two rebases since c comes before b: one to get the changes out of b, then another to edit c and add the stashed changes.
 

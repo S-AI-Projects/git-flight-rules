@@ -1,0 +1,10 @@
+git version 2.55.0
+python: 3.15.2
+
+expected: In interactive rebase, paths with spaces must be quoted; '--' is required to eliminate filename vs revision ambiguity; unrelated refs remain fixed and spaced files are preserved cleanly.
+
+actual:
+Initial IDs: A=fd5d892, B=f19d96c, C=5fabbdb
+After rebase: B'=d737858, C'=8998a17, topic stays at f19d96c
+Ambiguity verified: tag/path collision triggers 'both revision and filename', solved by '--'
+Spaces preserved: 'release notes.txt' and 'sample data/data.txt' handled with quotes and '--'
