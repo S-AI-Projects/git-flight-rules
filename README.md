@@ -759,6 +759,56 @@ $ git add -p
 # select `a` for the prompt.
 ```
 
+#### State Transition: `git add -p` (selecting `a` for an entire file)
+
+When choosing which entire files to stage with `git add -p` and selecting `a` (*stage this hunk and all later hunks in the file*), Git transitions the state of the **index (staging area)** while leaving branch refs, commit ancestry, and working tree files intact.
+
+**Before vs. After State Diagram:**
+
+```
+[Before: Modified working tree files, index matches HEAD]
+HEAD ───────► (main) ──► Commit C (todo.txt: "one\n")
+                           │
+                           ▼
+                         Commit B (notes.txt: "alpha\nbeta\n") ◄── (topic)
+                           │
+                           ▼
+                         Commit A (notes.txt: "alpha\n")
+
+Working Tree:   notes.txt ("alpha\nbeta\ngamma\n") [modified]
+                todo.txt  ("one\ntwo\n")          [modified]
+Index (Staged): notes.txt ("alpha\nbeta\n")       [clean vs HEAD]
+                todo.txt  ("one\n")               [clean vs HEAD]
+Refs:           HEAD -> refs/heads/main (Commit C); topic -> Commit B
+
+               ══════════════════════════════════════════════════
+               Command: printf 'a\n' | git add -p notes.txt
+               ══════════════════════════════════════════════════
+
+[After: notes.txt staged in index; refs, ancestry, and working tree unchanged]
+HEAD ───────► (main) ──► Commit C (todo.txt: "one\n")
+                           │
+                           ▼
+                         Commit B (notes.txt: "alpha\nbeta\n") ◄── (topic)
+                           │
+                           ▼
+                         Commit A (notes.txt: "alpha\n")
+
+Working Tree:   notes.txt ("alpha\nbeta\ngamma\n") [preserved, unchanged by add]
+                todo.txt  ("one\ntwo\n")          [preserved, unstaged changes remain]
+Index (Staged): notes.txt ("alpha\nbeta\ngamma\n") [STAGED - new blob recorded in index]
+                todo.txt  ("one\n")               [unstaged, matches Commit C]
+Refs:           HEAD -> refs/heads/main (Commit C); topic -> Commit B (no ref changes)
+Ancestry:       No new commits created; commit DAG is completely untouched.
+```
+
+**State Transitions Explained:**
+1. **Refs (`HEAD`, branch heads):** Unchanged. `HEAD` points to `refs/heads/main` (Commit C), and `refs/heads/topic` points to Commit B.
+2. **Commit Ancestry:** Unaffected. Staging prepares content for a future commit without altering the DAG.
+3. **Index (Staging Area):** Updates `notes.txt` to point to the new blob containing `"alpha\nbeta\ngamma\n"`. Staged status transitions from empty to `notes.txt` (`git diff --cached --name-only`).
+4. **Working Tree:** Modifies nothing on disk. Both `notes.txt` and `todo.txt` retain their edits.
+
+
 However, another way to do this interactively is to use `fzf`.
 
 ```sh

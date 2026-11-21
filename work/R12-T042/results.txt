@@ -1,0 +1,68 @@
+Task: R12-T042 - Verification Results
+====================================
+
+Assertion 1: Topology and Ref Immutability
+- Expected:
+  - HEAD points to refs/heads/main
+  - refs/heads/main points to Commit C
+  - refs/heads/topic points to Commit B
+  - Commit C parent is Commit B
+  - Commit B parent is Commit A
+- Actual:
+  - HEAD -> refs/heads/main (MATCH)
+  - main == Commit C (MATCH)
+  - topic == Commit B (MATCH)
+  - Commit C parent == Commit B (MATCH)
+  - Commit B parent == Commit A (MATCH)
+- Result: PASSED
+
+Assertion 2: Pre-state vs Post-state Index Transition
+- Expected:
+  - Pre-state staged files: []
+  - Pre-state unstaged files: ['notes.txt', 'todo.txt']
+  - Post-state staged files (git diff --cached --name-only): ['notes.txt']
+  - Post-state unstaged files (git diff --name-only): ['todo.txt']
+- Actual:
+  - Pre-state staged files: [] (MATCH)
+  - Pre-state unstaged files: ['notes.txt', 'todo.txt'] (MATCH)
+  - Post-state staged files: ['notes.txt'] (MATCH)
+  - Post-state unstaged files: ['todo.txt'] (MATCH)
+- Result: PASSED
+
+Assertion 3: Blob Content in Index
+- Expected:
+  - Pre-state index :notes.txt: "alpha\nbeta\n" (Commit B content)
+  - Post-state index :notes.txt: "alpha\nbeta\ngamma\n" (working tree content staged)
+  - Post-state index :todo.txt: "one\n" (Commit C content, unstaged in working tree)
+- Actual:
+  - Pre-state index :notes.txt: "alpha\nbeta\n" (MATCH)
+  - Post-state index :notes.txt: "alpha\nbeta\ngamma\n" (MATCH)
+  - Post-state index :todo.txt: "one\n" (MATCH)
+- Result: PASSED
+
+Assertion 4: Working Tree File Content Preservation
+- Expected:
+  - notes.txt: "alpha\nbeta\ngamma\n"
+  - todo.txt: "one\ntwo\n"
+- Actual:
+  - notes.txt: "alpha\nbeta\ngamma\n" (MATCH)
+  - todo.txt: "one\ntwo\n" (MATCH)
+- Result: PASSED
+
+Assertion 5: Cross-Repository Reproducibility
+- Expected:
+  - Identical execution and matching states across two independent temporary repositories (Repo 1 and Repo 2)
+- Actual:
+  - Repo 1 and Repo 2 match completely across all states and assertions
+- Result: PASSED
+
+Summary of Status Output after 'git add -p' (choosing 'a' for notes.txt):
+On branch main
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+	modified:   notes.txt
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   todo.txt
