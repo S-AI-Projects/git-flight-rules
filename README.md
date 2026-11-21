@@ -1800,6 +1800,57 @@ $ git update-ref refs/tags/<tag_name> <hash>
 
 Your tag should now have been restored.
 
+#### Demonstrating Tag Deletion and Recovery
+
+Consider an accidental deletion of an annotated tag `v1.0` pointing to commit `B`:
+
+**1. Create an annotated tag:**
+```sh
+$ git tag -a v1.0 -m "Release v1.0" topic
+```
+
+**2. Accidentally delete the tag:**
+```sh
+$ git tag -d v1.0
+Deleted tag 'v1.0' (was a1b2c3d)
+```
+
+**3. Locate the unreachable tag object:**
+Because Git does not prune unreferenced loose objects immediately, the tag object remains in `.git/objects/`:
+```sh
+$ git fsck --unreachable | grep tag
+unreachable tag <tag-hash>
+```
+
+Verify the tag metadata before restoring:
+```sh
+$ git cat-file -p <tag-hash>
+object <commit-B-hash>
+type commit
+tag v1.0
+tagger Course Student <student@example.invalid> ...
+Release v1.0
+```
+
+**4. Restore the tag reference:**
+```sh
+$ git update-ref refs/tags/v1.0 <tag-hash>
+```
+
+**5. Verification:**
+```sh
+$ git rev-parse v1.0^{tree}
+# Matches commit B's tree hash
+$ git show v1.0:notes.txt
+alpha
+beta
+```
+
+#### What Cannot Be Recovered by This Method
+- **Pruned loose objects:** If garbage collection has already run (`git gc --prune=now` or `git prune`), unreachable tag objects are permanently purged from disk and cannot be restored via `fsck`.
+- **Lightweight tags:** Lightweight tags are direct ref pointers rather than standalone tag objects. When deleted, no `unreachable tag` object is created. They must instead be recovered by finding the commit hash in the reflog (`git reflog`) or git history.
+
+
 ### Deleted Patch
 
 If someone has sent you a pull request on GitHub, but then deleted their original fork, you will be unable to clone their repository or to use `git am` as the [.diff, .patch](https://github.com/blog/967-github-secrets) URLs become unavailable. But you can checkout the PR itself using [GitHub's special refs](https://gist.github.com/piscisaureus/3342247). To fetch the content of PR#1 into a new branch called pr_1:

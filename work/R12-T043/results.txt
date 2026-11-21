@@ -1,0 +1,34 @@
+Task: R12-T043 - Verification Results
+====================================
+
+Assertion 1: Tag Object and Target Commit Integrity
+- Expected:
+  - Recovered tag SHA equals original tag object SHA
+  - Recovered tag peeled commit (v1.0^{commit}) equals Commit B SHA
+- Actual:
+  - Tag SHA: MATCH
+  - Commit SHA: MATCH
+- Result: PASSED
+
+Assertion 2: Tree Hash and File Content Preservation
+- Expected:
+  - Recovered tag tree hash (v1.0^{tree}) matches Commit B tree hash
+  - Recovered file content (v1.0:notes.txt) equals "alpha\nbeta\n"
+- Actual:
+  - Tree SHA: MATCH
+  - Content: MATCH ("alpha\nbeta\n")
+- Result: PASSED
+
+Assertion 3: Tag Metadata and Annotation Message
+- Expected:
+  - Annotation message contains "Release v1.0"
+- Actual:
+  - Annotation message verified ("Release v1.0")
+- Result: PASSED
+
+Assertion 4: Cross-Repository Reproducibility
+- Expected:
+  - Identical execution and recovery across two separate temporary repositories
+- Actual:
+  - Repo 1 and Repo 2 match completely
+- Result: PASSED
