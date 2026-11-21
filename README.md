@@ -486,6 +486,25 @@ You'll see a list of your past commits, and a commit for the reset. Choose the S
 
 And you should be good to go.
 
+#### Troubleshooting: Common Command Failure and Correction
+
+**Triggering Error:**
+If you execute the command with a placeholder SHA or mistyped revision:
+```sh
+(main)$ git reset --hard SHA1234
+fatal: ambiguous argument 'SHA1234': unknown revision or path not in the working tree.
+```
+Git exits with status 128 because `SHA1234` violates the precondition that the target revision must exist in the object database.
+
+**Smallest Correction:**
+Instead of copying a literal placeholder, use the reflog selector relative to the reset `HEAD@{1}`, or the actual SHA displayed in `git reflog`:
+```sh
+(main)$ git reset --hard HEAD@{1}
+HEAD is now at <commit-sha> Commit C: create todo.txt
+```
+This restores `HEAD`, index, and working tree cleanly back to the state prior to the accidental reset.
+
+
 <a name="undo-a-commit-merge"></a>
 ### I accidentally committed and pushed a merge
 

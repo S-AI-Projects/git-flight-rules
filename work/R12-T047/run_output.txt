@@ -1,0 +1,11 @@
+Exit code: 0
+--- STDOUT ---
+Starting verification of R12-T047...
+Executing workflow in temporary repo 1: /var/folders/wn/krqy3_ld3px81gh6q5pp1dyr0000gn/T/gfr_t047_1_ggnkfaz7
+  Repo 1: All failure diagnosis assertions passed.
+Executing workflow in temporary repo 2: /var/folders/wn/krqy3_ld3px81gh6q5pp1dyr0000gn/T/gfr_t047_2_ijshch3c
+  Repo 2: All failure diagnosis assertions passed.
+Checking cross-repository consistency...
+  Cross-repository consistency verified.
+
+SUCCESS: All failure diagnosis assertions passed successfully.
