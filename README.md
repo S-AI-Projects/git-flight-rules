@@ -951,6 +951,26 @@ One way of resetting branch `my-branch` to match `origin/my-branch` (to have the
 $ git checkout -b my-branch
 ```
 
+#### Prediction-and-Verification Exercise
+
+**Scenario:**
+You are on branch `main` at commit `C`. You have modified `notes.txt` and `todo.txt` in your working directory without staging them (`git status` shows both files as unstaged). Now you execute:
+
+```sh
+(main)$ git checkout -b feature-edits
+```
+
+**Predict Before Running:**
+1. *What happens to your unstaged edits in `notes.txt` and `todo.txt`?*
+2. *Which commit object does `feature-edits` point to, and does `refs/heads/main` change?*
+3. *Does Git create any new commits during this operation?*
+
+**Verified Explanation:**
+1. **Working Tree and Index:** Your unstaged changes in `notes.txt` and `todo.txt` remain dirty in your working tree and are carried over directly to `feature-edits`. Because both branches share the same base commit (`C`), Git performs a trivial checkout without requiring a stash or losing modifications.
+2. **Branch References:** Git creates `refs/heads/feature-edits` pointing directly to commit `C`. `HEAD` is updated to point to `refs/heads/feature-edits`. The original branch `refs/heads/main` remains unchanged at commit `C`.
+3. **Commit DAG:** No new commits are created. The commit graph is unmodified until you explicitly stage and commit your changes (`git add` and `git commit`).
+
+
 <a name="move-unstaged-edits-to-old-branch"></a>
 ### I want to move my unstaged edits to a different, existing branch
 

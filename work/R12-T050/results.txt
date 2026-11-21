@@ -1,0 +1,45 @@
+Task: R12-T050 - Verification Results
+====================================
+
+Assertion 1: Active Branch Switch and Target Commit
+- Expected:
+  - HEAD points to refs/heads/feature-edits
+  - feature-edits points to Commit C
+- Actual:
+  - HEAD -> feature-edits (MATCH)
+  - feature-edits == Commit C (MATCH)
+- Result: PASSED
+
+Assertion 2: Existing Branch Immutability
+- Expected:
+  - refs/heads/main remains at Commit C
+  - refs/heads/topic remains at Commit B
+- Actual:
+  - main == Commit C (MATCH)
+  - topic == Commit B (MATCH)
+- Result: PASSED
+
+Assertion 3: Working Tree Edits Carried Over
+- Expected:
+  - git diff --name-only returns ['notes.txt', 'todo.txt']
+  - git diff --cached --name-only returns []
+- Actual:
+  - Unstaged files: ['notes.txt', 'todo.txt'] (MATCH)
+  - Staged files: [] (MATCH)
+- Result: PASSED
+
+Assertion 4: File Content Preservation
+- Expected:
+  - notes.txt: "alpha\nbeta\ngamma\n"
+  - todo.txt: "one\ntwo\n"
+- Actual:
+  - notes.txt content MATCH
+  - todo.txt content MATCH
+- Result: PASSED
+
+Assertion 5: Cross-Repository Reproducibility
+- Expected:
+  - Consistent execution across two separate temporary repositories
+- Actual:
+  - Repo 1 and Repo 2 match completely
+- Result: PASSED
