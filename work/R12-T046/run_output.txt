@@ -1,0 +1,10 @@
+Exit code: 0
+--- STDOUT ---
+Starting verification of R12-T046...
+Executing Guide workflow in: /var/folders/wn/krqy3_ld3px81gh6q5pp1dyr0000gn/T/gfr_t046_guide_k_97za5a
+Executing Direct workflow in: /var/folders/wn/krqy3_ld3px81gh6q5pp1dyr0000gn/T/gfr_t046_direct_0b0mjkcb
+  Guide assertions passed.
+  Direct assertions passed.
+  Comparison differences verified.
+
+SUCCESS: All command comparison assertions passed successfully.

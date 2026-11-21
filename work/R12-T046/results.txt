@@ -1,0 +1,36 @@
+Task: R12-T046 - Verification Results
+====================================
+
+Assertion 1: Guide Method In-Place Rewind
+- Expected:
+  - refs/heads/main rewound to Commit B
+  - refs/heads/new_branch holds full history at Commit D
+  - HEAD points to refs/heads/main
+  - ORIG_HEAD recorded as Commit D
+- Actual:
+  - main == Commit B (MATCH)
+  - new_branch == Commit D (MATCH)
+  - HEAD -> refs/heads/main (MATCH)
+  - ORIG_HEAD == Commit D (MATCH)
+- Result: PASSED
+
+Assertion 2: Direct Method Non-Destructive Split
+- Expected:
+  - refs/heads/main remains untouched at Commit D
+  - refs/heads/branch_early points to Commit B
+  - HEAD points to refs/heads/branch_early
+  - ORIG_HEAD is not set to Commit D by reset
+- Actual:
+  - main == Commit D (MATCH)
+  - branch_early == Commit B (MATCH)
+  - HEAD -> refs/heads/branch_early (MATCH)
+  - ORIG_HEAD untouched (MATCH)
+- Result: PASSED
+
+Assertion 3: Observable Comparison Differences
+- Expected:
+  - Guide method rewinds original branch in-place, modifying ORIG_HEAD and requiring force-push if published
+  - Direct method preserves original branch head completely without reflog rewriting or force-push requirement
+- Actual:
+  - All observable ref, index, and reflog differences verified
+- Result: PASSED

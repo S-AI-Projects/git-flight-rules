@@ -1331,6 +1331,24 @@ Use `git log` to find the commit where you want to split. Then do the following:
 
 If you had previously pushed the `original_branch` to remote, you will need to do a force push. For more information check [Stack Overflow](https://stackoverflow.com/questions/28983458/how-to-split-a-branch-in-two-with-git/28983843#28983843)
 
+#### Comparing Split Methods: In-Place Rewind vs. Direct Split Branch
+
+There are two primary ways to split a branch, each yielding distinct state transitions and operational trade-offs:
+
+| Aspect | Method 1: Guide (`checkout -b` + `reset --hard`) | Method 2: Direct Split Branch (`checkout -b <new> <sha>`) |
+|---|---|---|
+| **Command sequence** | `git checkout -b new_branch`<br>`git checkout original_branch`<br>`git reset --hard <split_sha>` | `git checkout -b branch-early <split_sha>` |
+| **Original branch ref** | Rewound in-place to `<split_sha>` (destructive history rewrite) | Untouched at latest commit (non-destructive) |
+| **Remote publish impact** | Requires `git push --force` if original branch was published | Safe: No force-push needed on original branch |
+| **`ORIG_HEAD` state** | Sets `ORIG_HEAD` to pre-reset commit | `ORIG_HEAD` remains unaffected |
+| **Active checkout (`HEAD`)**| Ends on `original_branch` | Ends on `branch-early` |
+
+**Example Comparison:**
+Given a branch `main` containing commits `A -> B -> C -> D`, splitting at commit `B`:
+- **Method 1** creates `new_branch` at `D`, rewinds `main` to `B`, sets `ORIG_HEAD` to `D`, and leaves `HEAD` on `main`.
+- **Method 2** (`git checkout -b branch-early <commit-B>`) leaves `main` at `D`, creates `branch-early` at `B`, and switches `HEAD` to `branch-early` without modifying `ORIG_HEAD` or rewriting `main`.
+
+
 ## Rebasing and Merging
 
 <a name="undo-rebase"></a>

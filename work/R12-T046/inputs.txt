@@ -1,0 +1,50 @@
+Task: R12-T046
+Section: "I want to split a branch into two" in README.md
+Target Commands:
+1. Guide method:
+    git checkout -b new_branch
+    git checkout original_branch
+    git reset --hard <sha1 split here>
+2. Direct split method:
+    git checkout -b branch_early <sha1 split here>
+
+1. Environment & Setup:
+- Initial branch: main
+- Author Name: Course Student
+- Author Email: student@example.invalid
+- Clean Git Config: GIT_CONFIG_NOSYSTEM=1, GIT_CONFIG_GLOBAL=/dev/null
+
+2. Repository Construction Steps:
+- Initialize:
+    git init -b main
+    git config user.name "Course Student"
+    git config user.email "student@example.invalid"
+
+- Commit A:
+    printf "alpha\n" > notes.txt
+    git add notes.txt
+    git commit -m "Commit A: create notes.txt"
+
+- Commit B:
+    printf "beta\n" >> notes.txt
+    git add notes.txt
+    git commit -m "Commit B: append beta to notes.txt"
+    git branch topic
+
+- Commit C:
+    printf "one\n" > todo.txt
+    git add todo.txt
+    git commit -m "Commit C: create todo.txt"
+
+- Commit D:
+    printf "gamma\n" >> notes.txt
+    git add notes.txt
+    git commit -m "Commit D: append gamma to notes.txt"
+
+3. Executing Comparison Workflows:
+- Guide Workflow:
+    git checkout -b new_branch
+    git checkout main
+    git reset --hard <commit_b>
+- Direct Workflow:
+    git checkout -b branch_early <commit_b>
