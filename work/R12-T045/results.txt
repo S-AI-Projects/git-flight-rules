@@ -1,0 +1,38 @@
+Task: R12-T045 - Verification Results
+====================================
+
+Assertion 1: Unquoted Path Argument Splitting Error
+- Expected:
+  - 'git checkout release notes.txt' fails with non-zero exit code
+  - Stderr contains pathspec error for 'release'
+- Actual:
+  - Exit code non-zero (MATCH)
+  - Stderr contains "error: pathspec 'release' did not match any file(s) known to git" (MATCH)
+- Result: PASSED
+
+Assertion 2: Quoted File Discard with '--'
+- Expected:
+  - 'git checkout -- "release notes.txt"' succeeds
+  - "release notes.txt" content restored to "v1.0.0 initial notes\n"
+  - "sample data/records.txt" still retains unstaged changes
+- Actual:
+  - File restored (MATCH)
+  - Unstaged edits in sample data preserved (MATCH)
+- Result: PASSED
+
+Assertion 3: Quoted Directory Discard with '--'
+- Expected:
+  - 'git checkout -- "sample data"' succeeds
+  - "sample data/records.txt" content restored to "record 1\n"
+  - Working tree is clean of unstaged changes
+- Actual:
+  - Directory restored (MATCH)
+  - Unstaged changes empty (MATCH)
+- Result: PASSED
+
+Assertion 4: Cross-Repository Reproducibility
+- Expected:
+  - Identical behavior across two separate temporary repositories
+- Actual:
+  - Repo 1 and Repo 2 match completely
+- Result: PASSED

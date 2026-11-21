@@ -862,11 +862,37 @@ $ git checkout myFirstFile mySecondFile
 
 ### I want to discard only my unstaged local changes
 
-When you want to get rid of all of your unstaged local uncommitted changes
+When you want to get rid of all of your unstaged local uncommitted changes:
 
 ```sh
 $ git checkout .
 ```
+
+#### Handling Paths with Spaces and Revision Disambiguation (`--`)
+
+When discarding unstaged changes for specific files or folders that contain spaces (such as a file named `release notes.txt` or a directory named `sample data`), quoting and the double-dash `--` separator are required.
+
+**1. Word-splitting error without quotes:**
+If executed without quotes:
+```sh
+$ git checkout release notes.txt
+error: pathspec 'release' did not match any file(s) known to git
+```
+The shell splits `release notes.txt` into two arguments (`release` and `notes.txt`). Git interprets `release` as a branch, tag, or pathspec, resulting in an error.
+
+**2. Discarding files with quotes and `--`:**
+Wrap the path in quotes and use `--` to disambiguate paths from revisions:
+```sh
+$ git checkout -- "release notes.txt"
+```
+
+**3. Discarding an entire directory with spaces:**
+```sh
+$ git checkout -- "sample data"
+```
+
+**Why `--` matters:** The `--` argument explicitly separates revisions from pathspecs. If a branch or tag exists with the same name as a file or folder, omitting `--` causes Git to print an ambiguity warning or attempt a branch checkout instead of discarding file edits. (In modern Git versions, `git restore -- "release notes.txt"` can also be used).
+
 <a name="discard-all-untracked-files"></a>
 ### I want to discard all of my untracked files
 
