@@ -1,0 +1,73 @@
+Task: R12-T041 - Verification Results
+====================================
+
+Assertion 1: Branch and Ref Topology
+- Expected:
+  - HEAD points to refs/heads/main
+  - refs/heads/main points to Commit C
+  - refs/heads/topic points to Commit B
+  - Commit C parent is Commit B
+  - Commit B parent is Commit A
+- Actual:
+  - HEAD -> refs/heads/main (MATCH)
+  - main == Commit C (MATCH)
+  - topic == Commit B (MATCH)
+  - Commit C parent == Commit B (MATCH)
+  - Commit B parent == Commit A (MATCH)
+- Result: PASSED
+
+Assertion 2: Pre-reset Staging Status
+- Expected:
+  - Staged files: ['notes.txt', 'todo.txt']
+  - Unstaged files: []
+- Actual:
+  - Staged files: ['notes.txt', 'todo.txt'] (MATCH)
+  - Unstaged files: [] (MATCH)
+- Result: PASSED
+
+Assertion 3: Post-reset Staging Status (after `git reset -- notes.txt`)
+- Expected:
+  - Staged files (git diff --cached --name-only): ['todo.txt']
+  - Unstaged files (git diff --name-only): ['notes.txt']
+  - Untracked files: []
+- Actual:
+  - Staged files: ['todo.txt'] (MATCH)
+  - Unstaged files: ['notes.txt'] (MATCH)
+  - Untracked files: [] (MATCH)
+- Result: PASSED
+
+Assertion 4: Working Tree File Content Preservation
+- Expected:
+  - notes.txt: "alpha\nbeta\ngamma\n"
+  - todo.txt: "one\ntwo\n"
+- Actual:
+  - notes.txt: "alpha\nbeta\ngamma\n" (MATCH)
+  - todo.txt: "one\ntwo\n" (MATCH)
+- Result: PASSED
+
+Assertion 5: Index (Staged) File Content
+- Expected:
+  - :notes.txt (HEAD version): "alpha\nbeta\n"
+  - :todo.txt (staged modified version): "one\ntwo\n"
+- Actual:
+  - :notes.txt: "alpha\nbeta\n" (MATCH)
+  - :todo.txt: "one\ntwo\n" (MATCH)
+- Result: PASSED
+
+Assertion 6: Cross-Repository Reproducibility
+- Expected:
+  - Independent runs across two separate temporary directories (Repo 1 and Repo 2) produce identical states
+- Actual:
+  - Repo 1 and Repo 2 match completely across all states, file contents, and index/worktree distinctions
+- Result: PASSED
+
+Summary of Status Output after 'git reset -- notes.txt':
+On branch main
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+	modified:   todo.txt
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   notes.txt

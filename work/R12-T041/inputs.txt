@@ -1,0 +1,41 @@
+Task: R12-T041
+Section: "I want to unstage a specific staged file" in README.md
+Target Command: git reset -- <filename>
+
+1. Environment & Setup:
+- Initial branch: main
+- Author Name: Course Student
+- Author Email: student@example.invalid
+- Clean Git Config: GIT_CONFIG_NOSYSTEM=1, GIT_CONFIG_GLOBAL=/dev/null
+
+2. Repository Construction Steps:
+- Initialize:
+    git init -b main
+    git config user.name "Course Student"
+    git config user.email "student@example.invalid"
+
+- Commit A:
+    printf "alpha\n" > notes.txt
+    git add notes.txt
+    git commit -m "Commit A: create notes.txt"
+
+- Commit B:
+    printf "beta\n" >> notes.txt
+    git add notes.txt
+    git commit -m "Commit B: append beta to notes.txt"
+    git branch topic
+
+- Commit C:
+    printf "one\n" > todo.txt
+    git add todo.txt
+    git commit -m "Commit C: create todo.txt"
+
+3. Modifications and Staging:
+- Append "gamma\n" to notes.txt (working tree: "alpha\nbeta\ngamma\n")
+- Append "two\n" to todo.txt (working tree: "one\ntwo\n")
+- Stage both files:
+    git add notes.txt todo.txt
+
+4. Unstaging:
+- Unstage notes.txt while keeping todo.txt staged:
+    git reset -- notes.txt

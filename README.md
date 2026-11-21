@@ -741,13 +741,93 @@ NOTE 2: Your staged files will be marked as unstaged if you don't use the `--ind
 <a name="unstage-specific-staged-file"></a>
 ### I want to unstage a specific staged file
 
-Sometimes we have one or more files that accidentally ended up being staged, and these files have not been committed before. To unstage them:
+To unstage a specific staged file without discarding the changes in your working directory, use `git reset -- <filename>` (or `git restore --staged <filename>` in Git 2.23+). This removes the file from the staging area (index) while preserving all modifications in your working tree.
+
+#### Reproducible Walkthrough
+
+The following self-contained example sets up a repository from scratch, creates history across branches, stages multiple files, and demonstrates unstaging a specific file using `git reset --`.
+
+**1. Initialize repository and commit history:**
 
 ```sh
-$ git reset -- <filename>
+# Initialize a new repository with default branch 'main'
+$ git init -b main
+$ git config user.name "Course Student"
+$ git config user.email "student@example.invalid"
+
+# Commit A: creates notes.txt with "alpha\n"
+$ printf "alpha\n" > notes.txt
+$ git add notes.txt
+$ git commit -m "Commit A: create notes.txt"
+
+# Commit B: appends "beta\n" to notes.txt and creates branch 'topic' pointing at Commit B
+$ printf "beta\n" >> notes.txt
+$ git add notes.txt
+$ git commit -m "Commit B: append beta to notes.txt"
+$ git branch topic
+
+# Commit C: creates todo.txt with "one\n" on branch 'main'
+$ printf "one\n" > todo.txt
+$ git add todo.txt
+$ git commit -m "Commit C: create todo.txt"
 ```
 
-This results in unstaging the file and make it look like it's untracked.
+Viewing the commit log at this point shows branch `topic` at Commit B and branch `main` at Commit C:
+
+```sh
+$ git log --oneline --graph --all
+* <commit-C> (HEAD -> main) Commit C: create todo.txt
+* <commit-B> (topic) Commit B: append beta to notes.txt
+* <commit-A> Commit A: create notes.txt
+```
+
+*(Note: Commit hashes `<commit-C>`, `<commit-B>`, and `<commit-A>` are dynamically generated based on author, timestamp, and contents).*
+
+**2. Modify and stage both files:**
+
+```sh
+$ printf "gamma\n" >> notes.txt
+$ printf "two\n" >> todo.txt
+$ git add notes.txt todo.txt
+```
+
+Both files are now staged in the index:
+
+```sh
+$ git status
+On branch main
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+	modified:   notes.txt
+	modified:   todo.txt
+```
+
+**3. Unstage a specific file using `git reset --`:**
+
+To unstage only `notes.txt` while keeping `todo.txt` staged:
+
+```sh
+$ git reset -- notes.txt
+Unstaged changes after reset:
+M	notes.txt
+```
+
+**4. Verify repository status:**
+
+```sh
+$ git status
+On branch main
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+	modified:   todo.txt
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   notes.txt
+```
+
+Only `todo.txt` remains staged for commit. All modifications in the working tree are preserved: `notes.txt` contains `"alpha\nbeta\ngamma\n"` and `todo.txt` contains `"one\ntwo\n"`.
 
 <a name="i-want-to-choose-which-entire-files-to-stage"></a>
 ### I want to choose which entire files to stage

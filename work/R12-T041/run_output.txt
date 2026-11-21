@@ -1,0 +1,11 @@
+Exit code: 0
+--- STDOUT ---
+Starting verification of R12-T041...
+Executing workflow in temporary repo 1: /var/folders/wn/krqy3_ld3px81gh6q5pp1dyr0000gn/T/gfr_test1__vdg1ajy
+  Repo 1: All state assertions passed.
+Executing workflow in temporary repo 2: /var/folders/wn/krqy3_ld3px81gh6q5pp1dyr0000gn/T/gfr_test2_9kuu098_
+  Repo 2: All state assertions passed.
+Checking cross-repository consistency...
+  Cross-repository consistency verified.
+
+SUCCESS: All state and reproducibility assertions passed successfully.
