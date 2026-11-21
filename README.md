@@ -1994,7 +1994,7 @@ You can also name the file as just .keep , in which case the second line above w
 
 ### I want to cache a username and password for a repository
 
-You might have a repository that requires authentication.  In which case you can cache a username and password so you don't have to enter it on every push and pull. Credential helper can do this for you.
+You might have a repository that requires authentication. In which case you can cache a username and password so you don't have to enter it on every push and pull. Credential helper can do this for you.
 
 ```sh
 $ git config --global credential.helper cache
@@ -2005,6 +2005,26 @@ $ git config --global credential.helper cache
 $ git config --global credential.helper 'cache --timeout=3600'
 # Set the cache to timeout after 1 hour (setting is in seconds)
 ```
+
+#### Executable Verification Test
+
+To verify credential caching automatically in an isolated test environment without altering your personal global Git configuration:
+
+```sh
+# Run the automated test script:
+$ bash tests/guides/test_credential_cache.sh
+```
+
+The test performs the following steps inside an isolated temporary directory:
+1. Points `GIT_CONFIG_GLOBAL` to a temporary file to keep system and user configs clean.
+2. Applies the decisive command: `git config --global credential.helper cache`.
+3. Simulates credential approval:
+   ```sh
+   $ printf "protocol=https\nhost=example.invalid\nusername=testuser\npassword=secretpass\n\n" | git credential approve
+   ```
+4. Asserts that `git credential fill` returns the cached credentials.
+5. Verifies that omitting the `credential.helper cache` command fails to cache credentials, confirming the decisive role of the setting.
+
 
 To find a credential helper:
 

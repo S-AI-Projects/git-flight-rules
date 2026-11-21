@@ -1,0 +1,12 @@
+Exit code: 0
+--- STDOUT ---
+Starting verification of R12-T048...
+Testing execution with decisive command in: /var/folders/wn/krqy3_ld3px81gh6q5pp1dyr0000gn/T/gfr_t048_pass_4sn733hj
+  Assertion 1: Credential helper config verified.
+  Assertion 2: Credential retrieval verified.
+  Assertion 3: Temporary directory cleanup verified.
+Testing deliberate omission of decisive command in: /var/folders/wn/krqy3_ld3px81gh6q5pp1dyr0000gn/T/gfr_t048_fail_l6j02kyl
+  Assertion 4: Omission failure check verified.
+
+SUCCESS: All executable guide assertions passed successfully.
+PASS: Credential caching successfully verified.
