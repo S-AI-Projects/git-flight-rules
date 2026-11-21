@@ -1,0 +1,52 @@
+Task: R12-T049
+Section: "I want to view the commit history for a specific function" in README.md
+Target Command: git log -L :FunctionName:FilePath
+
+1. Environment & Setup:
+- Initial branch: main
+- Author Name: Course Student
+- Author Email: student@example.invalid
+- Clean Git Config: GIT_CONFIG_NOSYSTEM=1, GIT_CONFIG_GLOBAL=/dev/null
+
+2. Repository Construction Steps:
+- Initialize:
+    git init -b main
+    git config user.name "Course Student"
+    git config user.email "student@example.invalid"
+
+- Commit A:
+    printf "alpha\n" > notes.txt
+    git add notes.txt
+    git commit -m "Commit A: create notes.txt"
+
+- Commit B:
+    printf "beta\n" >> notes.txt
+    git add notes.txt
+    git commit -m "Commit B: append beta to notes.txt"
+    git branch topic
+
+- Commit C:
+    printf "one\n" > todo.txt
+    git add todo.txt
+    git commit -m "Commit C: create todo.txt"
+
+3. Function Tracking Setup:
+- Configure diff driver in .gitattributes:
+    printf "*.py diff=python\n" > .gitattributes
+    git add .gitattributes
+- Commit D:
+    printf "def calculate_total(items):\n    return sum(items)\n" > calc.py
+    git add calc.py
+    git commit -m "Commit D: add calculate_total in calc.py"
+- Commit E:
+    printf "def calculate_total(items):\n    # add discount handling\n    total = sum(items)\n    return total\n" > calc.py
+    git add calc.py
+    git commit -m "Commit E: refactor calculate_total in calc.py"
+
+4. Execution:
+- Valid run:
+    git log -L :calculate_total:calc.py
+- Missing file check (fails):
+    git log -L :calculate_total:missing.py
+- Missing function check (fails):
+    git log -L :undefined_func:calc.py

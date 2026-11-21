@@ -1,0 +1,11 @@
+Exit code: 0
+--- STDOUT ---
+Starting verification of R12-T049...
+Executing workflow in temporary repo 1: /var/folders/wn/krqy3_ld3px81gh6q5pp1dyr0000gn/T/gfr_t049_1_x83oo531
+  Repo 1: All prerequisite clarification assertions passed.
+Executing workflow in temporary repo 2: /var/folders/wn/krqy3_ld3px81gh6q5pp1dyr0000gn/T/gfr_t049_2_6xqpd9_t
+  Repo 2: All prerequisite clarification assertions passed.
+Checking cross-repository consistency...
+  Cross-repository consistency verified.
+
+SUCCESS: All prerequisite clarification assertions passed successfully.

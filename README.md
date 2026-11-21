@@ -1719,6 +1719,19 @@ $ git log -L :FunctionName:FilePath
 
 Note that you can combine this with further `git log` options, like [revision ranges](https://git-scm.com/docs/gitrevisions) and [commit limits](https://git-scm.com/docs/git-log/#_commit_limiting).
 
+#### Prerequisites and Setup
+
+Before running `git log -L :FunctionName:FilePath`, ensure the following prerequisites are met:
+
+1. **Tracked File in Commit History:** `FilePath` must be a committed, tracked file reachable in the current branch `HEAD`. If the file does not exist in `HEAD`, Git fails with `fatal: no such path in HEAD`.
+2. **Matching Function Signature:** `FunctionName` is interpreted as a regular expression matching the function header in `FilePath`. If no matching definition exists, Git fails with `fatal: -L parameter '...' starting at line 1: no match`.
+3. **Language Diff Driver:** Git determines function boundaries using language patterns (e.g. `def func():` in Python or `function func()` in JavaScript). For recognized file extensions, Git uses built-in rules; for custom extensions, map the diff driver in `.gitattributes`:
+   ```
+   *.py diff=python
+   ```
+4. **Committed State:** `git log -L` traces changes across commits. Any uncommitted working tree modifications to the function will not appear in the log output until committed.
+
+
 ### Find a tag where a commit is referenced
 
 To find all tags containing a specific commit:

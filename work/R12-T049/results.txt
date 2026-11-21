@@ -1,0 +1,35 @@
+Task: R12-T049 - Verification Results
+====================================
+
+Assertion 1: Missing File Failure Handling
+- Expected:
+  - 'git log -L :calculate_total:missing.py' exits non-zero with fatal error
+- Actual:
+  - Non-zero exit code (MATCH)
+  - Fatal error on pathspec (MATCH)
+- Result: PASSED
+
+Assertion 2: Missing Function Signature Handling
+- Expected:
+  - 'git log -L :undefined_func:calc.py' exits non-zero with no match error
+- Actual:
+  - Non-zero exit code (MATCH)
+  - Error: "-L parameter ... no match" (MATCH)
+- Result: PASSED
+
+Assertion 3: Successful Function Line-Range Commit Trace
+- Expected:
+  - Output traces Commit D and Commit E
+  - Function definition diff displayed
+- Actual:
+  - Commit D present in trace (MATCH)
+  - Commit E present in trace (MATCH)
+  - 'def calculate_total(items):' matched (MATCH)
+- Result: PASSED
+
+Assertion 4: Cross-Repository Reproducibility
+- Expected:
+  - Consistent execution across two separate temporary repositories
+- Actual:
+  - Repo 1 and Repo 2 match completely
+- Result: PASSED
