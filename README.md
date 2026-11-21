@@ -1772,9 +1772,21 @@ $ git rev-list -n 1 HEAD -- filename
 
 Then checkout that file:
 
+```sh
+$ git checkout deletingcommitid^ -- filename
 ```
-git checkout deletingcommitid^ -- filename
-```
+
+#### Branch and Remote Semantics
+
+Understanding which branch is affected depends on `HEAD`:
+
+- **Scope of `HEAD`:** When `HEAD` points to a feature branch (e.g. `topic`), `git rev-list -n 1 HEAD -- filename` searches only the commits reachable from `topic`. If the file was deleted in another branch (such as the default branch `main`), passing `HEAD` will not find that commit. You must explicitly name the target branch instead:
+  ```sh
+  $ git rev-list -n 1 main -- filename
+  ```
+- **Working Tree and Index Changes:** Running `git checkout deletingcommitid^ -- filename` checks out the file and immediately stages it into the index of your **current checked-out branch** (`topic`).
+- **Isolation of Unrelated Refs:** The default branch `main` (`refs/heads/main`) and any remote tracking branches (`origin/*`) remain completely fixed and unaffected. Committing the restored file (`git commit -m "Restore file"`) advances only `refs/heads/topic`.
+
 
 ### Delete tag
 

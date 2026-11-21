@@ -1,0 +1,11 @@
+Exit code: 0
+--- STDOUT ---
+Starting verification of R12-T044...
+Executing workflow in temporary repo 1: /var/folders/wn/krqy3_ld3px81gh6q5pp1dyr0000gn/T/gfr_t044_1_v80enxsj
+  Repo 1: All branch/remote semantics assertions passed.
+Executing workflow in temporary repo 2: /var/folders/wn/krqy3_ld3px81gh6q5pp1dyr0000gn/T/gfr_t044_2_i8wl4wod
+  Repo 2: All branch/remote semantics assertions passed.
+Checking cross-repository consistency...
+  Cross-repository consistency verified.
+
+SUCCESS: All branch semantics and recovery assertions passed successfully.

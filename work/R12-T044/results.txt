@@ -1,0 +1,32 @@
+Task: R12-T044 - Verification Results
+====================================
+
+Assertion 1: Current Branch (topic) Ref Progression
+- Expected:
+  - refs/heads/topic updates and advances beyond Commit B and Commit D
+  - HEAD points to refs/heads/topic
+- Actual:
+  - topic ref updated to Commit E (MATCH)
+  - HEAD -> refs/heads/topic (MATCH)
+- Result: PASSED
+
+Assertion 2: Unrelated Branch (main) Ref Immutability
+- Expected:
+  - refs/heads/main remains strictly at Commit C
+- Actual:
+  - main == Commit C (MATCH)
+- Result: PASSED
+
+Assertion 3: Restored File Content Accuracy
+- Expected:
+  - notes.txt restored content equals "alpha\nbeta\n" (state prior to deletion)
+- Actual:
+  - Content: MATCH ("alpha\nbeta\n")
+- Result: PASSED
+
+Assertion 4: Cross-Repository Reproducibility
+- Expected:
+  - Consistent execution across two separate temporary repositories
+- Actual:
+  - Repo 1 and Repo 2 match completely
+- Result: PASSED
