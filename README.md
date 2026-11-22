@@ -189,6 +189,76 @@ $ git remote set-url origin [url of the actual repo]
 
 For more, see [this StackOverflow topic](https://stackoverflow.com/questions/2432764/how-to-change-the-uri-url-for-a-remote-git-repository#2432799).
 
+**State Diagram (Before vs After):**
+
+Changing the remote URL updates repository configuration (`.git/config`). It does not modify `HEAD`, branch references, commit history/ancestry, staged files in the index, or working-tree files.
+
+```text
+State Transition: git remote set-url origin [url of the actual repo]
+
++--------------------+---------------------------------------------------+---------------------------------------------------+
+| Component          | Before set-url                                    | After set-url                                     |
++--------------------+---------------------------------------------------+---------------------------------------------------+
+| Remote Config      | remote.origin.url = file:///path/to/wrong-repo.git| remote.origin.url = file:///path/to/actual-repo.git| [CHANGED]
+| HEAD               | HEAD -> refs/heads/main                           | HEAD -> refs/heads/main                           | [UNCHANGED]
+| Branch Refs        | main  -> Commit C                                 | main  -> Commit C                                 | [UNCHANGED]
+|                    | topic -> Commit B                                 | topic -> Commit B                                 | [UNCHANGED]
+| Commit Ancestry    | (A) <--- (B) <--- (C)                             | (A) <--- (B) <--- (C)                             | [UNCHANGED]
+|                    |           ^        ^                              |           ^        ^                              |
+|                    |         topic     main (HEAD)                        |         topic     main (HEAD)                     |
+| Staged Files/Index | notes.txt, todo.txt (matching HEAD tree)          | notes.txt, todo.txt (matching HEAD tree)          | [UNCHANGED]
+| Working Tree       | notes.txt ("alpha\nbeta\n"), todo.txt ("one\n")   | notes.txt ("alpha\nbeta\n"), todo.txt ("one\n")   | [UNCHANGED]
++--------------------+---------------------------------------------------+---------------------------------------------------+
+```
+
+**Executable State Assertions:**
+
+In a repository with author `Course Student <student@example.invalid>` on branch `main` with Commits A, B, and C, branch `topic` at B, and `origin` initially set to a wrong remote URL:
+
+```sh
+# Setup repository and author
+(main)$ git init -b main
+(main)$ git config user.name "Course Student"
+(main)$ git config user.email "student@example.invalid"
+
+# Commit A: creates notes.txt with "alpha\n"
+(main)$ printf "alpha\n" > notes.txt
+(main)$ git add notes.txt
+(main)$ git commit -m "Commit A: create notes.txt"
+
+# Commit B: appends "beta\n" and create branch topic
+(main)$ printf "beta\n" >> notes.txt
+(main)$ git add notes.txt
+(main)$ git commit -m "Commit B: append to notes.txt"
+(main)$ git branch topic
+
+# Commit C: adds todo.txt with "one\n" on main
+(main)$ printf "one\n" > todo.txt
+(main)$ git add todo.txt
+(main)$ git commit -m "Commit C: add todo.txt"
+
+# Configure initial (wrong) remote URL
+(main)$ git remote add origin file:///tmp/wrong-repo.git
+
+# Verify state before set-url
+(main)$ git config remote.origin.url
+file:///tmp/wrong-repo.git
+(main)$ git rev-parse HEAD
+<commit-C>
+(main)$ git status --porcelain
+# (empty: working tree and index clean)
+
+# Update remote URL using the named command
+(main)$ git remote set-url origin file:///tmp/actual-repo.git
+
+# Assert state after set-url
+(main)$ git config remote.origin.url
+file:///tmp/actual-repo.git
+(main)$ test "$(git rev-parse HEAD)" = "$(git rev-parse refs/heads/main)"
+(main)$ test "$(git rev-parse refs/heads/topic)" = "<commit-B>"
+(main)$ test -z "$(git status --porcelain)"
+```
+
 
 ### I want to add code to someone else's repository
 
