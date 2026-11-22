@@ -1,0 +1,74 @@
+Starting automated verification check for R12-T016
+Tool versions: {
+  "git": "git version 2.50.1 (Apple Git-155)",
+  "python": "Python 3.15.2",
+  "os": "Darwin 25.6.0 (arm64)"
+}
+
+=== Running Test Iteration 1 ===
+Temporary root directory: /var/folders/k8/xtrjfrhs1r523br2mhhrr1kh0000gn/T/tmp8wivt6f7
+Execute: git config user.name "Course Student"
+Execute: git config user.email "student@example.invalid"
+Execute: git add notes.txt
+Execute: git commit -m "Commit A: create notes.txt"
+Execute: git rev-parse HEAD
+Commit A hash: b4d3499a49d1a6d91b989d88d5bc649811fac42f
+Execute: git add notes.txt
+Execute: git commit -m "Commit B: append to notes.txt"
+Execute: git rev-parse HEAD
+Execute: git rev-parse HEAD^{tree}
+Commit B hash: 750989169dc88195ab936b02844f1a4dda5504a1, Tree B: f85b72cccab2aab0cfca333f78ab1ff302be5f7b
+Execute: git branch topic
+Execute: git add todo.txt
+Execute: git commit -m "Commit C: add todo.txt"
+Execute: git rev-parse HEAD
+Execute: git rev-parse HEAD^{tree}
+Commit C hash: 8cb99fb1f733c98acc2c01130a521203fa8da0d2, Tree C: 70d571a7a75867c09d38254b1252d5e2402adaa6
+Execute: git rev-parse refs/heads/main
+Execute: git rev-parse refs/heads/topic
+Execute: git status --porcelain
+Execute: git archive --format zip --output "/var/folders/k8/xtrjfrhs1r523br2mhhrr1kh0000gn/T/tmp8wivt6f7/archives/main.zip" main
+Execute: git archive --format zip --prefix=release/ --output "/var/folders/k8/xtrjfrhs1r523br2mhhrr1kh0000gn/T/tmp8wivt6f7/archives/main_prefixed.zip" main
+Execute: git archive --format zip --output "/var/folders/k8/xtrjfrhs1r523br2mhhrr1kh0000gn/T/tmp8wivt6f7/archives/topic.zip" topic
+Assertion 1 Passed: main.zip contains exact root-level entries matching Tree C
+Assertion 2 Passed: main_prefixed.zip entries are correctly nested under 'release/'
+Assertion 3 Passed: topic.zip exports only Commit B files, omitting todo.txt
+Execute: git rev-parse refs/heads/main
+Execute: git rev-parse refs/heads/topic
+Execute: git status --porcelain
+Assertion 4 Passed: Repository refs, index, and working tree remain completely untouched
+
+=== Running Test Iteration 2 ===
+Temporary root directory: /var/folders/k8/xtrjfrhs1r523br2mhhrr1kh0000gn/T/tmpt8faodlb
+Execute: git config user.name "Course Student"
+Execute: git config user.email "student@example.invalid"
+Execute: git add notes.txt
+Execute: git commit -m "Commit A: create notes.txt"
+Execute: git rev-parse HEAD
+Commit A hash: 608056384a91a40e78e78d6ffdce006ba64eafa6
+Execute: git add notes.txt
+Execute: git commit -m "Commit B: append to notes.txt"
+Execute: git rev-parse HEAD
+Execute: git rev-parse HEAD^{tree}
+Commit B hash: 7666f5424e04f4de033eed93aae9b5c46e73b853, Tree B: f85b72cccab2aab0cfca333f78ab1ff302be5f7b
+Execute: git branch topic
+Execute: git add todo.txt
+Execute: git commit -m "Commit C: add todo.txt"
+Execute: git rev-parse HEAD
+Execute: git rev-parse HEAD^{tree}
+Commit C hash: c87905bb37e004d58aefaf165abae52a1019c85d, Tree C: 70d571a7a75867c09d38254b1252d5e2402adaa6
+Execute: git rev-parse refs/heads/main
+Execute: git rev-parse refs/heads/topic
+Execute: git status --porcelain
+Execute: git archive --format zip --output "/var/folders/k8/xtrjfrhs1r523br2mhhrr1kh0000gn/T/tmpt8faodlb/archives/main.zip" main
+Execute: git archive --format zip --prefix=release/ --output "/var/folders/k8/xtrjfrhs1r523br2mhhrr1kh0000gn/T/tmpt8faodlb/archives/main_prefixed.zip" main
+Execute: git archive --format zip --output "/var/folders/k8/xtrjfrhs1r523br2mhhrr1kh0000gn/T/tmpt8faodlb/archives/topic.zip" topic
+Assertion 1 Passed: main.zip contains exact root-level entries matching Tree C
+Assertion 2 Passed: main_prefixed.zip entries are correctly nested under 'release/'
+Assertion 3 Passed: topic.zip exports only Commit B files, omitting todo.txt
+Execute: git rev-parse refs/heads/main
+Execute: git rev-parse refs/heads/topic
+Execute: git status --porcelain
+Assertion 4 Passed: Repository refs, index, and working tree remain completely untouched
+
+Both iterations completed successfully with all assertions passing.

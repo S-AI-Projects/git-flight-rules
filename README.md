@@ -1815,6 +1815,58 @@ From github.com:foo/bar
 ```sh
 $ git archive --format zip --output /full/path/to/zipfile.zip main
 ```
+
+**Command Comparison & Archive Prefixing:**
+
+When creating an archive of a repository using `git archive`, you can optionally pass the `--prefix=<path>/` flag to enclose all extracted files inside a top-level directory, preventing files from scattering across the extraction target. Alternatively, you can target specific branch references (`main` vs. `topic`) to archive different snapshots of the commit tree.
+
+| Operation / Command | Preconditions | Resulting Commit/Index/Worktree | Observable Archive Difference |
+|---|---|---|---|
+| `git archive --format zip --output /path/to/repo.zip main` | Valid Git ref (`main`); write access to output path | No changes to `HEAD`, branch refs, index, or working tree | Root-level entries: contains `notes.txt` and `todo.txt` directly at the archive root. |
+| `git archive --format zip --prefix=release/ --output /path/to/repo-prefixed.zip main` | Valid Git ref (`main`); write access to output path | No changes to `HEAD`, branch refs, index, or working tree | Top-level folder: entries are nested under `release/` (`release/notes.txt`, `release/todo.txt`). |
+| `git archive --format zip --output /path/to/repo-topic.zip topic` | Valid Git ref (`topic`); write access to output path | No changes to `HEAD`, branch refs, index, or working tree | Branch tree: exports tree of Commit B (`notes.txt`), omitting Commit C (`todo.txt`). |
+
+**Reproducible Example:**
+
+In a temporary repository with branch `main`, author `Course Student <student@example.invalid>`, Commits A, B, and C, and branch `topic` created at B:
+
+```sh
+# Setup repository and author
+(main)$ git init -b main
+(main)$ git config user.name "Course Student"
+(main)$ git config user.email "student@example.invalid"
+
+# Commit A: creates notes.txt with "alpha\n"
+(main)$ printf "alpha\n" > notes.txt
+(main)$ git add notes.txt
+(main)$ git commit -m "Commit A: create notes.txt"
+
+# Commit B: appends "beta\n" and branch topic at B
+(main)$ printf "beta\n" >> notes.txt
+(main)$ git add notes.txt
+(main)$ git commit -m "Commit B: append to notes.txt"
+(main)$ git branch topic
+
+# Commit C: adds todo.txt with "one\n" on main
+(main)$ printf "one\n" > todo.txt
+(main)$ git add todo.txt
+(main)$ git commit -m "Commit C: add todo.txt"
+
+# 1. Guide command: export without prefix
+(main)$ git archive --format zip --output main.zip main
+(main)$ unzip -l main.zip
+# Archive contains: notes.txt, todo.txt
+
+# 2. Comparison with --prefix flag:
+(main)$ git archive --format zip --prefix=release/ --output main-prefixed.zip main
+(main)$ unzip -l main-prefixed.zip
+# Archive contains: release/, release/notes.txt, release/todo.txt
+
+# 3. Comparison targeting branch topic:
+(main)$ git archive --format zip --output topic.zip topic
+(main)$ unzip -l topic.zip
+# Archive contains only: notes.txt (Commit C todo.txt is omitted)
+```
 ### Push a branch and a tag that have the same name
 
 If there is a tag on a remote repository that has the same name as a branch you will get the following error when trying to push that branch with a standard `$ git push <remote> <branch>` command.
