@@ -432,6 +432,71 @@ If you haven't pushed, to reset Git to the state it was in before you made your 
 
 This only works if you haven't pushed. If you have pushed, the only truly safe thing to do is `git revert SHAofBadCommit`. That will create a new commit that undoes all the previous commit's changes. Or, if the branch you pushed to is rebase-safe (ie. other devs aren't expected to pull from it), you can just use `git push --force-with-lease`. For more, see [the above section](#deleteremove-last-pushed-commit).
 
+**Precondition Checklist & State Setup:**
+
+Before removing the last commit or force-pushing with lease, verify that the following prerequisites are satisfied:
+
+| Prerequisite | State Requirement | Verification Command | Failure Impact if Violated |
+|---|---|---|---|
+| **Non-Root Commit** | Branch must have at least one parent (`HEAD^` exists). | `git rev-parse --verify HEAD^` | `fatal: ambiguous argument 'HEAD^': unknown revision` |
+| **Current Branch** | Must be checked out on the exact branch to modify. | `git rev-parse --abbrev-ref HEAD` | Undoing a commit on the wrong branch. |
+| **Working Tree State** | Index & working tree should be clean before `--hard`. | `git status --porcelain` | `git reset --hard` will permanently discard uncommitted changes. |
+| **Remote Tracking** | Remote and tracking ref must be configured and up-to-date. | `git config remote.<remote>.url` | `git push --force-with-lease` will reject if remote ref differs. |
+
+**Minimal Setup & Execution Example:**
+
+In a temporary repository with branch `main`, author `Course Student <student@example.invalid>`, Commits A, B, and C, branch `topic` created at B, and a local bare remote:
+
+```sh
+# Setup repository, author, and local bare remote
+(main)$ git init -b main
+(main)$ git config user.name "Course Student"
+(main)$ git config user.email "student@example.invalid"
+
+# Commit A: creates notes.txt with "alpha\n"
+(main)$ printf "alpha\n" > notes.txt
+(main)$ git add notes.txt
+(main)$ git commit -m "Commit A: create notes.txt"
+
+# Commit B: appends "beta\n" and branch topic at B
+(main)$ printf "beta\n" >> notes.txt
+(main)$ git add notes.txt
+(main)$ git commit -m "Commit B: append to notes.txt"
+(main)$ git branch topic
+
+# Commit C: adds todo.txt with "one\n" on main
+(main)$ printf "one\n" > todo.txt
+(main)$ git add todo.txt
+(main)$ git commit -m "Commit C: add todo.txt"
+
+# Configure remote and push main
+(main)$ git remote add origin file:///tmp/remote.git
+(main)$ git push -u origin main
+```
+
+**1. Undo commit locally keeping staged changes (`--soft`):**
+
+```sh
+(main)$ git reset --soft HEAD^
+(main)$ git status --porcelain
+A  todo.txt
+# (HEAD points to Commit B; todo.txt remains staged in the index)
+```
+
+**2. Delete commit locally and remotely (`--hard` + `--force-with-lease`):**
+
+```sh
+# Reset hard to remove the commit and discard its working tree changes
+(main)$ git reset HEAD^ --hard
+(main)$ git status --porcelain
+# (working tree is clean; HEAD points to Commit B; todo.txt is deleted)
+
+# Safely update remote branch
+(main)$ git push --force-with-lease origin main
+# To file:///tmp/remote.git
+#  + <commit-C>...<commit-B> main -> main (forced update)
+```
+
 <a name="delete-any-commit"></a>
 ### Delete/remove arbitrary commit
 
