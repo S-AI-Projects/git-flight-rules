@@ -1,0 +1,16 @@
+R12-T029: Prerequisites for 'I need to combine commits' (reset --soft main / commit -am / rebase -i main)
+[PASS] P1: current branch is the feature branch, not main
+[PASS] P2 violated at first: topic forked at B, main is at C
+[PASS] why it matters: reset --soft main would also stage deleting main's todo.txt
+[PASS] P2 satisfied after 'git rebase main'
+[PASS] P3: no uncommitted changes to tracked files
+[PASS] P4: identity is set in the repository's local config
+[PASS] after reset --soft main: both commits' changes are staged, HEAD = main
+[PASS] method 1: exactly one new commit on top of main
+[PASS] method 1: combined commit has the same tree as the two original commits
+[PASS] method 1: untracked scratch.txt was not committed and is still untracked
+[PASS] method 2: rebase -i main also leaves one commit on top of main with the same tree
+[PASS] P5: editors were configured in local config only
+[PASS] global Git configuration file is byte-for-byte unchanged
+[PASS] main itself was never moved
+R12-T029: PASS (14 facts checked)

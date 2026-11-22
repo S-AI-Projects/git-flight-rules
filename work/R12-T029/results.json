@@ -1,0 +1,162 @@
+{
+  "task": "R12-T029",
+  "description": "Prerequisites for 'I need to combine commits' (reset --soft main / commit -am / rebase -i main)",
+  "status": "pass",
+  "error": null,
+  "tool_versions": {
+    "git": "git version 2.43.0",
+    "python": "3.13.18",
+    "platform": "Linux-6.18.44-fc-v726-x86_64-with-glibc2.39"
+  },
+  "inputs": {
+    "fixture": [
+      "git init -b main",
+      "git config user.name 'Course Student'",
+      "git config user.email student@example.invalid",
+      "printf 'alpha\\n' > notes.txt && git add notes.txt && git commit -m A",
+      "printf 'beta\\n' >> notes.txt && git commit -am B",
+      "git branch topic            # topic -> B",
+      "printf 'one\\n' > todo.txt && git add todo.txt && git commit -m C"
+    ],
+    "commands": [
+      "git switch topic                       # P1: be on the feature branch",
+      "two commits on topic: feature.txt f1, then f2",
+      "git merge-base --is-ancestor main topic || git rebase main   # P2",
+      "git status --porcelain --untracked-files=no   # P3: must be empty",
+      "git config --local user.name/user.email       # P4: identity",
+      "git reset --soft main && git commit -am 'New awesome feature'",
+      "git config --local core.editor / sequence.editor   # P5 for rebase -i",
+      "git rebase -i main"
+    ]
+  },
+  "checks": [
+    {
+      "fact": "P1: current branch is the feature branch, not main",
+      "expected": "topic",
+      "actual": "topic",
+      "ok": true
+    },
+    {
+      "fact": "P2 violated at first: topic forked at B, main is at C",
+      "expected": [
+        false,
+        "c4b9730a7f40d6c8cdc0c9d32c858ef56b0e7fce"
+      ],
+      "actual": [
+        false,
+        "c4b9730a7f40d6c8cdc0c9d32c858ef56b0e7fce"
+      ],
+      "ok": true
+    },
+    {
+      "fact": "why it matters: reset --soft main would also stage deleting main's todo.txt",
+      "expected": true,
+      "actual": true,
+      "ok": true
+    },
+    {
+      "fact": "P2 satisfied after 'git rebase main'",
+      "expected": 0,
+      "actual": 0,
+      "ok": true
+    },
+    {
+      "fact": "P3: no uncommitted changes to tracked files",
+      "expected": "",
+      "actual": "",
+      "ok": true
+    },
+    {
+      "fact": "P4: identity is set in the repository's local config",
+      "expected": [
+        "Course Student",
+        "student@example.invalid"
+      ],
+      "actual": [
+        "Course Student",
+        "student@example.invalid"
+      ],
+      "ok": true
+    },
+    {
+      "fact": "after reset --soft main: both commits' changes are staged, HEAD = main",
+      "expected": [
+        "bd9f160c78ce479ef606c657e4114bb8eb8a589d",
+        "feature.txt"
+      ],
+      "actual": [
+        "bd9f160c78ce479ef606c657e4114bb8eb8a589d",
+        "feature.txt"
+      ],
+      "ok": true
+    },
+    {
+      "fact": "method 1: exactly one new commit on top of main",
+      "expected": [
+        "1",
+        "bd9f160c78ce479ef606c657e4114bb8eb8a589d"
+      ],
+      "actual": [
+        "1",
+        "bd9f160c78ce479ef606c657e4114bb8eb8a589d"
+      ],
+      "ok": true
+    },
+    {
+      "fact": "method 1: combined commit has the same tree as the two original commits",
+      "expected": "f2a437904b3ca281686d9d82d3da937cd34f950e",
+      "actual": "f2a437904b3ca281686d9d82d3da937cd34f950e",
+      "ok": true
+    },
+    {
+      "fact": "method 1: untracked scratch.txt was not committed and is still untracked",
+      "expected": [
+        true,
+        "?? scratch.txt"
+      ],
+      "actual": [
+        true,
+        "?? scratch.txt"
+      ],
+      "ok": true
+    },
+    {
+      "fact": "method 2: rebase -i main also leaves one commit on top of main with the same tree",
+      "expected": [
+        "1",
+        "bd9f160c78ce479ef606c657e4114bb8eb8a589d",
+        "f2a437904b3ca281686d9d82d3da937cd34f950e"
+      ],
+      "actual": [
+        "1",
+        "bd9f160c78ce479ef606c657e4114bb8eb8a589d",
+        "f2a437904b3ca281686d9d82d3da937cd34f950e"
+      ],
+      "ok": true
+    },
+    {
+      "fact": "P5: editors were configured in local config only",
+      "expected": [
+        "true",
+        true
+      ],
+      "actual": [
+        "true",
+        true
+      ],
+      "ok": true
+    },
+    {
+      "fact": "global Git configuration file is byte-for-byte unchanged",
+      "expected": "f32e7cbf256906ce1720e2742d3cfa79271a7d69444bdaf23a64768c1d6b90b9",
+      "actual": "f32e7cbf256906ce1720e2742d3cfa79271a7d69444bdaf23a64768c1d6b90b9",
+      "ok": true
+    },
+    {
+      "fact": "main itself was never moved",
+      "expected": "bd9f160c78ce479ef606c657e4114bb8eb8a589d",
+      "actual": "bd9f160c78ce479ef606c657e4114bb8eb8a589d",
+      "ok": true
+    }
+  ]
+}
