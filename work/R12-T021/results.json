@@ -1,0 +1,141 @@
+{
+  "task": "R12-T021",
+  "description": "Reproducible example for 'To stage part of tracked files' (git add -u <pathspec>)",
+  "status": "pass",
+  "error": null,
+  "tool_versions": {
+    "git": "git version 2.43.0",
+    "python": "3.13.18",
+    "platform": "Linux-6.18.44-fc-v726-x86_64-with-glibc2.39"
+  },
+  "inputs": {
+    "fixture": [
+      "git init -b main",
+      "git config user.name 'Course Student'",
+      "git config user.email student@example.invalid",
+      "printf 'alpha\\n' > notes.txt && git add notes.txt && git commit -m A",
+      "printf 'beta\\n' >> notes.txt && git commit -am B",
+      "git branch topic            # topic -> B",
+      "printf 'one\\n' > todo.txt && git add todo.txt && git commit -m C"
+    ],
+    "commands": [
+      "printf 'gamma\\n' >> notes.txt",
+      "printf 'draft\\n' > draft.txt",
+      "mkdir src && printf 'x\\n' > src/new.txt",
+      "git add -u *.txt",
+      "git add -u src/"
+    ],
+    "runs": [
+      {
+        "label": "first temporary directory",
+        "dir": "/tmp/R12-T021-yyrshxis/run1"
+      },
+      {
+        "label": "second temporary directory",
+        "dir": "/tmp/R12-T021-yyrshxis/run2"
+      }
+    ]
+  },
+  "checks": [
+    {
+      "fact": "status before staging",
+      "expected": " M notes.txt\n?? draft.txt\n?? src/new.txt",
+      "actual": " M notes.txt\n?? draft.txt\n?? src/new.txt",
+      "ok": true
+    },
+    {
+      "fact": "git add -u *.txt stages only the tracked .txt edit",
+      "expected": "M  notes.txt\n?? draft.txt\n?? src/new.txt",
+      "actual": "M  notes.txt\n?? draft.txt\n?? src/new.txt",
+      "ok": true
+    },
+    {
+      "fact": "git add -u src/ adds nothing (src/ holds only untracked files)",
+      "expected": "M  notes.txt\n?? draft.txt\n?? src/new.txt",
+      "actual": "M  notes.txt\n?? draft.txt\n?? src/new.txt",
+      "ok": true
+    },
+    {
+      "fact": "index contains exactly the tracked files",
+      "expected": [
+        "notes.txt",
+        "todo.txt"
+      ],
+      "actual": [
+        "notes.txt",
+        "todo.txt"
+      ],
+      "ok": true
+    },
+    {
+      "fact": "staged notes.txt blob equals the edited working-tree file",
+      "expected": "alpha\nbeta\ngamma",
+      "actual": "alpha\nbeta\ngamma",
+      "ok": true
+    },
+    {
+      "fact": "no ref moved: main still at C, topic still at B",
+      "expected": [
+        "bd9f160c78ce479ef606c657e4114bb8eb8a589d",
+        "c4b9730a7f40d6c8cdc0c9d32c858ef56b0e7fce"
+      ],
+      "actual": [
+        "bd9f160c78ce479ef606c657e4114bb8eb8a589d",
+        "c4b9730a7f40d6c8cdc0c9d32c858ef56b0e7fce"
+      ],
+      "ok": true
+    },
+    {
+      "fact": "history is unchanged (C, B, A)",
+      "expected": "C\nB\nA",
+      "actual": "C\nB\nA",
+      "ok": true
+    },
+    {
+      "fact": "run 1 and run 2 produce identical refs",
+      "expected": {
+        "refs/heads/main": "bd9f160c78ce479ef606c657e4114bb8eb8a589d",
+        "refs/heads/topic": "c4b9730a7f40d6c8cdc0c9d32c858ef56b0e7fce"
+      },
+      "actual": {
+        "refs/heads/main": "bd9f160c78ce479ef606c657e4114bb8eb8a589d",
+        "refs/heads/topic": "c4b9730a7f40d6c8cdc0c9d32c858ef56b0e7fce"
+      },
+      "ok": true
+    },
+    {
+      "fact": "run 1 and run 2 produce identical index state",
+      "expected": "100644 85c30401ce288f253613cb07ee32e62128089caa 0\tnotes.txt\n100644 5626abf0f72e58d7a153368ba57db4c673c0e171 0\ttodo.txt",
+      "actual": "100644 85c30401ce288f253613cb07ee32e62128089caa 0\tnotes.txt\n100644 5626abf0f72e58d7a153368ba57db4c673c0e171 0\ttodo.txt",
+      "ok": true
+    },
+    {
+      "fact": "run 1 and run 2 produce identical file contents",
+      "expected": {
+        "draft.txt": "draft\n",
+        "notes.txt": "alpha\nbeta\ngamma\n",
+        "src/new.txt": "x\n",
+        "todo.txt": "one\n"
+      },
+      "actual": {
+        "draft.txt": "draft\n",
+        "notes.txt": "alpha\nbeta\ngamma\n",
+        "src/new.txt": "x\n",
+        "todo.txt": "one\n"
+      },
+      "ok": true
+    },
+    {
+      "fact": "run 1 and run 2 produce identical status output",
+      "expected": [
+        "M  notes.txt\n?? draft.txt\n?? src/new.txt",
+        "M  notes.txt\n?? draft.txt\n?? src/new.txt"
+      ],
+      "actual": [
+        "M  notes.txt\n?? draft.txt\n?? src/new.txt",
+        "M  notes.txt\n?? draft.txt\n?? src/new.txt"
+      ],
+      "ok": true
+    }
+  ]
+}

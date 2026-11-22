@@ -1,0 +1,13 @@
+R12-T021: Reproducible example for 'To stage part of tracked files' (git add -u <pathspec>)
+[PASS] status before staging
+[PASS] git add -u *.txt stages only the tracked .txt edit
+[PASS] git add -u src/ adds nothing (src/ holds only untracked files)
+[PASS] index contains exactly the tracked files
+[PASS] staged notes.txt blob equals the edited working-tree file
+[PASS] no ref moved: main still at C, topic still at B
+[PASS] history is unchanged (C, B, A)
+[PASS] run 1 and run 2 produce identical refs
+[PASS] run 1 and run 2 produce identical index state
+[PASS] run 1 and run 2 produce identical file contents
+[PASS] run 1 and run 2 produce identical status output
+R12-T021: PASS (11 facts checked)

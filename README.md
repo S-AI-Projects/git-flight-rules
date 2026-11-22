@@ -665,6 +665,60 @@ $ git add -u *.txt
 $ git add -u src/
 ```
 
+`-u` only updates files Git already tracks. A pathspec narrows that set; it never adds an untracked file, even when the shell glob or directory names one.
+
+<details>
+<summary>Reproducible example (start to finish)</summary>
+
+Run this in an empty scratch directory (Git 2.28+ for `git init -b`):
+
+```sh
+$ git init -q -b main demo && cd demo
+$ git config user.name "Course Student"
+$ git config user.email student@example.invalid
+$ printf 'alpha\n' > notes.txt && git add notes.txt && git commit -qm A
+$ printf 'beta\n' >> notes.txt && git commit -qam B
+$ git branch topic
+$ printf 'one\n' > todo.txt && git add todo.txt && git commit -qm C
+
+# one tracked edit, plus untracked files at the top level and in src/
+$ printf 'gamma\n' >> notes.txt
+$ printf 'draft\n' > draft.txt
+$ mkdir src && printf 'x\n' > src/new.txt
+$ git status --short --untracked-files=all
+ M notes.txt
+?? draft.txt
+?? src/new.txt
+```
+
+Stage the tracked `.txt` files. The shell expands `*.txt` to `draft.txt notes.txt todo.txt`; `-u` skips the untracked `draft.txt` without an error, and `todo.txt` has no changes:
+
+```sh
+$ git add -u *.txt
+$ git status --short --untracked-files=all
+M  notes.txt
+?? draft.txt
+?? src/new.txt
+```
+
+`src/` contains only an untracked file, so `git add -u src/` stages nothing:
+
+```sh
+$ git add -u src/
+$ git status --short --untracked-files=all
+M  notes.txt
+?? draft.txt
+?? src/new.txt
+$ git log --format=%s
+C
+B
+A
+```
+
+Only the index changed: `main` and `topic` did not move, and `git show :notes.txt` prints the staged `alpha`, `beta`, `gamma` lines. Running the whole block again in a new directory gives the same refs, index and files.
+
+</details>
+
 ### I want to stage all untracked files and leave tracked files
 
 ```sh
