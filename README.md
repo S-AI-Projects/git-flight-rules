@@ -1211,6 +1211,28 @@ Say you want to delete all branches that start with `fix/`:
 (main)$ git branch | grep 'fix/' | xargs git branch -d
 ```
 
+This assumes you are **not** on one of the `fix/` branches (note the `(main)` prompt). If you are, the command fails:
+
+```sh
+(fix/a)$ git branch
+* fix/a
+  fix/b
+  main
+(fix/a)$ git branch | grep 'fix/' | xargs git branch -d
+```
+
+`git branch` marks the current branch with `* `, so `xargs` runs `git branch -d * fix/a fix/b`. Git reports that there is no branch named `*` and that it cannot delete `fix/a` because it is checked out, then exits with a non-zero status. `fix/b` is still deleted, so the run only partly succeeds. (The exact error wording differs between Git versions.)
+
+The smallest fix is to switch to a branch that is not being deleted and run the same command again:
+
+```sh
+(fix/a)$ git switch main
+(main)$ git branch | grep 'fix/' | xargs git branch -d
+Deleted branch fix/a (was ...).
+```
+
+`-d` also refuses a branch that is not merged into your current branch. Use `-D` only for branches you are sure you no longer need.
+
 ### I want to rename a branch
 
 To rename the current (local) branch:

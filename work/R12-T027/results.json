@@ -1,0 +1,104 @@
+{
+  "task": "R12-T027",
+  "description": "Failure diagnosis for 'I want to delete multiple branches' (git branch | grep 'fix/' | xargs git branch -d)",
+  "status": "pass",
+  "error": null,
+  "tool_versions": {
+    "git": "git version 2.43.0",
+    "python": "3.13.18",
+    "platform": "Linux-6.18.44-fc-v726-x86_64-with-glibc2.39"
+  },
+  "inputs": {
+    "fixture": [
+      "git init -b main",
+      "git config user.name 'Course Student'",
+      "git config user.email student@example.invalid",
+      "printf 'alpha\\n' > notes.txt && git add notes.txt && git commit -m A",
+      "printf 'beta\\n' >> notes.txt && git commit -am B",
+      "git branch topic            # topic -> B",
+      "printf 'one\\n' > todo.txt && git add todo.txt && git commit -m C"
+    ],
+    "commands": [
+      "git branch fix/a topic && git branch fix/b topic   # both merged into main",
+      "git switch fix/a                                    # violated precondition",
+      "git branch | grep 'fix/' | xargs git branch -d",
+      "git switch main                                     # smallest correction",
+      "git branch | grep 'fix/' | xargs git branch -d"
+    ],
+    "bad_case_stderr": "error: branch '*' not found\nerror: cannot delete branch 'fix/a' used by worktree at '/tmp/R12-T027-8eb46gyy/demo'\n"
+  },
+  "checks": [
+    {
+      "fact": "on fix/a, 'git branch' marks it with '* ', which grep passes to xargs",
+      "expected": [
+        "* fix/a",
+        "  fix/b"
+      ],
+      "actual": [
+        "* fix/a",
+        "  fix/b"
+      ],
+      "ok": true
+    },
+    {
+      "fact": "bad case: the pipeline exits non-zero",
+      "expected": true,
+      "actual": true,
+      "ok": true
+    },
+    {
+      "fact": "bad case: the checked-out branch fix/a was NOT deleted (and '*' is not a branch)",
+      "expected": [
+        true,
+        true
+      ],
+      "actual": [
+        true,
+        true
+      ],
+      "ok": true
+    },
+    {
+      "fact": "bad case: the other match fix/b was deleted, so the run half-succeeded",
+      "expected": false,
+      "actual": false,
+      "ok": true
+    },
+    {
+      "fact": "repaired case: after 'git switch main' the same pipeline exits 0",
+      "expected": 0,
+      "actual": 0,
+      "ok": true
+    },
+    {
+      "fact": "repaired case: no fix/ branches remain",
+      "expected": [
+        "refs/heads/main",
+        "refs/heads/topic"
+      ],
+      "actual": [
+        "refs/heads/main",
+        "refs/heads/topic"
+      ],
+      "ok": true
+    },
+    {
+      "fact": "unrelated refs stayed fixed: main = C, topic = B",
+      "expected": [
+        "bd9f160c78ce479ef606c657e4114bb8eb8a589d",
+        "c4b9730a7f40d6c8cdc0c9d32c858ef56b0e7fce"
+      ],
+      "actual": [
+        "bd9f160c78ce479ef606c657e4114bb8eb8a589d",
+        "c4b9730a7f40d6c8cdc0c9d32c858ef56b0e7fce"
+      ],
+      "ok": true
+    },
+    {
+      "fact": "working tree and index are clean on main",
+      "expected": "",
+      "actual": "",
+      "ok": true
+    }
+  ]
+}
