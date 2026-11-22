@@ -161,6 +161,25 @@ To initialize an existing directory as a Git repository:
 
 ### I want to clone a remote repository
 
+**Worked exercise**
+
+*Predict*: After cloning a remote repository that contains a `main` branch with three commits (A creates `notes.txt` with `alpha\n`, B appends `beta\n`, C adds `todo.txt` with `one\n`) and a `topic` branch at commit B, the cloned working tree should:
+- Have `HEAD` pointing to `main`.
+- Contain `notes.txt` with both lines `alpha` and `beta`.
+- Contain `todo.txt` with `one`.
+- Have a remote-tracking branch `origin/topic`.
+
+*Execute*:
+```sh
+# In a temporary directory, create the source repo and a bare remote (see the automated test).
+# Then clone the remote:
+$ git clone /tmp/remote.git clone-dir
+```
+
+*Result*: The cloned repository satisfies all predictions. `git rev-parse --abbrev-ref HEAD` shows `main`; `cat notes.txt` outputs `alpha\nbeta\n`; `cat todo.txt` outputs `one`; and `git branch -a` lists `remotes/origin/topic`.
+
+---
+
 To clone (copy) a remote repository, copy the URL for the repository, and run:
 
 ```sh
