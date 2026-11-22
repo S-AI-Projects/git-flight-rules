@@ -1,0 +1,72 @@
+Starting automated verification check for R12-T017
+Tool versions: {
+  "git": "git version 2.50.1 (Apple Git-155)",
+  "python": "Python 3.15.2",
+  "os": "Darwin 25.6.0 (arm64)"
+}
+
+=== Running Test Iteration 1 ===
+Temporary root directory: /var/folders/k8/xtrjfrhs1r523br2mhhrr1kh0000gn/T/tmpa_h9jwgz
+Bare target remote URL: file:///var/folders/k8/xtrjfrhs1r523br2mhhrr1kh0000gn/T/tmpa_h9jwgz/remote-target.git
+Execute: git config user.name "Course Student"
+Execute: git config user.email "student@example.invalid"
+Execute: git add notes.txt
+Execute: git commit -m "Commit A: create notes.txt"
+Execute: git rev-parse HEAD
+Commit A hash: e66804bd97cfd8698f1f07699ea2774d166f0877
+Execute: git add notes.txt
+Execute: git commit -m "Commit B: append to notes.txt"
+Execute: git rev-parse HEAD
+Commit B hash: 5101a44fd7b5619cef0abf649d6fc1733b29d52f
+Execute: git branch topic
+Execute: git add todo.txt
+Execute: git commit -m "Commit C: add todo.txt"
+Execute: git rev-parse HEAD
+Commit C hash: 153eee386c1f6e563517eb06b34089e07d33768d
+Execute: git tag v1.0
+Execute: git reflog expire --expire=now --all && git gc --prune=now --aggressive
+Executed: git reflog expire and git gc
+Execute: git push origin --force --tags
+Assertion 1 Passed: git push failed as expected with code 128
+Execute: git remote add origin file:///var/folders/k8/xtrjfrhs1r523br2mhhrr1kh0000gn/T/tmpa_h9jwgz/remote-target.git
+Execute: git config remote.origin.url
+Assertion 2 Passed: Remote origin configured with file:///var/folders/k8/xtrjfrhs1r523br2mhhrr1kh0000gn/T/tmpa_h9jwgz/remote-target.git
+Execute: git push origin --force --tags
+Assertion 3 Passed: Repaired git push origin --force --tags succeeded with exit code 0
+Execute: git ls-remote --tags origin
+Assertion 4 Passed: Remote tag v1.0 verified pointing to Commit C
+Execute: git status --porcelain
+
+=== Running Test Iteration 2 ===
+Temporary root directory: /var/folders/k8/xtrjfrhs1r523br2mhhrr1kh0000gn/T/tmpinr90oog
+Bare target remote URL: file:///var/folders/k8/xtrjfrhs1r523br2mhhrr1kh0000gn/T/tmpinr90oog/remote-target.git
+Execute: git config user.name "Course Student"
+Execute: git config user.email "student@example.invalid"
+Execute: git add notes.txt
+Execute: git commit -m "Commit A: create notes.txt"
+Execute: git rev-parse HEAD
+Commit A hash: e66804bd97cfd8698f1f07699ea2774d166f0877
+Execute: git add notes.txt
+Execute: git commit -m "Commit B: append to notes.txt"
+Execute: git rev-parse HEAD
+Commit B hash: 5101a44fd7b5619cef0abf649d6fc1733b29d52f
+Execute: git branch topic
+Execute: git add todo.txt
+Execute: git commit -m "Commit C: add todo.txt"
+Execute: git rev-parse HEAD
+Commit C hash: 153eee386c1f6e563517eb06b34089e07d33768d
+Execute: git tag v1.0
+Execute: git reflog expire --expire=now --all && git gc --prune=now --aggressive
+Executed: git reflog expire and git gc
+Execute: git push origin --force --tags
+Assertion 1 Passed: git push failed as expected with code 128
+Execute: git remote add origin file:///var/folders/k8/xtrjfrhs1r523br2mhhrr1kh0000gn/T/tmpinr90oog/remote-target.git
+Execute: git config remote.origin.url
+Assertion 2 Passed: Remote origin configured with file:///var/folders/k8/xtrjfrhs1r523br2mhhrr1kh0000gn/T/tmpinr90oog/remote-target.git
+Execute: git push origin --force --tags
+Assertion 3 Passed: Repaired git push origin --force --tags succeeded with exit code 0
+Execute: git ls-remote --tags origin
+Assertion 4 Passed: Remote tag v1.0 verified pointing to Commit C
+Execute: git status --porcelain
+
+Both iterations completed successfully with all assertions passing.
