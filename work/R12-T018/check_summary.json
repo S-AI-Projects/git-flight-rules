@@ -1,0 +1,32 @@
+{
+  "task": "R12-T018",
+  "success": true,
+  "tool_versions": {
+    "git": "git version 2.50.1 (Apple Git-155)",
+    "python": "Python 3.15.2",
+    "os": "Darwin 25.6.0 (arm64)"
+  },
+  "iterations": [
+    {
+      "iteration": 1,
+      "omit_decisive_command": false,
+      "commit_a": "6bbaa7fa1a3eafe702a6e85a2caad9d5395169dd",
+      "commit_b": "b2b484c251feba5292e5e26c12046bea65db4e40",
+      "commit_c": "40068d6bcda799b12d33caa603da097b3ed7602c",
+      "notes_content": "alpha\nbeta\ngamma\n",
+      "status_clean_on_stash": true,
+      "all_assertions_passed": true
+    },
+    {
+      "iteration": 2,
+      "omit_decisive_command": false,
+      "commit_a": "eaa0ca0ebd89105bb0eddc41bb3000f8f5132f5c",
+      "commit_b": "3ee886dc81cba4efe9cf02ff628d0715c9ab6271",
+      "commit_c": "2f33616a4e6cf53a0bdec1468517cfb6a6fcf81a",
+      "notes_content": "alpha\nbeta\ngamma\n",
+      "status_clean_on_stash": true,
+      "all_assertions_passed": true
+    }
+  ],
+  "negative_test_omission_verified": true
+}
