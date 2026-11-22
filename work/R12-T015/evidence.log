@@ -1,0 +1,78 @@
+Starting automated verification check for R12-T015
+Tool versions: {
+  "git": "git version 2.50.1 (Apple Git-155)",
+  "python": "Python 3.15.2",
+  "os": "Darwin 25.6.0 (arm64)"
+}
+
+=== Running Test Iteration 1 ===
+Temporary directory: /var/folders/k8/xtrjfrhs1r523br2mhhrr1kh0000gn/T/tmpz9qe7yce
+Execute: git init -b main
+Execute: git config user.name "Course Student"
+Execute: git config user.email "student@example.invalid"
+Execute: git add notes.txt
+Execute: git commit -m "Commit A: create notes.txt"
+Execute: git rev-parse HEAD
+Commit A hash: 99530159276c16539816110a90ffcc4be051050e
+Execute: git add notes.txt
+Execute: git commit -m "Commit B: append to notes.txt"
+Execute: git rev-parse HEAD
+Commit B hash: fc4301918aa340c6a68f409a6b6f85f3ed4ec64b
+Execute: git branch topic
+Execute: git add todo.txt
+Execute: git commit -m "Commit C: add todo.txt"
+Execute: git rev-parse HEAD
+Commit C hash: c8a7439978051ae7cee48b6f1734315084b3cc5e
+Execute: git checkout topic
+Execute: git add release notes.txt
+Assertion 1 Passed: Unquoted pathspec correctly rejected by git add
+Execute: git add "release notes.txt" "sample data"
+Execute: git commit -m "Add release notes and sample data"
+Execute: git rev-parse HEAD
+Topic commit with quoted paths: c8dce8fbfdfc5146a65da157c7adf53dda635066
+Execute: git format-patch HEAD^ -- "release notes.txt" "sample data"
+Assertion 2 Passed: Patch generated cleanly preserving spaces in paths and filenames
+Execute: git checkout main
+Execute: git am "/var/folders/k8/xtrjfrhs1r523br2mhhrr1kh0000gn/T/tmpz9qe7yce/0001-Add-release-notes-and-sample-data.patch"
+Execute: git rev-parse HEAD
+Main HEAD after git am: b4080bf589618ef0b4f2caab41bfbff73ef42c05
+Assertion 3 Passed: Applied files match original content with spaces in paths preserved
+Execute: git status --porcelain
+Assertion 4 Passed: Working tree and index are clean
+
+=== Running Test Iteration 2 ===
+Temporary directory: /var/folders/k8/xtrjfrhs1r523br2mhhrr1kh0000gn/T/tmp7dj6a4gl
+Execute: git init -b main
+Execute: git config user.name "Course Student"
+Execute: git config user.email "student@example.invalid"
+Execute: git add notes.txt
+Execute: git commit -m "Commit A: create notes.txt"
+Execute: git rev-parse HEAD
+Commit A hash: 99530159276c16539816110a90ffcc4be051050e
+Execute: git add notes.txt
+Execute: git commit -m "Commit B: append to notes.txt"
+Execute: git rev-parse HEAD
+Commit B hash: fc4301918aa340c6a68f409a6b6f85f3ed4ec64b
+Execute: git branch topic
+Execute: git add todo.txt
+Execute: git commit -m "Commit C: add todo.txt"
+Execute: git rev-parse HEAD
+Commit C hash: c8a7439978051ae7cee48b6f1734315084b3cc5e
+Execute: git checkout topic
+Execute: git add release notes.txt
+Assertion 1 Passed: Unquoted pathspec correctly rejected by git add
+Execute: git add "release notes.txt" "sample data"
+Execute: git commit -m "Add release notes and sample data"
+Execute: git rev-parse HEAD
+Topic commit with quoted paths: c8dce8fbfdfc5146a65da157c7adf53dda635066
+Execute: git format-patch HEAD^ -- "release notes.txt" "sample data"
+Assertion 2 Passed: Patch generated cleanly preserving spaces in paths and filenames
+Execute: git checkout main
+Execute: git am "/var/folders/k8/xtrjfrhs1r523br2mhhrr1kh0000gn/T/tmp7dj6a4gl/0001-Add-release-notes-and-sample-data.patch"
+Execute: git rev-parse HEAD
+Main HEAD after git am: b4080bf589618ef0b4f2caab41bfbff73ef42c05
+Assertion 3 Passed: Applied files match original content with spaces in paths preserved
+Execute: git status --porcelain
+Assertion 4 Passed: Working tree and index are clean
+
+Both iterations completed successfully with all assertions passing.
