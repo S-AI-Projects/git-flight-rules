@@ -1,0 +1,10 @@
+R12-T027: Failure diagnosis for 'I want to delete multiple branches' (git branch | grep 'fix/' | xargs git branch -d)
+[PASS] on fix/a, 'git branch' marks it with '* ', which grep passes to xargs
+[PASS] bad case: the pipeline exits non-zero
+[PASS] bad case: the checked-out branch fix/a was NOT deleted (and '*' is not a branch)
+[PASS] bad case: the other match fix/b was deleted, so the run half-succeeded
+[PASS] repaired case: after 'git switch main' the same pipeline exits 0
+[PASS] repaired case: no fix/ branches remain
+[PASS] unrelated refs stayed fixed: main = C, topic = B
+[PASS] working tree and index are clean on main
+R12-T027: PASS (8 facts checked)
