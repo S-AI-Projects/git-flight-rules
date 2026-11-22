@@ -694,6 +694,81 @@ If you already know you don't want to change the commit message, you can tell gi
 (my-branch*)$ git commit --amend -C HEAD
 ```
 
+**Recovery Exercise: Recovering from an Accidental Commit Amend**
+
+Amending replaces the current commit with a new commit object. If you accidentally amend a commit with unintended staged changes, you can recover the original commit using Git's reference log (`reflog`).
+
+**1. Setup & Demonstration of the Mistake:**
+
+In a temporary repository with author `Course Student <student@example.invalid>` on branch `main` with Commits A, B, and C, and branch `topic` created at B:
+
+```sh
+# Initialize repo and configure author
+(main)$ git init -b main
+(main)$ git config user.name "Course Student"
+(main)$ git config user.email "student@example.invalid"
+
+# Commit A: creates notes.txt with "alpha\n"
+(main)$ printf "alpha\n" > notes.txt
+(main)$ git add notes.txt
+(main)$ git commit -m "Commit A: create notes.txt"
+
+# Commit B: appends "beta\n" and branch topic at B
+(main)$ printf "beta\n" >> notes.txt
+(main)$ git add notes.txt
+(main)$ git commit -m "Commit B: append to notes.txt"
+(main)$ git branch topic
+
+# Commit C: adds todo.txt with "one\n"
+(main)$ printf "one\n" > todo.txt
+(main)$ git add todo.txt
+(main)$ git commit -m "Commit C: add todo.txt"
+
+# Save original Commit C and tree IDs
+(main)$ ORIGINAL_COMMIT=$(git rev-parse HEAD)
+(main)$ ORIGINAL_TREE=$(git rev-parse HEAD^{tree})
+
+# Mistake: accidental modification is staged and amended into Commit C
+(main)$ printf "unwanted edit\n" >> notes.txt
+(main)$ git add notes.txt
+(main)$ git commit --amend -C HEAD
+```
+
+**2. Recovery Point & Documented Recovery Command:**
+
+Git records the position of `HEAD` prior to the amend in its reference log (`HEAD@{1}`):
+
+```sh
+(main)$ git reflog -n 2
+# <amended-commit> HEAD@{0}: commit (amend): Commit C
+# <original-commit> HEAD@{1}: commit: Commit C
+
+# Recover the original commit and working-tree state
+(main)$ git reset --hard HEAD@{1}
+```
+
+**3. Verification:**
+
+```sh
+# Verify recovered commit and tree match the pre-amend state
+(main)$ test "$(git rev-parse HEAD)" = "$ORIGINAL_COMMIT"
+(main)$ test "$(git rev-parse HEAD^{tree})" = "$ORIGINAL_TREE"
+
+# Verify file contents are restored
+(main)$ cat notes.txt
+alpha
+beta
+
+(main)$ cat todo.txt
+one
+```
+
+**4. Limitations (What Cannot Be Recovered):**
+
+* **Uncommitted working-tree modifications:** Any uncommitted changes present in your working directory or index at the moment `git reset --hard` is executed are permanently discarded and cannot be restored from the reflog.
+* **Untracked files:** Files that were never staged or committed are not tracked by Git refs.
+* **Local-only lifespan:** Reflog entries exist only in your local repository and expire based on `gc.reflogExpire` (typically 90 days); they cannot be recovered from remote clones.
+
 <a name="commit-partial-new-file"></a>
 ### I want to stage part of a new file, but not the whole file
 
