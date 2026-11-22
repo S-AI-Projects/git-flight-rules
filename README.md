@@ -255,6 +255,81 @@ To apply this patch file to your repository you would run `git am ./0001-My-Comm
 
 Patches can also be sent via email using the `git send-email` command. For information on usage and configuration see: https://git-send-email.io
 
+**Path Quoting and Disambiguation (`--`):**
+
+When creating or filtering patches for files or directories containing spaces—such as `"release notes.txt"` or `"sample data"`—you must quote paths and use `--` to prevent shell word splitting and resolve filename versus revision ambiguities.
+
+In a repository with branch `main`, author `Course Student <student@example.invalid>`, Commits A, B, and C, and branch `topic` created at B:
+
+```sh
+# Setup repository and author
+(main)$ git init -b main
+(main)$ git config user.name "Course Student"
+(main)$ git config user.email "student@example.invalid"
+
+# Commit A: creates notes.txt with "alpha\n"
+(main)$ printf "alpha\n" > notes.txt
+(main)$ git add notes.txt
+(main)$ git commit -m "Commit A: create notes.txt"
+
+# Commit B: appends "beta\n" and branch topic at B
+(main)$ printf "beta\n" >> notes.txt
+(main)$ git add notes.txt
+(main)$ git commit -m "Commit B: append to notes.txt"
+(main)$ git branch topic
+
+# Commit C: adds todo.txt with "one\n" on main
+(main)$ printf "one\n" > todo.txt
+(main)$ git add todo.txt
+(main)$ git commit -m "Commit C: add todo.txt"
+```
+
+Switch to branch `topic` and add files with spaces:
+
+```sh
+(main)$ git checkout topic
+(topic)$ mkdir -p "sample data"
+(topic)$ printf "sample content\n" > "sample data/data.txt"
+(topic)$ printf "v1.0 release notes\n" > "release notes.txt"
+```
+
+**1. Quoting Paths to Avoid Shell Word Splitting:**
+
+If paths with spaces are not quoted, the shell splits the path into multiple arguments:
+
+```sh
+(topic)$ git add release notes.txt
+fatal: pathspec 'release' did not match any files
+```
+
+Quoting the arguments ensures Git receives the exact path:
+
+```sh
+(topic)$ git add "release notes.txt" "sample data"
+(topic)$ git commit -m "Add release notes and sample data"
+```
+
+**2. Using `--` to Disambiguate Paths from Revisions:**
+
+When generating or inspecting patches targeting specific files, use `--` to separate commit revisions from pathnames:
+
+```sh
+(topic)$ git format-patch HEAD^ -- "release notes.txt" "sample data"
+0001-Add-release-notes-and-sample-data.patch
+```
+
+Without `--`, if a branch or tag shares a name with a file, Git cannot determine whether the argument is a revision reference or a file path, triggering an ambiguity warning (`both revision and filename; use '--' to separate paths from revisions`).
+
+**3. Applying the Patch:**
+
+The recipient can apply the patch using `git am`, which preserves the original directory structure and filenames with spaces intact:
+
+```sh
+(main)$ git checkout main
+(main)$ git am "0001-Add-release-notes-and-sample-data.patch"
+Applying: Add release notes and sample data
+```
+
 #### I need to update my fork with latest updates from the original repository
 
 After a while, the `upstream` repository may have been updated, and these updates need to be pulled into your `origin` repo. Remember that like you, other people are contributing too. Suppose that you are in your own feature branch and you need to update it with the original repository updates.
