@@ -1361,6 +1361,41 @@ For more, see [this SO thread](https://stackoverflow.com/questions/11058312/how-
 
 Let's suppose you are working in a branch that is/will become a pull-request against `main`. In the simplest case when all you want to do is to combine *all* commits into a single one and you don't care about commit timestamps, you can reset and recommit. Make sure the main branch is up to date and all your changes committed, then:
 
+<details>
+<summary>Checklist before you combine commits</summary>
+
+| Prerequisite | How to check | If it is not met |
+| --- | --- | --- |
+| You are on your feature branch, not `main` | `git symbolic-ref --short HEAD` | `git switch my-branch` |
+| `main` is up to date and your branch contains it | `git merge-base --is-ancestor main my-branch && echo ok` | `git rebase main` first. Otherwise `git reset --soft main` also stages the *reverse* of every commit `main` gained since you branched (`git diff --name-status main my-branch` shows them, for example `D todo.txt`) |
+| No uncommitted changes to tracked files | `git status --porcelain --untracked-files=no` prints nothing | commit or stash them |
+| Untracked files are not part of the feature | `git status --short` shows them as `??` | `git commit -a` does **not** add untracked files; `git add` them first if they belong in the commit |
+| Your name and email are configured | `git config user.name` and `git config user.email` | `git config user.name "Your Name"` (add `--global` only if you want it for every repository) |
+| For `git rebase -i`: an editor is configured | `git var GIT_EDITOR` | `git config core.editor "code --wait"` (or vim, nano, ...) |
+| The commits are not shared yet | `git status` says nothing about being ahead of/behind a pushed branch | combining rewrites history: you will need `git push --force-with-lease` |
+
+A minimal setup to practise on:
+
+```sh
+$ git init -q -b main demo && cd demo
+$ git config user.name "Course Student"
+$ git config user.email student@example.invalid
+$ printf 'alpha\n' > notes.txt && git add notes.txt && git commit -qm A
+$ printf 'beta\n' >> notes.txt && git commit -qam B
+$ git switch -c my-branch
+$ printf 'f1\n' > feature.txt && git add feature.txt && git commit -qm "feature part 1"
+$ printf 'f2\n' >> feature.txt && git commit -qam "feature part 2"
+$ git switch main && printf 'one\n' > todo.txt && git add todo.txt && git commit -qm C
+$ git switch my-branch
+$ git merge-base --is-ancestor main my-branch || echo "main moved on: rebase first"
+main moved on: rebase first
+$ git rebase main
+```
+
+After `git reset --soft main` and `git commit -am "New awesome feature"`, `git rev-list --count main..my-branch` prints `1`, and `git rev-parse HEAD^{tree}` is unchanged from before the reset.
+
+</details>
+
 ```sh
 (my-branch)$ git reset --soft main
 (my-branch)$ git commit -am "New awesome feature"
