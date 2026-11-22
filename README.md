@@ -599,6 +599,62 @@ Since you just rewrote the entire git repo history, the `git push` operation may
 (main)$ git push --force
 ```
 
+**Troubleshooting: Missing Remote Origin (`fatal: 'origin' does not appear to be a git repository`)**
+
+* **Triggering State:** Running `git push origin --force --tags` after rewriting history when the remote named `origin` has not been configured in the local repository (e.g., in a newly cloned or locally initialized cleanup repository).
+* **Error Category:** Missing Remote Reference (exit code 128).
+* **Observed Diagnostic:**
+  ```text
+  fatal: 'origin' does not appear to be a git repository
+  fatal: Could not read from remote repository.
+  ```
+* **Smallest Correction:** Configure the remote target URL with `git remote add origin <url>`, then re-run the push:
+  ```sh
+  (main)$ git remote add origin <url-of-target-remote>
+  (main)$ git push origin --force --tags
+  ```
+
+**Reproducible Example:**
+
+In a temporary repository with branch `main`, author `Course Student <student@example.invalid>`, Commits A, B, and C, and branch `topic` created at B:
+
+```sh
+# Setup repository and author
+(main)$ git init -b main
+(main)$ git config user.name "Course Student"
+(main)$ git config user.email "student@example.invalid"
+
+# Commit A: creates notes.txt with "alpha\n"
+(main)$ printf "alpha\n" > notes.txt
+(main)$ git add notes.txt
+(main)$ git commit -m "Commit A: create notes.txt"
+
+# Commit B: appends "beta\n" and branch topic at B
+(main)$ printf "beta\n" >> notes.txt
+(main)$ git add notes.txt
+(main)$ git commit -m "Commit B: append to notes.txt"
+(main)$ git branch topic
+
+# Commit C: adds todo.txt with "one\n" on main
+(main)$ printf "one\n" > todo.txt
+(main)$ git add todo.txt
+(main)$ git commit -m "Commit C: add todo.txt"
+(main)$ git tag v1.0
+
+# Cleanup and prune reflog
+(main)$ git reflog expire --expire=now --all && git gc --prune=now --aggressive
+
+# 1. Violated Precondition: origin does not exist
+(main)$ git push origin --force --tags
+# fatal: 'origin' does not appear to be a git repository (exit 128)
+
+# 2. Corrected Command: define remote origin and retry
+(main)$ git remote add origin file:///tmp/remote.git
+(main)$ git push origin --force --tags
+# To file:///tmp/remote.git
+#  * [new tag]         v1.0 -> v1.0
+```
+
 If this does not work, you will need to manually push the repo history in chunks of commits. In the command below, try increasing `<number>` until the push operation succeeds.
 ```sh
 (main)$ git push -u origin HEAD~<number>:refs/head/main --force
