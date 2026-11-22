@@ -655,6 +655,31 @@ will do the rest of the work for you.
 $ git add -u
 ```
 
+`git add -u` only writes to the index. It does not move `HEAD`, any local branch, any remote-tracking ref like `origin/main`, or anything on the remote. Which branch the change ends up on is decided by your *next commit*, and that commit only moves the branch you are on.
+
+For example, while you are on `topic` and the default branch is `main`:
+
+```sh
+(topic)$ printf 'gamma\n' >> notes.txt   # tracked file
+(topic)$ printf 'draft\n' > draft.txt    # new, untracked file
+(topic)$ git add -u
+(topic)$ git status --short
+M  notes.txt
+?? draft.txt
+(topic)$ git commit -m "D on topic"
+```
+
+After the commit:
+
+| Ref | Changed? |
+| --- | --- |
+| `refs/heads/topic` | yes, moved to the new commit `D` (its parent is the old `topic`) |
+| `refs/heads/main` | no |
+| `refs/remotes/origin/main` | no; it only changes on `fetch`/`pull`/`push` |
+| `main` on the remote | no; the remote gains `topic` only when you run `git push origin topic` |
+
+`draft.txt` is still untracked and is not part of `D`. You can check this with `git rev-parse main origin/main topic` before and after, and with `git ls-remote origin`.
+
 #### To stage part of tracked files
 
 ```sh
