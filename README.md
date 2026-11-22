@@ -362,6 +362,56 @@ $ git commit --amend --no-edit
 
 This is particularly useful when you have an open patch and you have committed an unnecessary file, and need to force push to update the patch on a remote. The `--no-edit` option is used to keep the existing commit message.
 
+**Branch and Remote Semantics:**
+
+When you execute this command sequence, Git modifies strictly the commit at the current branch reference (`HEAD`). Unrelated local branch references and remote tracking references remain unchanged.
+
+For example, consider a repository with default branch `main`, tracking remote `origin/main` (using a local bare repository `file:///tmp/remote.git`), and working branch `topic`:
+
+```sh
+# Setup repository with main and remote
+(main)$ git init -b main
+(main)$ git config user.name "Course Student"
+(main)$ git config user.email "student@example.invalid"
+
+# Commit A: creates notes.txt with "alpha\n"
+(main)$ printf "alpha\n" > notes.txt
+(main)$ git add notes.txt
+(main)$ git commit -m "Commit A: create notes.txt"
+
+# Commit B: appends "beta\n" and branch topic at B
+(main)$ printf "beta\n" >> notes.txt
+(main)$ git add notes.txt
+(main)$ git commit -m "Commit B: append to notes.txt"
+(main)$ git branch topic
+
+# Commit C: adds todo.txt with "one\n" on main
+(main)$ printf "one\n" > todo.txt
+(main)$ git add todo.txt
+(main)$ git commit -m "Commit C: add todo.txt"
+
+# Push main to local bare remote
+(main)$ git remote add origin file:///tmp/remote.git
+(main)$ git push -u origin main
+```
+
+Now switch to `topic` and remove the changes to `notes.txt` from the previous commit:
+
+```sh
+(main)$ git checkout topic
+(topic)$ git checkout HEAD^ notes.txt
+(topic)$ git add notes.txt
+(topic)$ git commit --amend --no-edit
+```
+
+*Note: If removing changes from `notes.txt` leaves no other differences compared to `HEAD^`, pass `--allow-empty` to retain an empty amended commit, or use `git reset HEAD^` to drop the commit.*
+
+**Ref State Transitions:**
+
+* **Intended Ref (Changed):** `refs/heads/topic` (and `HEAD`) points to the newly amended commit.
+* **Unrelated Local Ref (Fixed):** `refs/heads/main` remains fixed at Commit C.
+* **Remote Tracking Ref (Fixed):** `refs/remotes/origin/main` remains fixed at Commit C.
+
 <a name="move-change-to-new-commit"></a>
 ### I want to move a change from one commit to another
 If you've made a commit that includes changes that would fit better in another commit, you can move the changes to the other commit using an interactive rebase. This comes from [stackoverflow](https://stackoverflow.com/a/54985304/2491502).
