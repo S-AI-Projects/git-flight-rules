@@ -1,0 +1,68 @@
+Starting automated verification check for R12-T011
+Tool versions: {
+  "git": "git version 2.50.1 (Apple Git-155)",
+  "python": "Python 3.15.2",
+  "os": "Darwin 25.6.0 (arm64)"
+}
+
+=== Running Test Iteration 1 ===
+Temporary directory: /var/folders/k8/xtrjfrhs1r523br2mhhrr1kh0000gn/T/tmpuza7gki6
+Execute: git init -b main
+Execute: git config user.name "Course Student"
+Execute: git config user.email "student@example.invalid"
+Execute: git add notes.txt
+Execute: git commit -m "Commit A: create notes.txt"
+Execute: git rev-parse HEAD
+Commit A hash: a5590ea3f6a0edc4611dfeb7cc4336d080ae82ba
+Execute: git add notes.txt
+Execute: git commit -m "Commit B: append to notes.txt"
+Execute: git rev-parse HEAD
+Commit B hash: e7a08d120cb9720c7d97a6f56597fd6da647763f
+Execute: git branch topic
+Execute: git add todo.txt
+Execute: git commit -m "Commit C: add todo.txt"
+Execute: git rev-parse HEAD
+Commit C hash: 6ede310663414ede00b80c47777835f4bbc4cbd2
+Execute: git checkout topic
+Execute: git rev-parse --abbrev-ref HEAD
+Assertion 1 Passed: Working tree files match expected state ('alpha\nbeta\n', todo.txt absent)
+Execute: git rev-parse HEAD
+Execute: git rev-parse main
+Execute: git merge-base --is-ancestor e7a08d120cb9720c7d97a6f56597fd6da647763f 6ede310663414ede00b80c47777835f4bbc4cbd2
+Assertion 2 Passed: Refs correct; Commit B is ancestor of Commit C
+Execute: git status --porcelain
+Assertion 3 Passed: Working tree and index are clean
+Captured todo commands: ['noop']
+Assertion 4 Passed: Rebase instruction sheet contains 'noop' as expected
+
+=== Running Test Iteration 2 ===
+Temporary directory: /var/folders/k8/xtrjfrhs1r523br2mhhrr1kh0000gn/T/tmpk0d9d7lf
+Execute: git init -b main
+Execute: git config user.name "Course Student"
+Execute: git config user.email "student@example.invalid"
+Execute: git add notes.txt
+Execute: git commit -m "Commit A: create notes.txt"
+Execute: git rev-parse HEAD
+Commit A hash: a5590ea3f6a0edc4611dfeb7cc4336d080ae82ba
+Execute: git add notes.txt
+Execute: git commit -m "Commit B: append to notes.txt"
+Execute: git rev-parse HEAD
+Commit B hash: e7a08d120cb9720c7d97a6f56597fd6da647763f
+Execute: git branch topic
+Execute: git add todo.txt
+Execute: git commit -m "Commit C: add todo.txt"
+Execute: git rev-parse HEAD
+Commit C hash: 6ede310663414ede00b80c47777835f4bbc4cbd2
+Execute: git checkout topic
+Execute: git rev-parse --abbrev-ref HEAD
+Assertion 1 Passed: Working tree files match expected state ('alpha\nbeta\n', todo.txt absent)
+Execute: git rev-parse HEAD
+Execute: git rev-parse main
+Execute: git merge-base --is-ancestor e7a08d120cb9720c7d97a6f56597fd6da647763f 6ede310663414ede00b80c47777835f4bbc4cbd2
+Assertion 2 Passed: Refs correct; Commit B is ancestor of Commit C
+Execute: git status --porcelain
+Assertion 3 Passed: Working tree and index are clean
+Captured todo commands: ['noop']
+Assertion 4 Passed: Rebase instruction sheet contains 'noop' as expected
+
+Both iterations completed successfully with all assertions passing.
