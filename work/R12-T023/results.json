@@ -1,0 +1,108 @@
+{
+  "task": "R12-T023",
+  "description": "Recovery exercise for the Git Bash 'squash' shortcut (git rebase -i HEAD~$1)",
+  "status": "pass",
+  "error": null,
+  "tool_versions": {
+    "git": "git version 2.43.0",
+    "python": "3.13.18",
+    "platform": "Linux-6.18.44-fc-v726-x86_64-with-glibc2.39"
+  },
+  "inputs": {
+    "fixture": [
+      "git init -b main",
+      "git config user.name 'Course Student'",
+      "git config user.email student@example.invalid",
+      "printf 'alpha\\n' > notes.txt && git add notes.txt && git commit -m A",
+      "printf 'beta\\n' >> notes.txt && git commit -am B",
+      "git branch topic            # topic -> B",
+      "printf 'one\\n' > todo.txt && git add todo.txt && git commit -m C"
+    ],
+    "commands": [
+      "squash 2            # README function -> git rebase -i HEAD~2",
+      "(in the editor, the 'pick <C> C' line is deleted by mistake)",
+      "git reflog -3",
+      "git reset --hard ORIG_HEAD   # or: git reset --hard main@{1}"
+    ]
+  },
+  "checks": [
+    {
+      "fact": "saved recovery point is commit C",
+      "expected": "bd9f160c78ce479ef606c657e4114bb8eb8a589d",
+      "actual": "bd9f160c78ce479ef606c657e4114bb8eb8a589d",
+      "ok": true
+    },
+    {
+      "fact": "the shortcut exits 0",
+      "expected": 0,
+      "actual": 0,
+      "ok": true
+    },
+    {
+      "fact": "after the mistake: main points at B (C was dropped)",
+      "expected": "c4b9730a7f40d6c8cdc0c9d32c858ef56b0e7fce",
+      "actual": "c4b9730a7f40d6c8cdc0c9d32c858ef56b0e7fce",
+      "ok": true
+    },
+    {
+      "fact": "after the mistake: todo.txt is gone from the tree and working tree",
+      "expected": [
+        false,
+        "notes.txt"
+      ],
+      "actual": [
+        false,
+        "notes.txt"
+      ],
+      "ok": true
+    },
+    {
+      "fact": "ORIG_HEAD still records the pre-rebase tip",
+      "expected": "bd9f160c78ce479ef606c657e4114bb8eb8a589d",
+      "actual": "bd9f160c78ce479ef606c657e4114bb8eb8a589d",
+      "ok": true
+    },
+    {
+      "fact": "the branch reflog main@{1} records the pre-rebase tip",
+      "expected": "bd9f160c78ce479ef606c657e4114bb8eb8a589d",
+      "actual": "bd9f160c78ce479ef606c657e4114bb8eb8a589d",
+      "ok": true
+    },
+    {
+      "fact": "recovered: HEAD is commit C again",
+      "expected": "bd9f160c78ce479ef606c657e4114bb8eb8a589d",
+      "actual": "bd9f160c78ce479ef606c657e4114bb8eb8a589d",
+      "ok": true
+    },
+    {
+      "fact": "recovered: tree hash matches the saved tree",
+      "expected": "70d571a7a75867c09d38254b1252d5e2402adaa6",
+      "actual": "70d571a7a75867c09d38254b1252d5e2402adaa6",
+      "ok": true
+    },
+    {
+      "fact": "recovered: todo.txt content restored",
+      "expected": "one\n",
+      "actual": "one\n",
+      "ok": true
+    },
+    {
+      "fact": "recovered: topic was never touched",
+      "expected": "c4b9730a7f40d6c8cdc0c9d32c858ef56b0e7fce",
+      "actual": "c4b9730a7f40d6c8cdc0c9d32c858ef56b0e7fce",
+      "ok": true
+    },
+    {
+      "fact": "NOT recoverable by this method: the uncommitted edit is discarded",
+      "expected": "alpha\nbeta\n",
+      "actual": "alpha\nbeta\n",
+      "ok": true
+    },
+    {
+      "fact": "working tree and index are clean",
+      "expected": "",
+      "actual": "",
+      "ok": true
+    }
+  ]
+}

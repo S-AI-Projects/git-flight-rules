@@ -1,0 +1,14 @@
+R12-T023: Recovery exercise for the Git Bash 'squash' shortcut (git rebase -i HEAD~$1)
+[PASS] saved recovery point is commit C
+[PASS] the shortcut exits 0
+[PASS] after the mistake: main points at B (C was dropped)
+[PASS] after the mistake: todo.txt is gone from the tree and working tree
+[PASS] ORIG_HEAD still records the pre-rebase tip
+[PASS] the branch reflog main@{1} records the pre-rebase tip
+[PASS] recovered: HEAD is commit C again
+[PASS] recovered: tree hash matches the saved tree
+[PASS] recovered: todo.txt content restored
+[PASS] recovered: topic was never touched
+[PASS] NOT recoverable by this method: the uncommitted edit is discarded
+[PASS] working tree and index are clean
+R12-T023: PASS (12 facts checked)
