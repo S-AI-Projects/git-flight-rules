@@ -1,0 +1,11 @@
+R12-T026: Compare --assume-unchanged with --skip-worktree for 'I want Git to ignore changes to a specific file'
+[PASS] both workflows start from equivalent fixtures (same A, B, C ids)
+[PASS] ls-files -v marks the index entries differently: 'h' vs 'S'
+[PASS] both hide the local edit from git status
+[PASS] neither stages anything: index blob == HEAD blob in both
+[PASS] same: switching to topic (where todo.txt differs) is refused, still on main
+[PASS] difference: git reset --hard overwrites the assume-unchanged file
+[PASS] difference: git reset --hard keeps the skip-worktree file's local edit
+[PASS] HEAD did not move in either workflow
+[PASS] after clearing the flag, only the skip-worktree repo shows the kept edit
+R12-T026: PASS (9 facts checked)

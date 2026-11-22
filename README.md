@@ -1906,6 +1906,37 @@ Note that this does *not* remove the file from source control - it is only ignor
 $ git update-index --no-assume-unchanged file-to-stop-ignoring
 ```
 
+`--skip-worktree` covers the same situation and is usually the better choice for a file you edit locally on purpose:
+
+```sh
+$ git update-index --skip-worktree file-to-ignore
+$ git update-index --no-skip-worktree file-to-stop-ignoring
+```
+
+| | `--assume-unchanged` | `--skip-worktree` |
+| --- | --- | --- |
+| Intended use | performance hint: "don't bother checking this file" | "keep my local version of this tracked file" |
+| Precondition | file is tracked (in the index) | file is tracked (in the index) |
+| `git ls-files -v` tag | `h` | `S` |
+| `git status` shows the local edit | no | no |
+| Index / commit | unchanged; the edit is never staged | unchanged; the edit is never staged |
+| After `git reset --hard` | **local edit is overwritten** with the committed version | local edit is kept |
+
+You can reproduce the difference in a scratch repository where `todo.txt` is committed with the content `one`:
+
+```sh
+$ git update-index --assume-unchanged todo.txt    # or --skip-worktree
+$ printf 'local\n' >> todo.txt
+$ git ls-files -v todo.txt                        # h todo.txt / S todo.txt
+$ git status --short                              # prints nothing in both cases
+$ git reset --hard
+$ cat todo.txt
+```
+
+With `--assume-unchanged`, `cat` prints only `one`: the local edit is gone. With `--skip-worktree`, it prints `one` and `local`: the edit survives.
+
+Both flags are stored only in your local index, so they are never pushed. With either flag, switching to a branch where the committed file differs fails because it would overwrite your local edit; clear the flag and stash or commit the edit first.
+
 ## Debugging with Git
 
 The [git-bisect](https://git-scm.com/docs/git-bisect) command uses a binary search to find which commit in your Git history introduced a bug.
