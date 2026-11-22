@@ -1,0 +1,133 @@
+{
+  "task": "R12-T024",
+  "description": "Branch/remote semantics for 'stage all tracked files and leave untracked files' (git add -u)",
+  "status": "pass",
+  "error": null,
+  "tool_versions": {
+    "git": "git version 2.43.0",
+    "python": "3.13.18",
+    "platform": "Linux-6.18.44-fc-v726-x86_64-with-glibc2.39"
+  },
+  "inputs": {
+    "fixture": [
+      "git init -b main",
+      "git config user.name 'Course Student'",
+      "git config user.email student@example.invalid",
+      "printf 'alpha\\n' > notes.txt && git add notes.txt && git commit -m A",
+      "printf 'beta\\n' >> notes.txt && git commit -am B",
+      "git branch topic            # topic -> B",
+      "printf 'one\\n' > todo.txt && git add todo.txt && git commit -m C"
+    ],
+    "remote": "bare repository at origin.git (file:// URL)",
+    "commands": [
+      "git init --bare -b main ../origin.git",
+      "git remote add origin file://.../origin.git && git push origin main",
+      "git switch topic",
+      "printf 'gamma\\n' >> notes.txt && printf 'draft\\n' > draft.txt",
+      "git add -u",
+      "git commit -m 'D on topic'"
+    ]
+  },
+  "checks": [
+    {
+      "fact": "current branch is topic, default branch main is untouched",
+      "expected": [
+        "topic",
+        "bd9f160c78ce479ef606c657e4114bb8eb8a589d"
+      ],
+      "actual": [
+        "topic",
+        "bd9f160c78ce479ef606c657e4114bb8eb8a589d"
+      ],
+      "ok": true
+    },
+    {
+      "fact": "before: remote-tracking ref origin/main = C",
+      "expected": "bd9f160c78ce479ef606c657e4114bb8eb8a589d",
+      "actual": "bd9f160c78ce479ef606c657e4114bb8eb8a589d",
+      "ok": true
+    },
+    {
+      "fact": "git add -u stages the tracked edit and leaves draft.txt untracked",
+      "expected": "M  notes.txt\n?? draft.txt",
+      "actual": "M  notes.txt\n?? draft.txt",
+      "ok": true
+    },
+    {
+      "fact": "git add -u moves no ref at all (local, remote-tracking or remote)",
+      "expected": [
+        {
+          "refs/heads/main": "bd9f160c78ce479ef606c657e4114bb8eb8a589d",
+          "refs/heads/topic": "c4b9730a7f40d6c8cdc0c9d32c858ef56b0e7fce",
+          "refs/remotes/origin/main": "bd9f160c78ce479ef606c657e4114bb8eb8a589d"
+        },
+        {
+          "refs/heads/main": "bd9f160c78ce479ef606c657e4114bb8eb8a589d"
+        }
+      ],
+      "actual": [
+        {
+          "refs/heads/main": "bd9f160c78ce479ef606c657e4114bb8eb8a589d",
+          "refs/heads/topic": "c4b9730a7f40d6c8cdc0c9d32c858ef56b0e7fce",
+          "refs/remotes/origin/main": "bd9f160c78ce479ef606c657e4114bb8eb8a589d"
+        },
+        {
+          "refs/heads/main": "bd9f160c78ce479ef606c657e4114bb8eb8a589d"
+        }
+      ],
+      "ok": true
+    },
+    {
+      "fact": "commit moved only refs/heads/topic, from B to its new child D",
+      "expected": [
+        "c4b9730a7f40d6c8cdc0c9d32c858ef56b0e7fce",
+        "84f3a96ee6a814f0fe3cd526ed254173d541182c"
+      ],
+      "actual": [
+        "c4b9730a7f40d6c8cdc0c9d32c858ef56b0e7fce",
+        "84f3a96ee6a814f0fe3cd526ed254173d541182c"
+      ],
+      "ok": true
+    },
+    {
+      "fact": "unrelated refs stayed fixed: main and origin/main still C",
+      "expected": [
+        "bd9f160c78ce479ef606c657e4114bb8eb8a589d",
+        "bd9f160c78ce479ef606c657e4114bb8eb8a589d"
+      ],
+      "actual": [
+        "bd9f160c78ce479ef606c657e4114bb8eb8a589d",
+        "bd9f160c78ce479ef606c657e4114bb8eb8a589d"
+      ],
+      "ok": true
+    },
+    {
+      "fact": "the remote is unchanged and has no topic branch until you push it",
+      "expected": {
+        "refs/heads/main": "bd9f160c78ce479ef606c657e4114bb8eb8a589d"
+      },
+      "actual": {
+        "refs/heads/main": "bd9f160c78ce479ef606c657e4114bb8eb8a589d"
+      },
+      "ok": true
+    },
+    {
+      "fact": "D contains the staged edit but not the untracked file",
+      "expected": [
+        "alpha\nbeta\ngamma",
+        true
+      ],
+      "actual": [
+        "alpha\nbeta\ngamma",
+        true
+      ],
+      "ok": true
+    },
+    {
+      "fact": "draft.txt is still untracked after the commit",
+      "expected": "?? draft.txt",
+      "actual": "?? draft.txt",
+      "ok": true
+    }
+  ]
+}

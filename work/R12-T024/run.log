@@ -1,0 +1,11 @@
+R12-T024: Branch/remote semantics for 'stage all tracked files and leave untracked files' (git add -u)
+[PASS] current branch is topic, default branch main is untouched
+[PASS] before: remote-tracking ref origin/main = C
+[PASS] git add -u stages the tracked edit and leaves draft.txt untracked
+[PASS] git add -u moves no ref at all (local, remote-tracking or remote)
+[PASS] commit moved only refs/heads/topic, from B to its new child D
+[PASS] unrelated refs stayed fixed: main and origin/main still C
+[PASS] the remote is unchanged and has no topic branch until you push it
+[PASS] D contains the staged edit but not the untracked file
+[PASS] draft.txt is still untracked after the commit
+R12-T024: PASS (9 facts checked)
