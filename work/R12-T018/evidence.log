@@ -1,0 +1,88 @@
+Starting automated verification check for R12-T018
+Tool versions: {
+  "git": "git version 2.50.1 (Apple Git-155)",
+  "python": "Python 3.15.2",
+  "os": "Darwin 25.6.0 (arm64)"
+}
+
+=== Running Iteration 1 ===
+Temporary directory: /var/folders/k8/xtrjfrhs1r523br2mhhrr1kh0000gn/T/tmpd8pkz_pm
+Execute: git init -b main
+Execute: git config user.name "Course Student"
+Execute: git config user.email "student@example.invalid"
+Execute: git add notes.txt
+Execute: git commit -m "Commit A: create notes.txt"
+Execute: git rev-parse HEAD
+Execute: git add notes.txt
+Execute: git commit -m "Commit B: append to notes.txt"
+Execute: git rev-parse HEAD
+Execute: git branch topic
+Execute: git add todo.txt
+Execute: git commit -m "Commit C: add todo.txt"
+Execute: git rev-parse HEAD
+Execute: git status --porcelain
+Execute: git stash
+Execute: git status --porcelain
+Assertion 1 Passed: git stash restored wrong_branch (main) to clean state
+Execute: git checkout topic
+Execute: git rev-parse HEAD
+Assertion 2 Passed: Successfully switched to correct_branch (topic) at Commit B
+Execute: git stash apply
+Executed decisive command: git stash apply
+Execute: git status --porcelain
+Assertion 3 Passed: Uncommitted edits cleanly transferred to correct_branch (topic)
+
+=== Running Iteration 2 ===
+Temporary directory: /var/folders/k8/xtrjfrhs1r523br2mhhrr1kh0000gn/T/tmpyuigdtik
+Execute: git init -b main
+Execute: git config user.name "Course Student"
+Execute: git config user.email "student@example.invalid"
+Execute: git add notes.txt
+Execute: git commit -m "Commit A: create notes.txt"
+Execute: git rev-parse HEAD
+Execute: git add notes.txt
+Execute: git commit -m "Commit B: append to notes.txt"
+Execute: git rev-parse HEAD
+Execute: git branch topic
+Execute: git add todo.txt
+Execute: git commit -m "Commit C: add todo.txt"
+Execute: git rev-parse HEAD
+Execute: git status --porcelain
+Execute: git stash
+Execute: git status --porcelain
+Assertion 1 Passed: git stash restored wrong_branch (main) to clean state
+Execute: git checkout topic
+Execute: git rev-parse HEAD
+Assertion 2 Passed: Successfully switched to correct_branch (topic) at Commit B
+Execute: git stash apply
+Executed decisive command: git stash apply
+Execute: git status --porcelain
+Assertion 3 Passed: Uncommitted edits cleanly transferred to correct_branch (topic)
+
+Both standard iterations completed successfully with all assertions passing.
+
+Testing negative case (omitting decisive command 'git stash apply'):
+
+=== Running Negative Test (Omission) ===
+Temporary directory: /var/folders/k8/xtrjfrhs1r523br2mhhrr1kh0000gn/T/tmpgyfq36a0
+Execute: git init -b main
+Execute: git config user.name "Course Student"
+Execute: git config user.email "student@example.invalid"
+Execute: git add notes.txt
+Execute: git commit -m "Commit A: create notes.txt"
+Execute: git rev-parse HEAD
+Execute: git add notes.txt
+Execute: git commit -m "Commit B: append to notes.txt"
+Execute: git rev-parse HEAD
+Execute: git branch topic
+Execute: git add todo.txt
+Execute: git commit -m "Commit C: add todo.txt"
+Execute: git rev-parse HEAD
+Execute: git status --porcelain
+Execute: git stash
+Execute: git status --porcelain
+Assertion 1 Passed: git stash restored wrong_branch (main) to clean state
+Execute: git checkout topic
+Execute: git rev-parse HEAD
+Assertion 2 Passed: Successfully switched to correct_branch (topic) at Commit B
+Negative test passed: caught expected failure when decisive command omitted: Decisive command omitted: uncommitted edit 'gamma\n' missing on topic

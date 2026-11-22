@@ -1316,6 +1316,71 @@ You've made uncommitted changes and realise you're on the wrong branch. Stash ch
 (correct_branch)$ git stash apply
 ```
 
+**Automated Guide Integration Test:**
+
+This workflow can be verified using an isolated integration check that transitions uncommitted edits across branches while asserting working tree cleanliness and file state.
+
+**1. Reproducible Example:**
+
+In a temporary repository with branch `main`, author `Course Student <student@example.invalid>`, Commits A, B, and C, and branch `topic` created at B:
+
+```sh
+# Setup repository and author
+(main)$ git init -b main
+(main)$ git config user.name "Course Student"
+(main)$ git config user.email "student@example.invalid"
+
+# Commit A: creates notes.txt with "alpha\n"
+(main)$ printf "alpha\n" > notes.txt
+(main)$ git add notes.txt
+(main)$ git commit -m "Commit A: create notes.txt"
+
+# Commit B: appends "beta\n" and branch topic at B
+(main)$ printf "beta\n" >> notes.txt
+(main)$ git add notes.txt
+(main)$ git commit -m "Commit B: append to notes.txt"
+(main)$ git branch topic
+
+# Commit C: adds todo.txt with "one\n" on main
+(main)$ printf "one\n" > todo.txt
+(main)$ git add todo.txt
+(main)$ git commit -m "Commit C: add todo.txt"
+```
+
+Simulate making an uncommitted change (`"gamma\n"`) on `main` that belongs on `topic`:
+
+```sh
+# Accidentally edit notes.txt while on main
+(main)$ printf "gamma\n" >> notes.txt
+
+# Stash uncommitted changes on main
+(main)$ git stash
+(main)$ git status --porcelain
+# (empty: working tree on main restored to clean state)
+
+# Switch to the intended branch
+(main)$ git checkout topic
+
+# Apply the stashed changes to topic
+(topic)$ git stash apply
+(topic)$ git status --porcelain
+ M notes.txt
+```
+
+**2. Running the Automated Guide Test:**
+
+To run the automated verification script:
+
+```sh
+$ python3 work/R12-T018/check.py
+```
+
+The script executes the sequence in isolated temporary directories, verifies that:
+1. `git stash` restores the wrong branch (`main`) to a clean state.
+2. `git checkout topic` switches branch context without losing the stash.
+3. Decisive command `git stash apply` restores the uncommitted edits onto `topic`.
+4. Omitting `git stash apply` deliberately causes the test assertion to fail.
+
 <a name="split-branch-into-two"></a>
 ### I want to split a branch into two
 
