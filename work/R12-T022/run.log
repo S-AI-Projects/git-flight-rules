@@ -1,0 +1,12 @@
+R12-T022: State transitions for 'I want to start a local repository' (git init)
+[PASS] before: my-folder is not a Git repository
+[PASS] after: .git directory exists
+[PASS] after: HEAD is a symbolic ref to refs/heads/main
+[PASS] after: HEAD is unborn (rev-parse --verify HEAD fails, no commit yet)
+[PASS] after: no branch refs exist yet
+[PASS] after: the index is empty
+[PASS] after: working tree untouched, notes.txt is untracked
+[PASS] re-init reports 'Reinitialized existing' repository
+[PASS] re-init: refs unchanged (main=C, topic=B)
+[PASS] re-init: HEAD, index, status and ancestry identical
+R12-T022: PASS (10 facts checked)

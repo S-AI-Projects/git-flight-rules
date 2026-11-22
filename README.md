@@ -159,6 +159,31 @@ To initialize an existing directory as a Git repository:
 (my-folder) $ git init
 ```
 
+`git init` only creates the `.git` directory. It makes no commit, creates no branch ref and stages nothing; your files stay exactly as they were, now as untracked files:
+
+```text
+                 before git init            after git init
+HEAD             (no repository)            -> refs/heads/main  (unborn: no commit yet)
+branch refs      -                          none (refs/heads/main appears with the first commit)
+index (staged)   -                          empty
+working tree     notes.txt                  notes.txt  (untracked: ?? notes.txt)
+```
+
+The branch name comes from the `init.defaultBranch` setting (`main` above). Use `git init -b main` (Git 2.28+) to choose it explicitly. You can confirm every row:
+
+```sh
+(my-folder) $ git symbolic-ref HEAD
+refs/heads/main
+(my-folder) $ git rev-parse --verify -q HEAD || echo "unborn"
+unborn
+(my-folder) $ git for-each-ref      # prints nothing: no refs yet
+(my-folder) $ git ls-files --stage  # prints nothing: empty index
+(my-folder) $ git status --short
+?? notes.txt
+```
+
+Running `git init` again inside an existing repository is safe. It prints `Reinitialized existing Git repository` and leaves `HEAD`, every branch ref, the commit ancestry, the index and the working tree unchanged.
+
 ### I want to clone a remote repository
 
 To clone (copy) a remote repository, copy the URL for the repository, and run:

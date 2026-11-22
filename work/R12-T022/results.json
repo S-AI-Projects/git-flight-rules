@@ -1,0 +1,122 @@
+{
+  "task": "R12-T022",
+  "description": "State transitions for 'I want to start a local repository' (git init)",
+  "status": "pass",
+  "error": null,
+  "tool_versions": {
+    "git": "git version 2.43.0",
+    "python": "3.13.18",
+    "platform": "Linux-6.18.44-fc-v726-x86_64-with-glibc2.39"
+  },
+  "inputs": {
+    "fixture": [
+      "git init -b main",
+      "git config user.name 'Course Student'",
+      "git config user.email student@example.invalid",
+      "printf 'alpha\\n' > notes.txt && git add notes.txt && git commit -m A",
+      "printf 'beta\\n' >> notes.txt && git commit -am B",
+      "git branch topic            # topic -> B",
+      "printf 'one\\n' > todo.txt && git add todo.txt && git commit -m C"
+    ],
+    "config": "temporary GIT_CONFIG_GLOBAL with init.defaultBranch = main",
+    "commands": [
+      "mkdir my-folder && printf 'alpha\\n' > my-folder/notes.txt",
+      "(my-folder) $ git init",
+      "fixture repository: git init  # re-run inside an existing repository"
+    ]
+  },
+  "checks": [
+    {
+      "fact": "before: my-folder is not a Git repository",
+      "expected": true,
+      "actual": true,
+      "ok": true
+    },
+    {
+      "fact": "after: .git directory exists",
+      "expected": true,
+      "actual": true,
+      "ok": true
+    },
+    {
+      "fact": "after: HEAD is a symbolic ref to refs/heads/main",
+      "expected": "refs/heads/main",
+      "actual": "refs/heads/main",
+      "ok": true
+    },
+    {
+      "fact": "after: HEAD is unborn (rev-parse --verify HEAD fails, no commit yet)",
+      "expected": true,
+      "actual": true,
+      "ok": true
+    },
+    {
+      "fact": "after: no branch refs exist yet",
+      "expected": {},
+      "actual": {},
+      "ok": true
+    },
+    {
+      "fact": "after: the index is empty",
+      "expected": "",
+      "actual": "",
+      "ok": true
+    },
+    {
+      "fact": "after: working tree untouched, notes.txt is untracked",
+      "expected": [
+        "?? notes.txt",
+        "alpha\n"
+      ],
+      "actual": [
+        "?? notes.txt",
+        "alpha\n"
+      ],
+      "ok": true
+    },
+    {
+      "fact": "re-init reports 'Reinitialized existing' repository",
+      "expected": true,
+      "actual": true,
+      "ok": true
+    },
+    {
+      "fact": "re-init: refs unchanged (main=C, topic=B)",
+      "expected": [
+        "bd9f160c78ce479ef606c657e4114bb8eb8a589d",
+        "c4b9730a7f40d6c8cdc0c9d32c858ef56b0e7fce"
+      ],
+      "actual": [
+        "bd9f160c78ce479ef606c657e4114bb8eb8a589d",
+        "c4b9730a7f40d6c8cdc0c9d32c858ef56b0e7fce"
+      ],
+      "ok": true
+    },
+    {
+      "fact": "re-init: HEAD, index, status and ancestry identical",
+      "expected": {
+        "head": "refs/heads/main",
+        "head_oid": "bd9f160c78ce479ef606c657e4114bb8eb8a589d",
+        "refs": {
+          "refs/heads/main": "bd9f160c78ce479ef606c657e4114bb8eb8a589d",
+          "refs/heads/topic": "c4b9730a7f40d6c8cdc0c9d32c858ef56b0e7fce"
+        },
+        "index": "100644 fbbee861521bd5355538b096fa3998541cd33909 0\tnotes.txt\n100644 5626abf0f72e58d7a153368ba57db4c673c0e171 0\ttodo.txt",
+        "status": "",
+        "parents": "bd9f160c78ce479ef606c657e4114bb8eb8a589d c4b9730a7f40d6c8cdc0c9d32c858ef56b0e7fce\nc4b9730a7f40d6c8cdc0c9d32c858ef56b0e7fce 23b66f9163fc42bc55b85ea728366fd5bad88717\n23b66f9163fc42bc55b85ea728366fd5bad88717"
+      },
+      "actual": {
+        "head": "refs/heads/main",
+        "head_oid": "bd9f160c78ce479ef606c657e4114bb8eb8a589d",
+        "refs": {
+          "refs/heads/main": "bd9f160c78ce479ef606c657e4114bb8eb8a589d",
+          "refs/heads/topic": "c4b9730a7f40d6c8cdc0c9d32c858ef56b0e7fce"
+        },
+        "index": "100644 fbbee861521bd5355538b096fa3998541cd33909 0\tnotes.txt\n100644 5626abf0f72e58d7a153368ba57db4c673c0e171 0\ttodo.txt",
+        "status": "",
+        "parents": "bd9f160c78ce479ef606c657e4114bb8eb8a589d c4b9730a7f40d6c8cdc0c9d32c858ef56b0e7fce\nc4b9730a7f40d6c8cdc0c9d32c858ef56b0e7fce 23b66f9163fc42bc55b85ea728366fd5bad88717\n23b66f9163fc42bc55b85ea728366fd5bad88717"
+      },
+      "ok": true
+    }
+  ]
+}
