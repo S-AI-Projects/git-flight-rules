@@ -1,0 +1,134 @@
+{
+  "task": "R12-T026",
+  "description": "Compare --assume-unchanged with --skip-worktree for 'I want Git to ignore changes to a specific file'",
+  "status": "pass",
+  "error": null,
+  "tool_versions": {
+    "git": "git version 2.43.0",
+    "python": "3.13.18",
+    "platform": "Linux-6.18.44-fc-v726-x86_64-with-glibc2.39"
+  },
+  "inputs": {
+    "fixture": [
+      "git init -b main",
+      "git config user.name 'Course Student'",
+      "git config user.email student@example.invalid",
+      "printf 'alpha\\n' > notes.txt && git add notes.txt && git commit -m A",
+      "printf 'beta\\n' >> notes.txt && git commit -am B",
+      "git branch topic            # topic -> B",
+      "printf 'one\\n' > todo.txt && git add todo.txt && git commit -m C"
+    ],
+    "commands": [
+      "git update-index --assume-unchanged todo.txt   # repo 1",
+      "git update-index --skip-worktree todo.txt      # repo 2 (same fixture)",
+      "printf 'local\\n' >> todo.txt",
+      "git ls-files -v todo.txt && git status --short",
+      "git reset --hard",
+      "git update-index --no-assume-unchanged / --no-skip-worktree todo.txt"
+    ]
+  },
+  "checks": [
+    {
+      "fact": "both workflows start from equivalent fixtures (same A, B, C ids)",
+      "expected": {
+        "A": "23b66f9163fc42bc55b85ea728366fd5bad88717",
+        "B": "c4b9730a7f40d6c8cdc0c9d32c858ef56b0e7fce",
+        "C": "bd9f160c78ce479ef606c657e4114bb8eb8a589d"
+      },
+      "actual": {
+        "A": "23b66f9163fc42bc55b85ea728366fd5bad88717",
+        "B": "c4b9730a7f40d6c8cdc0c9d32c858ef56b0e7fce",
+        "C": "bd9f160c78ce479ef606c657e4114bb8eb8a589d"
+      },
+      "ok": true
+    },
+    {
+      "fact": "ls-files -v marks the index entries differently: 'h' vs 'S'",
+      "expected": [
+        "h",
+        "S"
+      ],
+      "actual": [
+        "h",
+        "S"
+      ],
+      "ok": true
+    },
+    {
+      "fact": "both hide the local edit from git status",
+      "expected": [
+        "",
+        ""
+      ],
+      "actual": [
+        "",
+        ""
+      ],
+      "ok": true
+    },
+    {
+      "fact": "neither stages anything: index blob == HEAD blob in both",
+      "expected": [
+        true,
+        true
+      ],
+      "actual": [
+        true,
+        true
+      ],
+      "ok": true
+    },
+    {
+      "fact": "same: switching to topic (where todo.txt differs) is refused, still on main",
+      "expected": [
+        true,
+        "main",
+        true,
+        "main"
+      ],
+      "actual": [
+        true,
+        "main",
+        true,
+        "main"
+      ],
+      "ok": true
+    },
+    {
+      "fact": "difference: git reset --hard overwrites the assume-unchanged file",
+      "expected": "one\n",
+      "actual": "one\n",
+      "ok": true
+    },
+    {
+      "fact": "difference: git reset --hard keeps the skip-worktree file's local edit",
+      "expected": "one\nlocal\n",
+      "actual": "one\nlocal\n",
+      "ok": true
+    },
+    {
+      "fact": "HEAD did not move in either workflow",
+      "expected": [
+        "bd9f160c78ce479ef606c657e4114bb8eb8a589d",
+        "bd9f160c78ce479ef606c657e4114bb8eb8a589d"
+      ],
+      "actual": [
+        "bd9f160c78ce479ef606c657e4114bb8eb8a589d",
+        "bd9f160c78ce479ef606c657e4114bb8eb8a589d"
+      ],
+      "ok": true
+    },
+    {
+      "fact": "after clearing the flag, only the skip-worktree repo shows the kept edit",
+      "expected": [
+        "",
+        " M todo.txt"
+      ],
+      "actual": [
+        "",
+        " M todo.txt"
+      ],
+      "ok": true
+    }
+  ]
+}
