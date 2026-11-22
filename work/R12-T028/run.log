@@ -1,0 +1,19 @@
+R12-T028: Executable guide check for 'Possible issues with interactive rebases'
+[PASS] guide test file exists
+[PASS] README.md documents how to run the guide test
+[PASS] guide test exits 0 when the guide is followed
+[PASS] guide state: noop: the rebase todo list is just 'noop'
+[PASS] guide state: noop: topic fast-forwarded to main (C)
+[PASS] guide state: conflict: rebase stops with non-zero exit
+[PASS] guide state: conflict: git status reports 'both modified: notes.txt'
+[PASS] guide state: conflict: --theirs kept the topic (local branch) version
+[PASS] guide state: conflict: rebased topic now sits on top of main (D)
+[PASS] guide state: conflict: no rebase in progress afterwards
+[PASS] guide state: abort: topic2 is back at its original commit T
+[PASS] guide state: abort: working tree and index are clean
+[PASS] guide state: main was never rewritten (D on top of C)
+[PASS] guide test asserted at least three state facts
+[PASS] guide test removed its temporary directory
+[PASS] guide test FAILS (non-zero) when 'git checkout --theirs' is omitted
+[PASS] the failure names the --theirs assertion
+R12-T028: PASS (17 facts checked)

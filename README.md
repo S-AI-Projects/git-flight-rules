@@ -1509,6 +1509,12 @@ This will tell you if any commits are in one but not the other, and will give yo
 
 ### Possible issues with interactive rebases
 
+The steps in this section (a `noop` rebase, resolving a conflict with `--theirs` and `git rebase --continue`, and `git rebase --abort`) are covered by an executable check. It runs in a temporary repository, asserts the resulting refs and file contents, and leaves your own repositories and Git configuration alone:
+
+```sh
+$ python3 tests/guides/test_interactive_rebase_issues.py
+```
+
 <a name="noop"></a>
 #### The rebase editing screen says 'noop'
 
