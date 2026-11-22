@@ -1,0 +1,12 @@
+R12-T025: Quoting and path handling for 'I staged too many edits...' (git reset -p)
+[PASS] all three edits are staged; Git quotes paths containing spaces
+[PASS] unquoted paths fail: the shell splits them and 'release'/'sample' are read as revisions
+[PASS] failed commands left the index untouched
+[PASS] quoted path after -- unstages only 'release notes.txt'
+[PASS] 'release notes.txt' is now untracked and its contents are kept
+[PASS] first commit holds notes.txt and 'sample data/rows.csv' with spaces preserved
+[PASS] second commit holds only 'release notes.txt'
+[PASS] main advanced C -> D -> E; topic stayed at B
+[PASS] 'git reset -p topic' fails: topic is both a branch and a file
+[PASS] 'git reset -p -- topic' treats it as a path and unstages the file
+R12-T025: PASS (10 facts checked)

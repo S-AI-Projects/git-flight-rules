@@ -722,6 +722,29 @@ Then, you will need to use the `e` option to manually choose which lines to add.
 
 `git reset -p` will open a patch mode reset dialog.  This is similar to `git add -p`, except that selecting "yes" will unstage the change, removing it from the upcoming commit.
 
+To unstage changes in one path only, put the path after `--` and quote it if it contains spaces. For example, with an edit to `notes.txt`, a new file `release notes.txt` and a new file in the directory `sample data/` all staged:
+
+```sh
+$ git status --short
+M  notes.txt
+A  "release notes.txt"
+A  "sample data/rows.csv"
+$ git reset -p -- "release notes.txt"    # answer y to the hunk
+$ git status --short
+M  notes.txt
+A  "sample data/rows.csv"
+?? "release notes.txt"
+$ git commit -m "Update notes and sample data"
+$ git add -- "release notes.txt"
+$ git commit -m "Add release notes"
+```
+
+(`git status` puts double quotes around paths that contain spaces; the quotes are not part of the file name.)
+
+Without quotes the shell splits the path into separate arguments. `git reset -p release notes.txt` and `git reset -p sample data` both fail with "ambiguous argument ... unknown revision or path", because Git tries to read `release` and `sample` as revisions. Nothing is unstaged.
+
+Use `--` even when a path has no spaces. If a file has the same name as a branch (for example a file called `topic` while a branch `topic` exists), `git reset -p topic` fails because the name is both a revision and a file name; `git reset -p -- topic` tells Git to treat it as a path. The exact error wording varies between Git versions.
+
 <a name="unstaging-edits-and-staging-the-unstaged"></a>
 ### I want to stage my unstaged edits, and unstage my staged edits
 

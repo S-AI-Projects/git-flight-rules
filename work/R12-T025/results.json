@@ -1,0 +1,145 @@
+{
+  "task": "R12-T025",
+  "description": "Quoting and path handling for 'I staged too many edits...' (git reset -p)",
+  "status": "pass",
+  "error": null,
+  "tool_versions": {
+    "git": "git version 2.43.0",
+    "python": "3.13.18",
+    "platform": "Linux-6.18.44-fc-v726-x86_64-with-glibc2.39"
+  },
+  "inputs": {
+    "fixture": [
+      "git init -b main",
+      "git config user.name 'Course Student'",
+      "git config user.email student@example.invalid",
+      "printf 'alpha\\n' > notes.txt && git add notes.txt && git commit -m A",
+      "printf 'beta\\n' >> notes.txt && git commit -am B",
+      "git branch topic            # topic -> B",
+      "printf 'one\\n' > todo.txt && git add todo.txt && git commit -m C"
+    ],
+    "paths": [
+      "release notes.txt",
+      "sample data/rows.csv",
+      "topic (file named like the branch)"
+    ],
+    "commands": [
+      "printf 'gamma\\n' >> notes.txt",
+      "printf 'v1\\n' > 'release notes.txt'",
+      "mkdir 'sample data' && printf 'a,b\\n' > 'sample data/rows.csv'",
+      "git add -A",
+      "git reset -p release notes.txt            # unquoted: fails",
+      "git reset -p sample data                  # unquoted: fails",
+      "printf 'y\\n' | git reset -p -- 'release notes.txt'",
+      "git commit -m 'Update notes and sample data'",
+      "git add -- 'release notes.txt' && git commit -m 'Add release notes'",
+      "printf 'x\\n' > topic && git add topic",
+      "git reset -p topic                        # ambiguous: fails",
+      "printf 'y\\n' | git reset -p -- topic"
+    ]
+  },
+  "checks": [
+    {
+      "fact": "all three edits are staged; Git quotes paths containing spaces",
+      "expected": "M  notes.txt\nA  \"release notes.txt\"\nA  \"sample data/rows.csv\"",
+      "actual": "M  notes.txt\nA  \"release notes.txt\"\nA  \"sample data/rows.csv\"",
+      "ok": true
+    },
+    {
+      "fact": "unquoted paths fail: the shell splits them and 'release'/'sample' are read as revisions",
+      "expected": [
+        true,
+        true
+      ],
+      "actual": [
+        true,
+        true
+      ],
+      "ok": true
+    },
+    {
+      "fact": "failed commands left the index untouched",
+      "expected": "100644 85c30401ce288f253613cb07ee32e62128089caa 0\tnotes.txt\n100644 626799f0f85326a8c1fc522db584e86cdfccd51f 0\trelease notes.txt\n100644 91e7b5b17dd85f6e9b9d2d85acb2982bd5f455ee 0\tsample data/rows.csv\n100644 5626abf0f72e58d7a153368ba57db4c673c0e171 0\ttodo.txt",
+      "actual": "100644 85c30401ce288f253613cb07ee32e62128089caa 0\tnotes.txt\n100644 626799f0f85326a8c1fc522db584e86cdfccd51f 0\trelease notes.txt\n100644 91e7b5b17dd85f6e9b9d2d85acb2982bd5f455ee 0\tsample data/rows.csv\n100644 5626abf0f72e58d7a153368ba57db4c673c0e171 0\ttodo.txt",
+      "ok": true
+    },
+    {
+      "fact": "quoted path after -- unstages only 'release notes.txt'",
+      "expected": [
+        "notes.txt",
+        "sample data/rows.csv"
+      ],
+      "actual": [
+        "notes.txt",
+        "sample data/rows.csv"
+      ],
+      "ok": true
+    },
+    {
+      "fact": "'release notes.txt' is now untracked and its contents are kept",
+      "expected": [
+        "?? \"release notes.txt\"",
+        "v1\n"
+      ],
+      "actual": [
+        "?? \"release notes.txt\"",
+        "v1\n"
+      ],
+      "ok": true
+    },
+    {
+      "fact": "first commit holds notes.txt and 'sample data/rows.csv' with spaces preserved",
+      "expected": [
+        "notes.txt",
+        "sample data/rows.csv"
+      ],
+      "actual": [
+        "notes.txt",
+        "sample data/rows.csv"
+      ],
+      "ok": true
+    },
+    {
+      "fact": "second commit holds only 'release notes.txt'",
+      "expected": [
+        "release notes.txt"
+      ],
+      "actual": [
+        "release notes.txt"
+      ],
+      "ok": true
+    },
+    {
+      "fact": "main advanced C -> D -> E; topic stayed at B",
+      "expected": [
+        "bd9f160c78ce479ef606c657e4114bb8eb8a589d",
+        "92172ecd370e3ae2e0427395e1e408e9936e8d82",
+        "c4b9730a7f40d6c8cdc0c9d32c858ef56b0e7fce"
+      ],
+      "actual": [
+        "bd9f160c78ce479ef606c657e4114bb8eb8a589d",
+        "92172ecd370e3ae2e0427395e1e408e9936e8d82",
+        "c4b9730a7f40d6c8cdc0c9d32c858ef56b0e7fce"
+      ],
+      "ok": true
+    },
+    {
+      "fact": "'git reset -p topic' fails: topic is both a branch and a file",
+      "expected": [
+        true,
+        "A  topic"
+      ],
+      "actual": [
+        true,
+        "A  topic"
+      ],
+      "ok": true
+    },
+    {
+      "fact": "'git reset -p -- topic' treats it as a path and unstages the file",
+      "expected": "?? topic",
+      "actual": "?? topic",
+      "ok": true
+    }
+  ]
+}
