@@ -1,0 +1,110 @@
+{
+  "task": "R12-T030",
+  "description": "Prediction-and-verification exercise for 'I want to discard specific unstaged files' (git checkout <file>)",
+  "status": "pass",
+  "error": null,
+  "tool_versions": {
+    "git": "git version 2.43.0",
+    "python": "3.13.18",
+    "platform": "Linux-6.18.44-fc-v726-x86_64-with-glibc2.39"
+  },
+  "inputs": {
+    "fixture": [
+      "git init -b main",
+      "git config user.name 'Course Student'",
+      "git config user.email student@example.invalid",
+      "printf 'alpha\\n' > notes.txt && git add notes.txt && git commit -m A",
+      "printf 'beta\\n' >> notes.txt && git commit -am B",
+      "git branch topic            # topic -> B",
+      "printf 'one\\n' > todo.txt && git add todo.txt && git commit -m C"
+    ],
+    "commands": [
+      "printf 'gamma\\n' >> notes.txt && git add notes.txt   # staged",
+      "printf 'delta\\n' >> notes.txt                         # unstaged, on top",
+      "printf 'two\\n' >> todo.txt                            # unstaged only",
+      "git checkout notes.txt todo.txt"
+    ]
+  },
+  "checks": [
+    {
+      "fact": "starting state: notes.txt staged+unstaged, todo.txt unstaged",
+      "expected": "MM notes.txt\n M todo.txt",
+      "actual": "MM notes.txt\n M todo.txt",
+      "ok": true
+    },
+    {
+      "fact": "answer 1: HEAD and all refs are unchanged",
+      "expected": [
+        "bd9f160c78ce479ef606c657e4114bb8eb8a589d",
+        {
+          "refs/heads/main": "bd9f160c78ce479ef606c657e4114bb8eb8a589d",
+          "refs/heads/topic": "c4b9730a7f40d6c8cdc0c9d32c858ef56b0e7fce"
+        }
+      ],
+      "actual": [
+        "bd9f160c78ce479ef606c657e4114bb8eb8a589d",
+        {
+          "refs/heads/main": "bd9f160c78ce479ef606c657e4114bb8eb8a589d",
+          "refs/heads/topic": "c4b9730a7f40d6c8cdc0c9d32c858ef56b0e7fce"
+        }
+      ],
+      "ok": true
+    },
+    {
+      "fact": "answer 2: the index is unchanged (same tree id from git write-tree)",
+      "expected": "d6da49f066048110cc6211123db4e2d1fe72feb1",
+      "actual": "d6da49f066048110cc6211123db4e2d1fe72feb1",
+      "ok": true
+    },
+    {
+      "fact": "answer 3: notes.txt in the working tree now equals the INDEX blob (gamma kept)",
+      "expected": [
+        "85c30401ce288f253613cb07ee32e62128089caa",
+        "alpha\nbeta\ngamma\n"
+      ],
+      "actual": [
+        "85c30401ce288f253613cb07ee32e62128089caa",
+        "alpha\nbeta\ngamma\n"
+      ],
+      "ok": true
+    },
+    {
+      "fact": "answer 3b: ...which is NOT the HEAD blob: the staged change survives",
+      "expected": true,
+      "actual": true,
+      "ok": true
+    },
+    {
+      "fact": "answer 4: todo.txt in the working tree equals the index (= HEAD) blob",
+      "expected": [
+        "5626abf0f72e58d7a153368ba57db4c673c0e171",
+        "5626abf0f72e58d7a153368ba57db4c673c0e171",
+        "one\n"
+      ],
+      "actual": [
+        "5626abf0f72e58d7a153368ba57db4c673c0e171",
+        "5626abf0f72e58d7a153368ba57db4c673c0e171",
+        "one\n"
+      ],
+      "ok": true
+    },
+    {
+      "fact": "answer 5: status shows only the staged notes.txt change",
+      "expected": "M  notes.txt",
+      "actual": "M  notes.txt",
+      "ok": true
+    },
+    {
+      "fact": "follow-up: 'git checkout HEAD -- notes.txt' also discards the staged change",
+      "expected": [
+        "",
+        "alpha\nbeta\n"
+      ],
+      "actual": [
+        "",
+        "alpha\nbeta\n"
+      ],
+      "ok": true
+    }
+  ]
+}
