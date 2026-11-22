@@ -1,0 +1,92 @@
+Starting automated verification check for R12-T013
+Tool versions: {
+  "git": "git version 2.50.1 (Apple Git-155)",
+  "python": "Python 3.15.2",
+  "os": "Darwin 25.6.0 (arm64)"
+}
+
+=== Running Test Iteration 1 ===
+Temporary directory: /var/folders/k8/xtrjfrhs1r523br2mhhrr1kh0000gn/T/tmpyqlepsa0
+Execute: git init -b main
+Execute: git config user.name "Course Student"
+Execute: git config user.email "student@example.invalid"
+Execute: git add notes.txt
+Execute: git commit -m "Commit A: create notes.txt"
+Execute: git rev-parse HEAD
+Commit A hash: beab5799b8f029f6b0933de9e447e0be1048599b
+Execute: git add notes.txt
+Execute: git commit -m "Commit B: append to notes.txt"
+Execute: git rev-parse HEAD
+Commit B hash: 3cd994b8e15e67776f4023eeab4d63b72361e3c0
+Execute: git branch topic
+Execute: git add todo.txt
+Execute: git commit -m "Commit C: add todo.txt"
+Execute: git rev-parse HEAD
+Execute: git rev-parse HEAD^{tree}
+Original Commit C hash: 914c7948c195bb0140d9b8cf8b01e8b204806833
+Original Tree C hash: 70d571a7a75867c09d38254b1252d5e2402adaa6
+Execute: git add notes.txt
+Execute: git commit --amend -C HEAD
+Execute: git rev-parse HEAD
+Execute: git rev-parse HEAD^{tree}
+Amended Commit hash: 18321ca1272befdba7638473d9116b24a24a715b
+Amended Tree hash: 86b12e29544508443b63c755280e6f96abb8b060
+Execute: git rev-parse HEAD@{1}
+Recovery target HEAD@{1} confirmed: 914c7948c195bb0140d9b8cf8b01e8b204806833
+Execute: git reset --hard HEAD@{1}
+Execute: git rev-parse HEAD
+Execute: git rev-parse HEAD^{tree}
+Recovered Commit hash: 914c7948c195bb0140d9b8cf8b01e8b204806833
+Recovered Tree hash: 70d571a7a75867c09d38254b1252d5e2402adaa6
+Assertion 1 Passed: Recovered commit and tree hashes match original Commit C exactly
+Assertion 2 Passed: Working-tree file contents restored to exact expected state
+Execute: git rev-parse refs/heads/main
+Execute: git rev-parse refs/heads/topic
+Execute: git merge-base --is-ancestor 3cd994b8e15e67776f4023eeab4d63b72361e3c0 914c7948c195bb0140d9b8cf8b01e8b204806833
+Assertion 3 Passed: Branch refs (main, topic) and ancestry are fully intact
+Execute: git status --porcelain
+Assertion 4 Passed: Working tree and index are clean
+
+=== Running Test Iteration 2 ===
+Temporary directory: /var/folders/k8/xtrjfrhs1r523br2mhhrr1kh0000gn/T/tmpa3ja500l
+Execute: git init -b main
+Execute: git config user.name "Course Student"
+Execute: git config user.email "student@example.invalid"
+Execute: git add notes.txt
+Execute: git commit -m "Commit A: create notes.txt"
+Execute: git rev-parse HEAD
+Commit A hash: 4df55f29005aef0b610271eb07422dce2c198e3e
+Execute: git add notes.txt
+Execute: git commit -m "Commit B: append to notes.txt"
+Execute: git rev-parse HEAD
+Commit B hash: da62c8fea3260a7966ee0250bf2815d7e6d10b5f
+Execute: git branch topic
+Execute: git add todo.txt
+Execute: git commit -m "Commit C: add todo.txt"
+Execute: git rev-parse HEAD
+Execute: git rev-parse HEAD^{tree}
+Original Commit C hash: 3dfabccfd0ac73713cde05c3c4b82d7f7d930b02
+Original Tree C hash: 70d571a7a75867c09d38254b1252d5e2402adaa6
+Execute: git add notes.txt
+Execute: git commit --amend -C HEAD
+Execute: git rev-parse HEAD
+Execute: git rev-parse HEAD^{tree}
+Amended Commit hash: 71ab10ed09c8efc3aa6e32144b4941096f9fc643
+Amended Tree hash: 86b12e29544508443b63c755280e6f96abb8b060
+Execute: git rev-parse HEAD@{1}
+Recovery target HEAD@{1} confirmed: 3dfabccfd0ac73713cde05c3c4b82d7f7d930b02
+Execute: git reset --hard HEAD@{1}
+Execute: git rev-parse HEAD
+Execute: git rev-parse HEAD^{tree}
+Recovered Commit hash: 3dfabccfd0ac73713cde05c3c4b82d7f7d930b02
+Recovered Tree hash: 70d571a7a75867c09d38254b1252d5e2402adaa6
+Assertion 1 Passed: Recovered commit and tree hashes match original Commit C exactly
+Assertion 2 Passed: Working-tree file contents restored to exact expected state
+Execute: git rev-parse refs/heads/main
+Execute: git rev-parse refs/heads/topic
+Execute: git merge-base --is-ancestor da62c8fea3260a7966ee0250bf2815d7e6d10b5f 3dfabccfd0ac73713cde05c3c4b82d7f7d930b02
+Assertion 3 Passed: Branch refs (main, topic) and ancestry are fully intact
+Execute: git status --porcelain
+Assertion 4 Passed: Working tree and index are clean
+
+Both iterations completed successfully with all assertions passing.
