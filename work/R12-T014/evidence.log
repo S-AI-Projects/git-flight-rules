@@ -1,0 +1,84 @@
+Starting automated verification check for R12-T014
+Tool versions: {
+  "git": "git version 2.50.1 (Apple Git-155)",
+  "python": "Python 3.15.2",
+  "os": "Darwin 25.6.0 (arm64)"
+}
+
+=== Running Test Iteration 1 ===
+Temporary root directory: /var/folders/k8/xtrjfrhs1r523br2mhhrr1kh0000gn/T/tmphnn9rnha
+Local bare remote URL: file:///var/folders/k8/xtrjfrhs1r523br2mhhrr1kh0000gn/T/tmphnn9rnha/remote-repo.git
+Execute: git config user.name "Course Student"
+Execute: git config user.email "student@example.invalid"
+Execute: git add notes.txt
+Execute: git commit -m "Commit A: create notes.txt"
+Execute: git rev-parse HEAD
+Commit A hash: 5b1ff9a9086ae24696824d9b6f4bfa8011171702
+Execute: git add notes.txt
+Execute: git commit -m "Commit B: append to notes.txt"
+Execute: git rev-parse HEAD
+Commit B hash: b2286daafb41bbbb63669bc6fed4609d3aa2a296
+Execute: git branch topic
+Execute: git add todo.txt
+Execute: git commit -m "Commit C: add todo.txt"
+Execute: git rev-parse HEAD
+Commit C hash: af3592b0e8209f455a7274bfec3ebd6dc3461dcd
+Execute: git remote add origin file:///var/folders/k8/xtrjfrhs1r523br2mhhrr1kh0000gn/T/tmphnn9rnha/remote-repo.git
+Execute: git push -u origin main
+Execute: git rev-parse refs/remotes/origin/main
+Execute: git checkout topic
+Execute: git rev-parse refs/heads/topic
+Execute: git rev-parse refs/heads/main
+Before amend - topic HEAD: b2286daafb41bbbb63669bc6fed4609d3aa2a296, main HEAD: af3592b0e8209f455a7274bfec3ebd6dc3461dcd
+Execute: git checkout HEAD^ notes.txt
+Execute: git add notes.txt
+Execute: git commit --amend --no-edit --allow-empty
+Execute: git rev-parse refs/heads/topic
+Execute: git rev-parse refs/heads/main
+Execute: git rev-parse refs/remotes/origin/main
+After amend - topic HEAD: 5420a967217b453d830ed29a513de9156dc3465a, main HEAD: af3592b0e8209f455a7274bfec3ebd6dc3461dcd, origin/main: af3592b0e8209f455a7274bfec3ebd6dc3461dcd
+Assertion 1 Passed: Intended ref (refs/heads/topic) successfully changed to new amended commit
+Assertion 2 Passed: Unrelated refs (refs/heads/main and refs/remotes/origin/main) stayed fixed
+Assertion 3 Passed: notes.txt content successfully reverted to 'alpha\n'
+Execute: git status --porcelain
+Assertion 4 Passed: Working tree and index are clean
+
+=== Running Test Iteration 2 ===
+Temporary root directory: /var/folders/k8/xtrjfrhs1r523br2mhhrr1kh0000gn/T/tmp7_xmv2h1
+Local bare remote URL: file:///var/folders/k8/xtrjfrhs1r523br2mhhrr1kh0000gn/T/tmp7_xmv2h1/remote-repo.git
+Execute: git config user.name "Course Student"
+Execute: git config user.email "student@example.invalid"
+Execute: git add notes.txt
+Execute: git commit -m "Commit A: create notes.txt"
+Execute: git rev-parse HEAD
+Commit A hash: 5b1ff9a9086ae24696824d9b6f4bfa8011171702
+Execute: git add notes.txt
+Execute: git commit -m "Commit B: append to notes.txt"
+Execute: git rev-parse HEAD
+Commit B hash: b2286daafb41bbbb63669bc6fed4609d3aa2a296
+Execute: git branch topic
+Execute: git add todo.txt
+Execute: git commit -m "Commit C: add todo.txt"
+Execute: git rev-parse HEAD
+Commit C hash: af3592b0e8209f455a7274bfec3ebd6dc3461dcd
+Execute: git remote add origin file:///var/folders/k8/xtrjfrhs1r523br2mhhrr1kh0000gn/T/tmp7_xmv2h1/remote-repo.git
+Execute: git push -u origin main
+Execute: git rev-parse refs/remotes/origin/main
+Execute: git checkout topic
+Execute: git rev-parse refs/heads/topic
+Execute: git rev-parse refs/heads/main
+Before amend - topic HEAD: b2286daafb41bbbb63669bc6fed4609d3aa2a296, main HEAD: af3592b0e8209f455a7274bfec3ebd6dc3461dcd
+Execute: git checkout HEAD^ notes.txt
+Execute: git add notes.txt
+Execute: git commit --amend --no-edit --allow-empty
+Execute: git rev-parse refs/heads/topic
+Execute: git rev-parse refs/heads/main
+Execute: git rev-parse refs/remotes/origin/main
+After amend - topic HEAD: b5c43f9bd071b6e5e709d9f2adbf178ef4bc3380, main HEAD: af3592b0e8209f455a7274bfec3ebd6dc3461dcd, origin/main: af3592b0e8209f455a7274bfec3ebd6dc3461dcd
+Assertion 1 Passed: Intended ref (refs/heads/topic) successfully changed to new amended commit
+Assertion 2 Passed: Unrelated refs (refs/heads/main and refs/remotes/origin/main) stayed fixed
+Assertion 3 Passed: notes.txt content successfully reverted to 'alpha\n'
+Execute: git status --porcelain
+Assertion 4 Passed: Working tree and index are clean
+
+Both iterations completed successfully with all assertions passing.

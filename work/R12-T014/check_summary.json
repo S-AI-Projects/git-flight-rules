@@ -1,0 +1,35 @@
+{
+  "task": "R12-T014",
+  "success": true,
+  "tool_versions": {
+    "git": "git version 2.50.1 (Apple Git-155)",
+    "python": "Python 3.15.2",
+    "os": "Darwin 25.6.0 (arm64)"
+  },
+  "iterations": [
+    {
+      "iteration": 1,
+      "commit_a": "5b1ff9a9086ae24696824d9b6f4bfa8011171702",
+      "commit_b": "b2286daafb41bbbb63669bc6fed4609d3aa2a296",
+      "commit_c": "af3592b0e8209f455a7274bfec3ebd6dc3461dcd",
+      "topic_before": "b2286daafb41bbbb63669bc6fed4609d3aa2a296",
+      "topic_after": "5420a967217b453d830ed29a513de9156dc3465a",
+      "main_before": "af3592b0e8209f455a7274bfec3ebd6dc3461dcd",
+      "main_after": "af3592b0e8209f455a7274bfec3ebd6dc3461dcd",
+      "remote_main": "af3592b0e8209f455a7274bfec3ebd6dc3461dcd",
+      "all_assertions_passed": true
+    },
+    {
+      "iteration": 2,
+      "commit_a": "5b1ff9a9086ae24696824d9b6f4bfa8011171702",
+      "commit_b": "b2286daafb41bbbb63669bc6fed4609d3aa2a296",
+      "commit_c": "af3592b0e8209f455a7274bfec3ebd6dc3461dcd",
+      "topic_before": "b2286daafb41bbbb63669bc6fed4609d3aa2a296",
+      "topic_after": "b5c43f9bd071b6e5e709d9f2adbf178ef4bc3380",
+      "main_before": "af3592b0e8209f455a7274bfec3ebd6dc3461dcd",
+      "main_after": "af3592b0e8209f455a7274bfec3ebd6dc3461dcd",
+      "remote_main": "af3592b0e8209f455a7274bfec3ebd6dc3461dcd",
+      "all_assertions_passed": true
+    }
+  ]
+}
