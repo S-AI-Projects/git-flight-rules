@@ -1,0 +1,86 @@
+Starting automated verification check for R12-T012
+Tool versions: {
+  "git": "git version 2.50.1 (Apple Git-155)",
+  "python": "Python 3.15.2",
+  "os": "Darwin 25.6.0 (arm64)"
+}
+
+=== Running Test Iteration 1 ===
+Temporary root directory: /var/folders/k8/xtrjfrhs1r523br2mhhrr1kh0000gn/T/tmpdj8wep9x
+Initial wrong remote URL: file:///var/folders/k8/xtrjfrhs1r523br2mhhrr1kh0000gn/T/tmpdj8wep9x/wrong-repo.git
+Target actual remote URL: file:///var/folders/k8/xtrjfrhs1r523br2mhhrr1kh0000gn/T/tmpdj8wep9x/actual-repo.git
+Execute: git config user.name "Course Student"
+Execute: git config user.email "student@example.invalid"
+Execute: git add notes.txt
+Execute: git commit -m "Commit A: create notes.txt"
+Execute: git rev-parse HEAD
+Commit A hash: 84ac4b5f6ab0d479d714628884e4e83431eb4bb1
+Execute: git add notes.txt
+Execute: git commit -m "Commit B: append to notes.txt"
+Execute: git rev-parse HEAD
+Commit B hash: bc191314a75796dedb870707392f289d31746678
+Execute: git branch topic
+Execute: git add todo.txt
+Execute: git commit -m "Commit C: add todo.txt"
+Execute: git rev-parse HEAD
+Commit C hash: f07e1333b689128a4e30e165830e206732552bb8
+Execute: git remote add origin file:///var/folders/k8/xtrjfrhs1r523br2mhhrr1kh0000gn/T/tmpdj8wep9x/wrong-repo.git
+Execute: git config remote.origin.url
+Execute: git rev-parse HEAD
+Execute: git rev-parse refs/heads/main
+Execute: git rev-parse refs/heads/topic
+Execute: git status --porcelain
+Execute: git rev-list --count HEAD
+Execute: git remote set-url origin file:///var/folders/k8/xtrjfrhs1r523br2mhhrr1kh0000gn/T/tmpdj8wep9x/actual-repo.git
+Executed: git remote set-url origin file:///var/folders/k8/xtrjfrhs1r523br2mhhrr1kh0000gn/T/tmpdj8wep9x/actual-repo.git
+Execute: git config remote.origin.url
+Execute: git rev-parse HEAD
+Execute: git rev-parse refs/heads/main
+Execute: git rev-parse refs/heads/topic
+Execute: git status --porcelain
+Execute: git rev-list --count HEAD
+Assertion 1 Passed: remote.origin.url successfully updated to 'file:///var/folders/k8/xtrjfrhs1r523br2mhhrr1kh0000gn/T/tmpdj8wep9x/actual-repo.git'
+Execute: git merge-base --is-ancestor bc191314a75796dedb870707392f289d31746678 f07e1333b689128a4e30e165830e206732552bb8
+Assertion 2 Passed: HEAD, branch refs, and commit ancestry are identical
+Assertion 3 Passed: Index and working tree files are completely unchanged
+
+=== Running Test Iteration 2 ===
+Temporary root directory: /var/folders/k8/xtrjfrhs1r523br2mhhrr1kh0000gn/T/tmp9wkwr3ky
+Initial wrong remote URL: file:///var/folders/k8/xtrjfrhs1r523br2mhhrr1kh0000gn/T/tmp9wkwr3ky/wrong-repo.git
+Target actual remote URL: file:///var/folders/k8/xtrjfrhs1r523br2mhhrr1kh0000gn/T/tmp9wkwr3ky/actual-repo.git
+Execute: git config user.name "Course Student"
+Execute: git config user.email "student@example.invalid"
+Execute: git add notes.txt
+Execute: git commit -m "Commit A: create notes.txt"
+Execute: git rev-parse HEAD
+Commit A hash: 21684b582fccb735ae5d90c95fceade4e86b77c5
+Execute: git add notes.txt
+Execute: git commit -m "Commit B: append to notes.txt"
+Execute: git rev-parse HEAD
+Commit B hash: a855abce6ab2e238ec1ceb8388593b2a07b06093
+Execute: git branch topic
+Execute: git add todo.txt
+Execute: git commit -m "Commit C: add todo.txt"
+Execute: git rev-parse HEAD
+Commit C hash: 1ef0ffda24ad25941e10d1b70fe74fc2637a8ffc
+Execute: git remote add origin file:///var/folders/k8/xtrjfrhs1r523br2mhhrr1kh0000gn/T/tmp9wkwr3ky/wrong-repo.git
+Execute: git config remote.origin.url
+Execute: git rev-parse HEAD
+Execute: git rev-parse refs/heads/main
+Execute: git rev-parse refs/heads/topic
+Execute: git status --porcelain
+Execute: git rev-list --count HEAD
+Execute: git remote set-url origin file:///var/folders/k8/xtrjfrhs1r523br2mhhrr1kh0000gn/T/tmp9wkwr3ky/actual-repo.git
+Executed: git remote set-url origin file:///var/folders/k8/xtrjfrhs1r523br2mhhrr1kh0000gn/T/tmp9wkwr3ky/actual-repo.git
+Execute: git config remote.origin.url
+Execute: git rev-parse HEAD
+Execute: git rev-parse refs/heads/main
+Execute: git rev-parse refs/heads/topic
+Execute: git status --porcelain
+Execute: git rev-list --count HEAD
+Assertion 1 Passed: remote.origin.url successfully updated to 'file:///var/folders/k8/xtrjfrhs1r523br2mhhrr1kh0000gn/T/tmp9wkwr3ky/actual-repo.git'
+Execute: git merge-base --is-ancestor a855abce6ab2e238ec1ceb8388593b2a07b06093 1ef0ffda24ad25941e10d1b70fe74fc2637a8ffc
+Assertion 2 Passed: HEAD, branch refs, and commit ancestry are identical
+Assertion 3 Passed: Index and working tree files are completely unchanged
+
+Both iterations completed successfully with all assertions passing.
