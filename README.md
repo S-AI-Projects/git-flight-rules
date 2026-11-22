@@ -1522,6 +1522,50 @@ That means you are trying to rebase against a branch that is at an identical com
 * making sure your main branch is where it should be
 * rebase against `HEAD~2` or earlier instead
 
+To reproduce this scenario, create a repository with author `Course Student <student@example.invalid>` on branch `main` with three commits, and create branch `topic` at Commit B:
+
+```sh
+(main)$ git init -b main
+(main)$ git config user.name "Course Student"
+(main)$ git config user.email "student@example.invalid"
+(main)$ printf "alpha\n" > notes.txt
+(main)$ git add notes.txt
+(main)$ git commit -m "Commit A: create notes.txt"
+(main)$ printf "beta\n" >> notes.txt
+(main)$ git add notes.txt
+(main)$ git commit -m "Commit B: append to notes.txt"
+(main)$ git branch topic
+(main)$ printf "one\n" > todo.txt
+(main)$ git add todo.txt
+(main)$ git commit -m "Commit C: add todo.txt"
+```
+
+Switch to branch `topic` and inspect the status and commit log:
+
+```sh
+(main)$ git checkout topic
+(topic)$ git status
+On branch topic
+nothing to commit, working tree clean
+
+(topic)$ git log --graph --oneline main topic
+* <commit-C> (main) Commit C: add todo.txt
+* <commit-B> (HEAD -> topic) Commit B: append to notes.txt
+* <commit-A> Commit A: create notes.txt
+```
+
+When you interactively rebase `topic` against `main`:
+
+```sh
+(topic)$ git rebase -i main
+```
+
+Because `main` is ahead of `topic` and already contains all commits from `topic` (`Commit A` and `Commit B`), the commit range `main..topic` to rebase is empty. Git therefore displays `noop` in the interactive rebase editor:
+
+```
+noop
+```
+
 <a name="merge-conflict"></a>
 #### There were conflicts
 

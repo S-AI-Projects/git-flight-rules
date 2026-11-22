@@ -1,0 +1,35 @@
+{
+  "task": "R12-T011",
+  "success": true,
+  "tool_versions": {
+    "git": "git version 2.50.1 (Apple Git-155)",
+    "python": "Python 3.15.2",
+    "os": "Darwin 25.6.0 (arm64)"
+  },
+  "iterations": [
+    {
+      "iteration": 1,
+      "commit_a": "a5590ea3f6a0edc4611dfeb7cc4336d080ae82ba",
+      "commit_b": "e7a08d120cb9720c7d97a6f56597fd6da647763f",
+      "commit_c": "6ede310663414ede00b80c47777835f4bbc4cbd2",
+      "notes_content": "alpha\nbeta\n",
+      "todo_commands": [
+        "noop"
+      ],
+      "status_clean": true,
+      "rebase_exit_code": 0
+    },
+    {
+      "iteration": 2,
+      "commit_a": "a5590ea3f6a0edc4611dfeb7cc4336d080ae82ba",
+      "commit_b": "e7a08d120cb9720c7d97a6f56597fd6da647763f",
+      "commit_c": "6ede310663414ede00b80c47777835f4bbc4cbd2",
+      "notes_content": "alpha\nbeta\n",
+      "todo_commands": [
+        "noop"
+      ],
+      "status_clean": true,
+      "rebase_exit_code": 0
+    }
+  ]
+}
