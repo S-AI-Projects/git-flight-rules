@@ -1,0 +1,82 @@
+Starting automated verification check for R12-T019
+Tool versions: {
+  "git": "git version 2.50.1 (Apple Git-155)",
+  "python": "Python 3.15.2",
+  "os": "Darwin 25.6.0 (arm64)"
+}
+
+=== Running Test Iteration 1 ===
+Temporary root directory: /var/folders/k8/xtrjfrhs1r523br2mhhrr1kh0000gn/T/tmpcwjr2ulj
+Bare remote URL: file:///var/folders/k8/xtrjfrhs1r523br2mhhrr1kh0000gn/T/tmpcwjr2ulj/remote-target.git
+Execute: git config user.name "Course Student"
+Execute: git config user.email "student@example.invalid"
+Execute: git add notes.txt
+Execute: git commit -m "Commit A: create notes.txt"
+Execute: git rev-parse HEAD
+Execute: git add notes.txt
+Execute: git commit -m "Commit B: append to notes.txt"
+Execute: git rev-parse HEAD
+Execute: git branch topic
+Execute: git add todo.txt
+Execute: git commit -m "Commit C: add todo.txt"
+Execute: git rev-parse HEAD
+Execute: git remote add origin file:///var/folders/k8/xtrjfrhs1r523br2mhhrr1kh0000gn/T/tmpcwjr2ulj/remote-target.git
+Execute: git push -u origin main
+Execute: git rev-parse refs/remotes/origin/main
+Execute: git rev-parse --abbrev-ref HEAD
+Execute: git rev-parse --verify HEAD^
+Execute: git status --porcelain
+Assertion 1 Passed: All prerequisites verified (branch, parent commit, clean status, remote)
+Execute: git reset --soft HEAD^
+Execute: git rev-parse HEAD
+Execute: git status --porcelain
+Assertion 2 Passed: git reset --soft HEAD^ restored HEAD to Commit B with todo.txt staged
+Execute: git commit -m "Commit C: add todo.txt"
+Execute: git rev-parse HEAD
+Execute: git reset HEAD^ --hard
+Execute: git rev-parse HEAD
+Execute: git status --porcelain
+Assertion 3 Passed: git reset HEAD^ --hard restored HEAD to Commit B and deleted todo.txt
+Execute: git push --force-with-lease origin main
+Execute: git rev-parse refs/remotes/origin/main
+Execute: git rev-parse refs/heads/topic
+Assertion 4 Passed: Remote main ref updated to Commit B; topic ref remains fixed
+
+=== Running Test Iteration 2 ===
+Temporary root directory: /var/folders/k8/xtrjfrhs1r523br2mhhrr1kh0000gn/T/tmpr1ahill2
+Bare remote URL: file:///var/folders/k8/xtrjfrhs1r523br2mhhrr1kh0000gn/T/tmpr1ahill2/remote-target.git
+Execute: git config user.name "Course Student"
+Execute: git config user.email "student@example.invalid"
+Execute: git add notes.txt
+Execute: git commit -m "Commit A: create notes.txt"
+Execute: git rev-parse HEAD
+Execute: git add notes.txt
+Execute: git commit -m "Commit B: append to notes.txt"
+Execute: git rev-parse HEAD
+Execute: git branch topic
+Execute: git add todo.txt
+Execute: git commit -m "Commit C: add todo.txt"
+Execute: git rev-parse HEAD
+Execute: git remote add origin file:///var/folders/k8/xtrjfrhs1r523br2mhhrr1kh0000gn/T/tmpr1ahill2/remote-target.git
+Execute: git push -u origin main
+Execute: git rev-parse refs/remotes/origin/main
+Execute: git rev-parse --abbrev-ref HEAD
+Execute: git rev-parse --verify HEAD^
+Execute: git status --porcelain
+Assertion 1 Passed: All prerequisites verified (branch, parent commit, clean status, remote)
+Execute: git reset --soft HEAD^
+Execute: git rev-parse HEAD
+Execute: git status --porcelain
+Assertion 2 Passed: git reset --soft HEAD^ restored HEAD to Commit B with todo.txt staged
+Execute: git commit -m "Commit C: add todo.txt"
+Execute: git rev-parse HEAD
+Execute: git reset HEAD^ --hard
+Execute: git rev-parse HEAD
+Execute: git status --porcelain
+Assertion 3 Passed: git reset HEAD^ --hard restored HEAD to Commit B and deleted todo.txt
+Execute: git push --force-with-lease origin main
+Execute: git rev-parse refs/remotes/origin/main
+Execute: git rev-parse refs/heads/topic
+Assertion 4 Passed: Remote main ref updated to Commit B; topic ref remains fixed
+
+Both iterations completed successfully with all assertions passing.
