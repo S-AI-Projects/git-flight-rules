@@ -2100,6 +2100,28 @@ function squash() {
 
 Copy those commands to your .bashrc or .bash_profile.
 
+**Recovering from a shortcut mistake.** `sq` rewrites history quickly, so it is just as easy to squash too much or delete a todo line by accident. Say `main` has commits `A`, `B` and `C`, you run `sq 2`, and in the editor you delete the `pick ... C` line instead of changing it. When the rebase finishes, `main` points at `B` and `todo.txt` (added by `C`) is gone. Git saved the previous tip in two places:
+
+```sh
+(main)$ git rev-parse ORIG_HEAD     # tip before the rebase (commit C)
+(main)$ git reflog -3               # HEAD@{n} entries; main@{1} is also C
+(main)$ git reset --hard ORIG_HEAD  # or: git reset --hard main@{1}
+(main)$ git log --format=%s
+C
+B
+A
+```
+
+To confirm the recovery, save `git rev-parse HEAD^{tree}` before running `sq`, then compare it with the same command afterwards; the hashes should be identical.
+
+What this does *not* recover:
+
+* Uncommitted changes. `git reset --hard` overwrites the working tree and index, so any edit you made after the mistake and did not commit is lost. Commit or stash it first.
+* Anything outside your local reflog. The reflog exists only in your clone, and Git eventually prunes old entries (by default after 30 days for unreachable commits). If you already force-pushed the rewritten branch, collaborators' copies are not changed by your reset.
+* Use `ORIG_HEAD` straight away. Other commands such as `reset`, `merge` and `rebase` overwrite it; `main@{1}` and `HEAD@{n}` from `git reflog` remain available.
+
+If you notice the mistake while the todo list is still open in the editor, delete every line and save instead; an empty todo list aborts the rebase and leaves `main` untouched.
+
 ### PowerShell on Windows
 
 If you are using PowerShell on Windows, you can also set up aliases and functions. Add these commands to your profile, whose path is defined in the `$profile` variable. Learn more at the [About Profiles](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_profiles) page on the Microsoft documentation site.
