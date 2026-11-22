@@ -860,6 +860,41 @@ Alternatively, to discard multiple files in your working copy, list them all.
 $ git checkout myFirstFile mySecondFile
 ```
 
+`git checkout <file>` copies the file from the **index** (staging area), not from the last commit. Staged changes therefore survive; only the unstaged part is thrown away. (`git restore <file>` does the same thing; add `--` before the file names if one could also be a branch name.)
+
+**Exercise: predict, run, explain.** Start with `notes.txt` (committed as `alpha`, `beta`) and `todo.txt` (committed as `one`):
+
+```sh
+$ printf 'gamma\n' >> notes.txt && git add notes.txt   # staged
+$ printf 'delta\n' >> notes.txt                         # unstaged, on top of it
+$ printf 'two\n' >> todo.txt                            # unstaged
+$ git status --short
+MM notes.txt
+ M todo.txt
+```
+
+Before running `git checkout notes.txt todo.txt`, write down what you expect for `HEAD`, the index, and each file's contents. Then run it and check:
+
+```sh
+$ git checkout notes.txt todo.txt
+$ git status --short
+$ cat notes.txt
+$ git rev-parse :notes.txt; git hash-object notes.txt   # index blob vs working-tree blob
+```
+
+<details>
+<summary>Answer</summary>
+
+* `HEAD` and every branch ref are unchanged: `git checkout <file>` never moves a ref.
+* The index is unchanged (`git write-tree` prints the same tree id before and after).
+* `notes.txt` now contains `alpha`, `beta`, `gamma`. The changed object is the working-tree file, which now matches the **index blob** (`git rev-parse :notes.txt` equals `git hash-object notes.txt`). Only the unstaged `delta` line was discarded; the staged `gamma` line is still there.
+* `todo.txt` is back to `one`, because its index blob is the same as the committed one.
+* `git status --short` prints just `M  notes.txt`: the staged change remains, and nothing is left unstaged.
+
+To discard the staged change as well, restore from `HEAD` instead: `git checkout HEAD -- notes.txt` (or `git restore --staged --worktree notes.txt`).
+
+</details>
+
 ### I want to discard only my unstaged local changes
 
 When you want to get rid of all of your unstaged local uncommitted changes

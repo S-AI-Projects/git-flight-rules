@@ -1,0 +1,10 @@
+R12-T030: Prediction-and-verification exercise for 'I want to discard specific unstaged files' (git checkout <file>)
+[PASS] starting state: notes.txt staged+unstaged, todo.txt unstaged
+[PASS] answer 1: HEAD and all refs are unchanged
+[PASS] answer 2: the index is unchanged (same tree id from git write-tree)
+[PASS] answer 3: notes.txt in the working tree now equals the INDEX blob (gamma kept)
+[PASS] answer 3b: ...which is NOT the HEAD blob: the staged change survives
+[PASS] answer 4: todo.txt in the working tree equals the index (= HEAD) blob
+[PASS] answer 5: status shows only the staged notes.txt change
+[PASS] follow-up: 'git checkout HEAD -- notes.txt' also discards the staged change
+R12-T030: PASS (8 facts checked)
